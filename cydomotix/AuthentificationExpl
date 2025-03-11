@@ -1,0 +1,30 @@
+SecurityConfig : configure Spring Security (login, accès (admin etc), encodage du mdp)
+CustomUserDetailsService : implémentation de UserDetailsService (Spring Security) pour load la data d'un utilisateur de la DB
+
+Etapes d'authentification :
+
+1. Accès du user au site
+    - Si l'utilisateur tente d'accéder à une page protégée (dashboard ou jsp quoi) : Spring Security check si le user est authentifié
+    - Si user pas authentifié : sera redirigé à la page de login (définie dans SecurityConfig)
+    => Form pour entrer son login et mdp
+
+2. Envoi de la requête de login :
+    - Spring Security intercepte la requête quand on envoie le formulaire pour invoquer le process d'authentification :
+    - Utilise son interface UserDetailsService (et la classe custom CustomUserDetailsService) :
+    => Load le username et password du user à partir de la DB en utilisant loadUserByUsername
+    => la méthode envoie une requête pour récup les données à la DB grâce à UserRepository
+    => Retourne un objet UserDetails (username, password encodé, type d'accès (role))
+
+
+3. Validation du mdp :
+    - BCryptPasswordEncoder (configuré dans SecurityConfig) : encoder le mdp avant de le mettre dans la DB
+    - Quand un user se log in : Spring Security compare le mdp encodé de l'objet UserDetails avec le mdp du formulaire envoyé passé à l'encodage
+    - Si les 2 mdp match : user authentifié + Spring Security vérifie si le role/type d'accès du user est accepté pour voir la page à laquelle il essaie d'accéder
+    - User redirigé vers la page "dashboard"
+
+4. Si erreur d'authentification :
+    - Si le user n'existe pas : exception UsernameNotFoundException
+    - Password match pas : AuthenticationException / BadCredentialsException
+    - Spring Security gère l'erreur et autorise l'utilisateur à essayer à nouveau
+
+

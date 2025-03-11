@@ -1,62 +1,62 @@
-DROP TABLE IF EXISTS Maison;
-DROP TABLE IF EXISTS Utilisateur;
-DROP TABLE IF EXISTS Piece;
-DROP TABLE IF EXISTS Outil;
-DROP TABLE IF EXISTS Objet;
+DROP TABLE IF EXISTS House;
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Room;
+DROP TABLE IF EXISTS Tool;
+DROP TABLE IF EXISTS ConnectedObject;
 
-CREATE TABLE Maison(
-                       id_Maison INT PRIMARY KEY,
-                       Nom VARCHAR(20),
+CREATE TABLE House (
+                       id_house INT PRIMARY KEY,
+                       name VARCHAR(20)
 );
 
-CREATE TABLE Utilisateur(
-                            id_Utilisateur INT,
-                            Pseudonyme VARCHAR(20),
-                            Age INT,
-                            Sexe VARCHAR(20),
-                            DateNaissance DATE,
-                            TypeDeMembre VARCHAR(20),
-                            Photo VARCHAR(20),
-                            Prenom VARCHAR(20),
-                            Nom VARCHAR(20),
-                            TypeAcces VARCHAR(20),
-                            NiveauExp VARCHAR(20),
-                            NbPts INT,
-                            MotDePasse VARCHAR(20),
-                            estConnecte BOOLEAN,
-                            id_Maison INT NOT NULL,
-                            PRIMARY KEY(id_Utilisateur),
-                            FOREIGN KEY(id_Maison) REFERENCES Maison(id_Maison)
+CREATE TABLE User (
+                      id_user INT,
+                      username VARCHAR(20),
+                      age INT,
+                      gender VARCHAR(20),
+                      birth_date DATE,
+                      member_type VARCHAR(20),
+                      photo VARCHAR(20),
+                      first_name VARCHAR(20),
+                      last_name VARCHAR(20),
+                      access_type VARCHAR(20),
+                      experience_level VARCHAR(20),
+                      points INT,
+                      password VARCHAR(20),
+                      is_connected BOOLEAN,
+                      id_house INT NOT NULL,
+                      PRIMARY KEY(id_user),
+                      FOREIGN KEY(id_house) REFERENCES House(id_house)
 );
 
-CREATE TABLE Pieces(
-                       id_Piece INT,
-                       Nom VARCHAR(50),
-                       Type VARCHAR(50),
-                       id_Maison INT NOT NULL,
-                       PRIMARY KEY(id_Piece),
-                       FOREIGN KEY(id_Maison) REFERENCES Maison(id_Maison)
+CREATE TABLE Room (
+                      id_room INT,
+                      name VARCHAR(50),
+                      type VARCHAR(50),
+                      id_house INT NOT NULL,
+                      PRIMARY KEY(id_room),
+                      FOREIGN KEY(id_house) REFERENCES House(id_house)
 );
 
-CREATE TABLE Outils(
-                       id_Outils INT,
-                       Nom VARCHAR(50),
-                       id_Piece INT,
-                       PRIMARY KEY(id_Outils),
-                       FOREIGN KEY(id_Piece) REFERENCES Pieces(id_Piece)
+CREATE TABLE Tool (
+                      id_tool INT,
+                      name VARCHAR(50),
+                      id_room INT,
+                      PRIMARY KEY(id_tool),
+                      FOREIGN KEY(id_room) REFERENCES Room(id_room)
 );
 
-CREATE TABLE Objet(
-                      id_Objets INT,
-                      Mode VARCHAR(20),
-                      Connectivité VARCHAR(20),
-                      Marque VARCHAR(20),
-                      DerniereInterraction VARCHAR(50),
-                      EtatBatterie INT,
-                      EstActiver LOGICAL,
-                      TypeObjet VARCHAR(50),
-                      Nom VARCHAR(20),
-                      id_Piece INT,
-                      PRIMARY KEY(id_Objets),
-                      FOREIGN KEY(id_Piece) REFERENCES Pieces(id_Piece)
+CREATE TABLE ConnectedObject (
+                        id_object INT,
+                        mode VARCHAR(20),
+                        connectivity VARCHAR(20),
+                        brand VARCHAR(20),
+                        last_interaction VARCHAR(50),
+                        battery_status INT,
+                        is_active BOOLEAN,
+                        object_type VARCHAR(50),
+                        name VARCHAR(20),
+                        id_room INT,
+                        PRIMARY KEY(id_object),
+                        FOREIGN KEY(id_room) REFERENCES Room(id_room)
 );

@@ -1,4 +1,4 @@
 package com.example.cydomotix.Model;
 
-public class Objet {
+public class Tool {
 }

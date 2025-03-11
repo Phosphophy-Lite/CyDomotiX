@@ -1,4 +1,4 @@
 package com.example.cydomotix.Model;
 
-public class Outil {
+public class Room {
 }
