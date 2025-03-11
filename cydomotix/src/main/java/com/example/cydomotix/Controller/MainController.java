@@ -21,4 +21,9 @@ public class MainController {
         return "home";
     }
 
+    @GetMapping("/page2")
+    public String showPage2(){
+        return "page2";
+    }
+
 }
