@@ -34,7 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register").permitAll() // Public pages (no authentication require)
+                        .requestMatchers("/", "/register", "/css/**", "/js/**", "/img/**").permitAll() // Public pages (no authentication required)
                         .requestMatchers("/admin/**").hasRole("ADMIN") // Pages in /admin/ are restricted to ADMIN users
                         .anyRequest().authenticated() // All other requests need authentication
                 )
