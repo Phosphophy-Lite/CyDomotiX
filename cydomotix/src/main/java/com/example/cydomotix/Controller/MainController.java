@@ -1,6 +1,8 @@
 package com.example.cydomotix.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +17,26 @@ public class MainController {
      */
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home() {
+        // Vérifie si l'utilisateur a déjà une session authentifiée en cours
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser")) { // anonymousUser : pas loggé
+            return "redirect:/dashboard"; // Rediriger les utilisateurs connectés au dashboard
+        }
 
-        /* Charge la page home.html quand on accède à la racine "/" du serveur web */
+        // Pas loggé : charge la page home.html quand on accède à la racine "/" du serveur web
         return "home";
     }
 
     @GetMapping("/page2")
     public String showPage2(){
         return "page2";
+    }
+
+    @GetMapping("/dashboard")
+    public String dashboard(){
+        return "dashboard";
     }
 
 }

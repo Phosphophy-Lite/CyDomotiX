@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS House;
-DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS `User`;
 DROP TABLE IF EXISTS Room;
 DROP TABLE IF EXISTS Tool;
 DROP TABLE IF EXISTS ConnectedObject;
@@ -9,9 +9,9 @@ CREATE TABLE House (
                        name VARCHAR(20)
 );
 
-CREATE TABLE User (
-                      id_user INT,
-                      username VARCHAR(20),
+CREATE TABLE `User` (
+                      id_user INT PRIMARY KEY,
+                      username VARCHAR(20) UNIQUE NOT NULL,
                       age INT,
                       gender VARCHAR(20),
                       birth_date DATE,
@@ -19,13 +19,12 @@ CREATE TABLE User (
                       photo VARCHAR(20),
                       first_name VARCHAR(20),
                       last_name VARCHAR(20),
-                      access_type VARCHAR(20),
+                      access_type VARCHAR(20) NOT NULL,
                       experience_level VARCHAR(20),
                       points INT,
-                      password VARCHAR(20),
+                      password VARCHAR(255) NOT NULL,
                       is_connected BOOLEAN,
                       id_house INT NOT NULL,
-                      PRIMARY KEY(id_user),
                       FOREIGN KEY(id_house) REFERENCES House(id_house)
 );
 

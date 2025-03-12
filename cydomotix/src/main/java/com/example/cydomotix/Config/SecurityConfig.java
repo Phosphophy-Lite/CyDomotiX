@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import static org.springframework.web.servlet.function.RequestPredicates.headers;
 
 
 /**
@@ -32,12 +35,21 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/css/**", "/js/**", "/img/**").permitAll() // Public pages (no authentication required)
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Pages in /admin/ are restricted to ADMIN users
-                        .anyRequest().authenticated() // All other requests need authentication
-                )
+                .authorizeHttpRequests(auth -> {
+
+                    // Allow H2 console only in dev mode
+                    if ("dev".equals(System.getProperty("spring.profiles.active", "dev"))) {
+                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
+                    }
+
+                    auth.requestMatchers("/", "/register", "/css/**", "/js/**", "/img/**").permitAll(); // Public pages (no authentication required)
+                    auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages in /admin/ are restricted to ADMIN users
+
+
+                    auth.anyRequest().authenticated(); // All other requests need authentication
+                })
                 .formLogin(login -> login // Configures form-based login
                         .loginPage("/login") // Redirects users to /login for authentication
                         .defaultSuccessUrl("/dashboard", true) // Redirect to dashboard page after login
@@ -57,19 +69,25 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID") // Delete the session cookie
                         .permitAll()
-                );
+                )
+                .csrf(csrf -> csrf.disable()) //disable csrf protection ; not recommended for prod. H2 console doesn't work with CSRF enabled.
+                .headers(headers -> headers.frameOptions((frameOptions) -> frameOptions.disable())); // Can be necessary to properly display H2-Console
+
+        // Manage user sessions
+        http.sessionManagement(session -> session
+                .invalidSessionUrl("/login?expired=true") // Redirect if user tries to access protected page with invalid session (expired ID or manually deleted cookie)
+                .maximumSessions(1) // Limit to one session per user
+                .expiredUrl("/login?session-expired=true") // Redirect when session is now expired (inactivity/timeout)
+        );
+
+        // Handle
+        http.exceptionHandling(exceptionHandling -> exceptionHandling
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.sendRedirect("/dashboard"); // Redirect to dashboard if access is denied
+                })
+        );
 
         return http.build();
-    }
-
-    /**
-     * Used by Spring Security to load user details during authentication
-     * @param userRepository
-     * @return
-     */
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new CustomUserDetailsService(userRepository);
     }
 
     /**

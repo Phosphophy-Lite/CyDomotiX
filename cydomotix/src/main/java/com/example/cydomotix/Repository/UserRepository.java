@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
     // Here, include custom CRUD methods
 
