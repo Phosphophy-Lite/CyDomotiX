@@ -11,6 +11,7 @@ import java.util.Optional;
 
 /**
  * Initializes a default Admin account for project showcase & testing purposes
+ * And a default Dev account
  */
 @Component
 public class AdminInitializer implements CommandLineRunner {
@@ -21,22 +22,32 @@ public class AdminInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
+    private void createPriviledgedUser(String username, String password, String role){
+
+        // Check if user already exists
+        Optional<User> priviledgedUser = userRepository.findByUsername(username);
+
+        if (priviledgedUser.isEmpty()) {
+            // Create a new user
+            User usr = new User(
+                    username,
+                    passwordEncoder.encode(password),
+                    role);
+
+            userRepository.save(usr);
+            System.out.println("Initialized admin account with credientials : " + usr.getUsername() + "/" + password);
+
+        }else{
+            System.out.println(username + "already exists.");
+        }
+    }
+
     @Override
     public void run(String... args) {
-        // Check if an admin user already exists
-        Optional<User> adminUser = userRepository.findByUsername("admin");
 
-        if (adminUser.isEmpty()) {
-            // Create a new admin user
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPassword(passwordEncoder.encode("adminpassword")); // Encrypt password
-            admin.setAccessType("ADMIN"); // sets authority to ADMIN
+        createPriviledgedUser("admin", "adminpassword", "ADMIN");
+        createPriviledgedUser("dev", "devpassword", "DEV");
 
-            userRepository.save(admin); // Save the admin user in DB
-            System.out.println("Default admin user created: admin/adminpassword");
-        } else {
-            System.out.println("Admin user already exists.");
-        }
     }
 }

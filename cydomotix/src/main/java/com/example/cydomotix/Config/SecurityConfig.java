@@ -7,14 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import static org.springframework.web.servlet.function.RequestPredicates.headers;
-
 
 /**
  * Configures authentication and authorization for the web app
@@ -39,13 +34,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> {
 
-                    // Allow H2 console only in dev mode
+                    // Allow H2 console only in dev mode. DELETE FOR PROD
                     if ("dev".equals(System.getProperty("spring.profiles.active", "dev"))) {
                         auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
                     }
 
-                    auth.requestMatchers("/", "/register", "/css/**", "/js/**", "/img/**").permitAll(); // Public pages (no authentication required)
+                    auth.requestMatchers("/", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Public pages (no authentication required)
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages in /admin/ are restricted to ADMIN users
+                    auth.requestMatchers("/dev/**", "/h2-console").hasRole("DEV");
 
 
                     auth.anyRequest().authenticated(); // All other requests need authentication
@@ -80,12 +76,10 @@ public class SecurityConfig {
                 .expiredUrl("/login?session-expired=true") // Redirect when session is now expired (inactivity/timeout)
         );
 
-        // Handle
         http.exceptionHandling(exceptionHandling -> exceptionHandling
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.sendRedirect("/dashboard"); // Redirect to dashboard if access is denied
-                })
+                .accessDeniedPage("/access-denied") // Custom access denied page
         );
+
 
         return http.build();
     }
