@@ -27,9 +27,9 @@ public class MainController {
         return "home";
     }
 
-    @GetMapping("/page2")
+    @GetMapping("dev/page2")
     public String showPage2(){
-        return "page2";
+        return "dev/page2";
     }
 
     @GetMapping("/dashboard")

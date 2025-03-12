@@ -34,15 +34,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> {
 
-                    // Allow H2 console only in dev mode. DELETE FOR PROD
+                    // DELETE FOR PROD
                     if ("dev".equals(System.getProperty("spring.profiles.active", "dev"))) {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
+                        auth.requestMatchers("/h2-console/**", "/h2-console", "/loginWIP").permitAll();
                     }
 
-                    auth.requestMatchers("/", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Public pages (no authentication required)
+                    auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Public pages (no authentication required)
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages in /admin/ are restricted to ADMIN users
                     auth.requestMatchers("/dev/**", "/h2-console").hasRole("DEV");
-
 
                     auth.anyRequest().authenticated(); // All other requests need authentication
                 })
@@ -77,7 +76,7 @@ public class SecurityConfig {
         );
 
         http.exceptionHandling(exceptionHandling -> exceptionHandling
-                .accessDeniedPage("/access-denied") // Custom access denied page
+                .accessDeniedPage("/error") // Custom error page
         );
 
 

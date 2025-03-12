@@ -7,14 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class CustomErrorController implements ErrorController {
 
-    @RequestMapping("/access-denied")
-    public String accessDenied() {
-        return "access-denied";  // Corresponds to the "access-denied.html" template
-    }
-
     @RequestMapping("/error")
     public String error() {
-        return "error";  // Corresponds to the "access-denied.html" template
+        return "error";
     }
 
 }
