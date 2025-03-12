@@ -14,7 +14,15 @@ body {
 }
 
 #formConnexion, #formInscription {
-    transition: opacity 0.3s ease-in-out;
+    transition: width 0.5 ease, opacity 0.5s ease-in-out;
+}
+
+.fade-out {
+    opacity: 0; /* Rendre l'élément invisible */
+}
+
+.fade-in {
+    opacity: 1; /* Rendre l'élément visible */
 }
 
 #main {
@@ -107,15 +115,18 @@ p {
     border: none; /* Supprime les bordures */
     outline: none; /* Enlève le contour bleu au focus (facultatif) */
     width: 12em;
+    /*font-size: 1.05em;*/
 }
 
 .signUpPartLine{
     border-bottom: lightgrey 2px solid;
     margin-top: 1em;
+    margin-left: 3em;
 }
 
 .signUpPart{
     margin-right: 3em;
+    
 }
 
 .endPage{
