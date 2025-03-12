@@ -14,7 +14,7 @@ public class User implements UserDetails {
 
     @Id // indique que cet attribut est la primary key de la table
     @GeneratedValue(strategy= GenerationType.IDENTITY) // id_user doit être auto incrémenté
-    private Long id_user;
+    private Integer id_user;
 
     @Column(nullable = false, unique = true)
     private String username;
