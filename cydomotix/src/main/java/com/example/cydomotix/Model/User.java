@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private int points;
 
     private boolean is_connected;
-    private int id_house; // Non-null foreign key
+    private Integer id_house; // Non-null foreign key
 
 
     public User(String username, String password, String access_type) {
@@ -120,7 +120,7 @@ public class User implements UserDetails {
     public boolean isConnected(){
         return this.is_connected;
     }
-    public int getIdHouse(){
+    public Integer getIdHouse(){
         return this.id_house;
     }
 
@@ -163,7 +163,7 @@ public class User implements UserDetails {
     public void setConnected(boolean newConnected){
         this.is_connected = newConnected;
     }
-    public void setIdHouse(int newIdHouse){
+    public void setIdHouse(Integer newIdHouse){
         this.id_house = newIdHouse;
     }
 

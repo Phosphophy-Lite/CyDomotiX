@@ -8,7 +8,7 @@ public class ConnectedObject {
 
     @Id // indique que cet attribut est la primary key de la table
     @GeneratedValue(strategy= GenerationType.IDENTITY) // id_house doit être auto incrémenté
-    private long id_object;
+    private Integer id_object;
 
     private String mode;
     private String connectivity;
@@ -18,13 +18,13 @@ public class ConnectedObject {
     private Boolean is_active;
     private String object_type;
     private String name;
-    private long id_room; // Clé étrangère
+    private Integer id_room; // Clé étrangère
 
 
-    public long getId_object() {
+    public Integer getId_object() {
         return id_object;
     }
-    public void setId_object(long id_object) {
+    public void setId_object(Integer id_object) {
         this.id_object = id_object;
     }
 
@@ -92,11 +92,11 @@ public class ConnectedObject {
         this.name = name;
     }
 
-    public long getId_room() {
+    public Integer getId_room() {
         return id_room;
     }
 
-    public void setId_room(long id_room) {
+    public void setId_room(Integer id_room) {
         this.id_room = id_room;
     }
 }

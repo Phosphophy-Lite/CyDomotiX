@@ -8,13 +8,13 @@ public class Room {
 
     @Id // indique que cet attribut est la primary key de la table
     @GeneratedValue(strategy= GenerationType.IDENTITY) // id_house doit être auto incrémenté
-    private long id_room;
+    private Integer id_room;
 
     private String name;
     private String type;
-    private long id_house; // Clé étangère
+    private Integer id_house; // Clé étangère
 
-    public long getId_room(){
+    public Integer getId_room(){
         return this.id_room;
     }
     public String getName(){
@@ -23,11 +23,11 @@ public class Room {
     public String getType(){
         return this.type;
     }
-    public long getId_house(){
+    public Integer getId_house(){
         return this.id_room;
     }
 
-    public void setId_room(long NewId_room){
+    public void setId_room(Integer NewId_room){
         this.id_room = NewId_room;
     }
     public void setName(String NewName){
@@ -36,7 +36,7 @@ public class Room {
     public void setType(String NewType){
         this.type = NewType;
     }
-    public void setId_house(long NewId_house){
+    public void setId_house(Integer NewId_house){
         this.id_house = NewId_house;
     }
 
