@@ -77,6 +77,7 @@ public class AuthController {
 
 
         model.addAttribute("user", new User()); // Nécessaire pour le formulaire d'inscription caché
+
         return "auth/login";
     }
 

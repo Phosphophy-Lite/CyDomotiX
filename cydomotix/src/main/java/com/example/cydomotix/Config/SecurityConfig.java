@@ -34,7 +34,7 @@ public class SecurityConfig {
 
                     // DELETE FOR PROD
                     if ("dev".equals(System.getProperty("spring.profiles.active", "dev"))) {
-                        auth.requestMatchers("/h2-console/**", "/h2-console", "/loginWIP").permitAll();
+                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
                     }
 
                     auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Public pages (no authentication required)

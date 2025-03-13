@@ -33,10 +33,11 @@ public class AdminInitializer implements CommandLineRunner {
             User usr = new User(
                     username,
                     passwordEncoder.encode(password),
-                    role);
+                    role
+            );
 
             userRepository.save(usr);
-            System.out.println("Initialized admin account with credientials : " + usr.getUsername() + "/" + password);
+            System.out.println("Initialized admin account with credentials : " + usr.getUsername() + "/" + password);
 
         }else{
             System.out.println(username + "already exists.");
