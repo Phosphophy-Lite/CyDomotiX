@@ -24,7 +24,6 @@ CREATE TABLE `User` (
                       points INT,
                       password VARCHAR(255) NOT NULL,
                       is_connected BOOLEAN,
-                      id_house INT NOT NULL,
                       FOREIGN KEY(id_house) REFERENCES House(id_house)
 );
 

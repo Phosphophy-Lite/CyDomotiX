@@ -17,7 +17,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    // Here, include custom CRUD methods
+    // Ici, inclure des méthodes CRUD personnalisées
+    // Ces méthodes sont automatiquement reconnues par CrudRepository comme des opérations CRUD (Créer, Lire, Mettre à jour, Supprimer) sur les attributs d'un utilisateur dans la base de données
+    // Ces méthodes communiquent automatiquement avec la base de données, envoyant des requêtes SQL pour créer, lire, mettre à jour ou supprimer
 
-    Optional<User> findByUsername(String username); // Find user by username for login
+    Optional<User> findByUsername(String username);
+    Optional<User> findById(Integer id);
 }

@@ -3,6 +3,7 @@ package com.example.cydomotix.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,7 +33,10 @@ public class User implements UserDetails {
 
     private int age;
     private String gender;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth_date;
+
     private String member_type;
     private String photo;
     private String first_name;
@@ -41,7 +45,6 @@ public class User implements UserDetails {
     private int points;
 
     private boolean is_connected;
-    private Integer id_house; // Non-null foreign key
 
 
     public User(String username, String password, String access_type) {
@@ -90,6 +93,9 @@ public class User implements UserDetails {
         return true;
     }
 
+    public Integer getId(){
+        return this.id_user;
+    }
 
     public int getAge(){
         return this.age;
@@ -124,9 +130,6 @@ public class User implements UserDetails {
 
     public boolean isConnected(){
         return this.is_connected;
-    }
-    public Integer getIdHouse(){
-        return this.id_house;
     }
 
     public void setUsername(String newUsername){
@@ -167,9 +170,6 @@ public class User implements UserDetails {
     }
     public void setConnected(boolean newConnected){
         this.is_connected = newConnected;
-    }
-    public void setIdHouse(Integer newIdHouse){
-        this.id_house = newIdHouse;
     }
 
 }

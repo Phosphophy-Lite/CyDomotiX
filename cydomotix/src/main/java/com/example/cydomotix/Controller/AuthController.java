@@ -27,25 +27,41 @@ public class AuthController {
      */
     @PostMapping("/register")
     public String registerUser(@Valid User user, BindingResult bindingResult, Model model) {
-        /* @Valid ensures the User object received through the form respects @NotNull / @Size, etc, constraints
-            on its attributes as defined in the User class
-            BindingResult contains validation errors if the object fails this validation.
-         */
+        /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
+           @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
+
+           BindingResult contient les erreurs de validation si l'objet ne satisfait pas ces contraintes.
+
+           User stocke l'objet utilisateur temporaire contenant les attributs remplis lors de l'inscription.
+        */
 
 
-        // Check if username already exists in the database
+        // Vérifie si le nom d'utilisateur existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
         if (userService.usernameExists(user.getUsername())) {
             bindingResult.rejectValue("username", "error.user", "Le nom d'utilisateur existe déjà.");
         }
 
+        // Afficher tous les messages d'erreur à la vue utilisateur
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
             model.addAttribute("user", user); // Keep user data for form re-population
             model.addAttribute("registrationError", "Veuillez corriger les erreurs dans le formulaire.");
-            return "auth/login";  // If there are errors, show the form again
+
+            return "redirect:auth/login?show=register"; // If there are errors, show the form again
         }
 
-        userService.registerUser(user); // Encrypt password and save to DB
+        // Enregistrer l'utilisateur dans la BDD (avec encryption de mot de passe) et récupère ses infos dans un objet
+        User registeredUser = userService.registerUser(user);
+
+        // Nous ne voulons pas stocker une image avant d'enregistrer l'utilisateur,
+        // sinon nous stockerions des images inutiles en cas d'erreur lors de l'enregistrement de l'utilisateur.
+
+        // Nous avons besoin d'un moyen pour récupérer l'image envoyée dans le formulaire,
+        // et obtenir un String uniqueFileName si l'enregistrement de l'image réussit également.
+
+        // Mettre à jour la photo de profil de l'utilisateur enregistré
+        // setUserProfilePicture(registeredUser, uniqueFileName);
+
         System.out.println("Successfully added " + user.getUsername() + "to the database.");
 
         return "redirect:/login?registerSuccess=true"; // Redirect to the login page after successful registration
