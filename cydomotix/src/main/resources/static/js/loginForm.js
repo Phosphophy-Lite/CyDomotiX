@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const urlParams = new URLSearchParams(window.location.search);
     const show = urlParams.get("show");
 
@@ -14,15 +14,16 @@ document.addEventListener("DOMContentLoaded", function() {
         signupForm.classList.add("hidden");
     }
 
-    document.getElementById("pChangeForm").addEventListener("click", function() {
+    document.getElementById("pChangeForm").addEventListener("click", function () {
         loginForm.classList.add("hidden");
         signupForm.classList.remove("hidden");
         main.classList.toggle("inscription-mode");
     });
 
-    document.getElementById("pChangeToLogin").addEventListener("click", function() {
+    document.getElementById("pChangeToLogin").addEventListener("click", function () {
         signupForm.classList.add("hidden");
         loginForm.classList.remove("hidden");
         main.classList.remove("inscription-mode");
     });
 });
+

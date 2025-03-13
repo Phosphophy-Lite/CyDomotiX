@@ -8,7 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity // Annotation qui dit que cette classe correspond à une table de notre BDD sql
@@ -35,7 +35,8 @@ public class User implements UserDetails {
     private String gender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birth_date;
+    @Column(nullable = true) // Allow null values
+    private LocalDate birth_date;
 
     private String member_type;
     private String photo;
@@ -103,7 +104,7 @@ public class User implements UserDetails {
     public String getGender(){
         return this.gender;
     }
-    public Date getBirthDate(){
+    public LocalDate getBirthDate(){
         return this.birth_date;
     }
     public String getMemberType(){
@@ -141,7 +142,7 @@ public class User implements UserDetails {
     public void setGender(String newGender){
         this.gender = newGender;
     }
-    public void setBirthDate(Date newBirthDate){
+    public void setBirthDate(LocalDate newBirthDate){
         this.birth_date = newBirthDate;
     }
     public void setMemberType(String newMemberType){

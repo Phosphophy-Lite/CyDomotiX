@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
@@ -26,7 +27,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult, Model model) {
+    public String registerUser(@Valid User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
            @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
 
@@ -41,13 +42,19 @@ public class AuthController {
             bindingResult.rejectValue("username", "error.user", "Le nom d'utilisateur existe déjà.");
         }
 
+        // Autorise à ne pas remplir forcément le champ date de naissance
+        // Si le champ du formulaire est laissé vide par l'utilisateur, le formulaire va envoyer un String vide
+        // C'est un problème car on autorise les valeurs null, mais pas les String non null mais vide car il y aura un problème de format de Date non reconnu
+        if (user.getBirthDate() != null && user.getBirthDate().toString().isEmpty()) {
+            user.setBirthDate(null); // Remplir alors cet attribut par null si le String envoyé est vide
+        }
+
         // Afficher tous les messages d'erreur à la vue utilisateur
         if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult.getAllErrors());
-            model.addAttribute("user", user); // Keep user data for form re-population
-            model.addAttribute("registrationError", "Veuillez corriger les erreurs dans le formulaire.");
-
-            return "redirect:auth/login?show=register"; // If there are errors, show the form again
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+            redirectAttributes.addFlashAttribute("user", user);
+            redirectAttributes.addFlashAttribute("registrationError", "Veuillez corriger les erreurs dans le formulaire.");
+            return "redirect:/login?show=register"; // Redirection vers le formulaire avec messages stockés temporairement
         }
 
         // Enregistrer l'utilisateur dans la BDD (avec encryption de mot de passe) et récupère ses infos dans un objet
