@@ -16,7 +16,7 @@ CREATE TABLE `User` (
                       gender VARCHAR(20),
                       birth_date DATE,
                       member_type VARCHAR(20),
-                      photo VARCHAR(20),
+                      photo VARCHAR(255),
                       first_name VARCHAR(20),
                       last_name VARCHAR(20),
                       access_type VARCHAR(20) NOT NULL,

@@ -10,13 +10,18 @@ Etapes d'authentification :
 
 2. Envoi de la requête de login :
     - Spring Security intercepte la requête quand on envoie le formulaire pour invoquer le process d'authentification :
-    - Utilise son interface UserDetailsService (et la classe custom CustomUserDetailsService) :
+    - Utilise son interface UserDetailsService (et la classe custom CustomUserDetailsService) pour :
+    => Automatiquement retrouver les champs correspondant au username et password si l'attribut html de l'input name est égal strictement au nom de l'attribut de la classe Java à recup
+        * on pourrait custom les noms des champs si on rajoute cette partie là dans Security Config .formlogin :
+            .usernameParameter("nomcustom")
+            .passwordParameter("nomcustom2")
+
     => Load le username et password du user à partir de la DB en utilisant loadUserByUsername
     => la méthode envoie une requête pour récup les données à la DB grâce à UserRepository
     => Retourne un objet UserDetails (username, password encodé, type d'accès (role))
 
 
-3. Validation du mdp :
+3. Validation du mdp
     - BCryptPasswordEncoder (configuré dans SecurityConfig) : encoder le mdp avant de le mettre dans la DB
     - Quand un user se log in : Spring Security compare le mdp encodé de l'objet UserDetails avec le mdp du formulaire envoyé passé à l'encodage
     - Si les 2 mdp match : user authentifié + Spring Security vérifie si le role/type d'accès du user est accepté pour voir la page à laquelle il essaie d'accéder

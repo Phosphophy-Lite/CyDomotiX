@@ -1,6 +1,8 @@
 package com.example.cydomotix.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,13 +19,16 @@ public class User implements UserDetails {
     private Integer id_user;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "Un pseudonyme est obligatoire.")
     private String username;
 
     @Column(nullable = false)
+    @NotBlank(message = "Un mot de passe est obligatoire.")
+    @Size(min = 6, message = "Le mot de passe doit faire au moins 6 caractères.")
     private String password;
 
     @Column(nullable = false)
-    private String access_type; // "ROLE_USER", "ROLE_ADMIN" etc
+    private String access_type = "USER"; // par défaut
 
     private int age;
     private String gender;

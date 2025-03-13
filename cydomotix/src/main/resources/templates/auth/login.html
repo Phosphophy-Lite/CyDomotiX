@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 
     <link rel="stylesheet" type="text/css" href="/css/login.css" th:href="@{/css/login.css}" />
-    <script src="/js/app.js" defer></script>
+    <script src="/js/loginForm.js" defer></script>
 
 
 
@@ -37,8 +37,14 @@
                         <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"/>
                     </svg>
                     <input id="inputMDP" type="password" name="password" placeholder="Entrez votre mot de passe" required>
-
                 </div>
+
+                <!-- Montre message d'erreur de login si les informations sont incorrectes -->
+                <div th:if="${errorMessage}">
+                    <p style="color: red;" th:text="${errorMessage}"></p>
+                </div>
+
+
                 <div class="endPage">
 
                     <div id="SeConnecter">
@@ -71,28 +77,27 @@
             <form th:action="@{/register}" method="post" enctype="multipart/form-data" th:object="${user}">
 
                 <div id="containerSignUp">
-
                     <div class="signUpPart">
 
                         <div class="signUpPartLine">
-                            <label for="pseudonyme">Pseudonyme :</label><br>
-                            <input type="text" class="SignUpInput"  th:field="*{username}" placeholder="Entrez votre pseudonyme" id="pseudonyme" name="pseudonyme" required ><br><br>
+                            <label for="username">Pseudonyme :</label><br>
+                            <input type="text" class="SignUpInput"  th:field="*{username}" id="username" placeholder="Entrez votre pseudonyme" required ><br><br>
                         </div>
 
 
                         <div class="signUpPartLine">
                             <label for="password">Mot de passe :</label><br>
-                            <input type="password" class="SignUpInput" placeholder="Entrez votre mot de passe" id="password" name="password" th:field="*{password}" required><br><br>
+                            <input type="password" class="SignUpInput" th:field="*{password}" id="password" placeholder="Entrez votre mot de passe" required><br><br>
                         </div>
 
                         <div class="signUpPartLine">
-                            <label for="nom">Nom :</label><br>
-                            <input type="text" id="nom" class="SignUpInput" placeholder="Entrez votre nom" name="nom" required><br><br>
+                            <label for="lastName">Nom :</label><br>
+                            <input type="text" class="SignUpInput" th:field="*{lastName}" id="lastName" placeholder="Entrez votre nom" required><br><br>
                         </div>
 
                         <div class="signUpPartLine">
-                            <label for="prenom">Prénom :</label><br>
-                            <input type="text" id="prenom"  class="SignUpInput" placeholder="Entrez votre prénom" name="prenom" required><br><br>
+                            <label for="firstName">Prénom :</label><br>
+                            <input type="text" class="SignUpInput" th:field="*{firstName}" id="firstName" placeholder="Entrez votre prénom" required><br><br>
                         </div>
 
                     </div>
@@ -100,36 +105,58 @@
                     <div class="signUpPart">
                         <br><br>
                         <label for="age">Âge :</label><br>
-                        <input type="number" id="age" name="age" required><br><br>
+                        <input type="number" th:field="*{age}" id="age"><br><br>
 
-                        <label for="sexe">Sexe :</label><br>
-                        <select id="sexe" name="sexe" required>
-                            <option value="">-- Choisir --</option>
+                        <label for="gender">Sexe :</label><br>
+                        <select th:field="*{gender}" id="gender" >
+                            <option value="" disabled>-- Choisir --</option>
                             <option value="homme">Homme</option>
                             <option value="femme">Femme</option>
                             <option value="autre">Autre</option>
                         </select><br><br>
 
-                        <label for="date_naissance">Date de naissance :</label><br>
-                        <input type="date" id="date_naissance" name="date_naissance" required><br><br>
+                        <label for="birthDate">Date de naissance :</label><br>
+                        <input type="date" th:field="*{birthDate}" id="birthDate"><br><br>
 
-                        <label for="type_membre">Type de membre :</label><br>
-                        <select id="type_membre" name="type_membre" required>
+                        <label for="memberType">Type de membre :</label><br>
+                        <select th:field="*{memberType}" id="memberType">
                             <option value="">-- Choisir --</option>
                             <option value="mère">Mère</option>
                             <option value="père">Père</option>
                             <option value="enfant">Enfant</option>
                         </select><br><br>
+
+                        <!--
                         <label for="photo">Photo :</label>
-                        <input type="file" id="photo" name="photo" accept="image/*" required>
+                        <input type="file" th:field="*{photo}" id="photo" accept="image/*"> -->
+
+                    </div>
+
+
+                    <!-- Afficher les erreurs d'inscription -->
+                    <div th:if="${registrationError}">
+                        <p style="color:red" th:text="${registrationError}"></p>
+                    </div>
+
+                    <!-- Erreur de validation du nom d'utilisateur -->
+                    <div th:if="${#fields.hasErrors('username')}">
+                        <p style="color:red" th:errors="*{username}"></p>
+                    </div>
+
+                    <!-- Erreur de validation du mot de passe -->
+                    <div th:if="${#fields.hasErrors('password')}">
+                        <p style="color:red" th:errors="*{password}"></p>
+                    </div>
+
+                    <!-- Message de validation -->
+                    <div th:if="${param.registerSuccess}">
+                        <p style="color:green">Inscription effectuée. Veuillez-vous connecter.</p>
                     </div>
 
 
                 </div>
 
                 <div class="endPage">
-
-
                     <input type="submit" class="bouton" value="S'INSCRIRE">
                 </div>
 
@@ -150,45 +177,6 @@
 
 </div>
 
-
-
-</div>
-
-
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const show = urlParams.get("show");
-
-        const loginForm = document.getElementById("loginForm");
-        const signupForm = document.getElementById("signupForm");
-        const main = document.getElementById("main");
-
-        if (show === "register") {
-            signupForm.classList.remove("hidden");
-            loginForm.classList.add("hidden");
-        } else {
-            loginForm.classList.remove("hidden");
-            signupForm.classList.add("hidden");
-        }
-
-        document.getElementById("pChangeForm").addEventListener("click", function() {
-            loginForm.classList.add("hidden");
-            signupForm.classList.remove("hidden");
-            main.classList.toggle("inscription-mode");
-        });
-
-        document.getElementById("pChangeToLogin").addEventListener("click", function() {
-            signupForm.classList.add("hidden");
-            loginForm.classList.remove("hidden");
-            main.classList.remove("inscription-mode");
-        });
-    });
-
-
-</script>
 </body>
 
 </html>

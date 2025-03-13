@@ -20,12 +20,15 @@ public class UserService {
     }
 
     public User registerUser(User user) {
+        System.out.println("Creating new user " + user.getUsername());
+
         if (usernameExists(user.getUsername())) {
             throw new IllegalArgumentException("Pseudonym already in use.");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccessType("ROLE_USER"); // Default role for new users
+        user.setAccessType("USER"); // Default role for new users
+
         return userRepository.save(user);
     }
 

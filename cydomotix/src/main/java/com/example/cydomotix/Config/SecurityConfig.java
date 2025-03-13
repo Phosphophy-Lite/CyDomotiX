@@ -1,7 +1,5 @@
 package com.example.cydomotix.Config;
 
-import com.example.cydomotix.Repository.UserRepository;
-import com.example.cydomotix.Service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -51,11 +49,11 @@ public class SecurityConfig {
                         .permitAll()
                         .failureHandler((request, response, exception) -> { // If credentials are invalid, give a feedback to the user
                             if (exception instanceof BadCredentialsException) {
-                                request.setAttribute("errorMessage", "Username or password invalid");
+                                request.getSession().setAttribute("errorMessage", "Pseudonyme ou mot de passe invalide.");
                             } else {
-                                request.setAttribute("errorMessage", "Login failed");
+                                request.getSession().setAttribute("errorMessage", "Échec de connexion. Veuillez réessayer.");
                             }
-                            response.sendRedirect("/login?error=true"); // Redirect back to login page with error message
+                            response.sendRedirect("/login?error=true"); // Redirect back to login page
                         })
                 )
                 .logout(logout -> logout
