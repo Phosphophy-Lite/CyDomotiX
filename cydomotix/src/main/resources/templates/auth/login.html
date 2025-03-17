@@ -108,11 +108,9 @@
                         <input type="number" th:field="*{age}" id="age"><br><br>
 
                         <label for="gender">Sexe :</label><br>
-                        <select th:field="*{gender}" id="gender" >
-                            <option value="" disabled>-- Choisir --</option>
-                            <option value="homme">Homme</option>
-                            <option value="femme">Femme</option>
-                            <option value="autre">Autre</option>
+                        <select th:field="*{gender}" id="gender">
+                            <!-- Display all possible values as options for enum Gender -->
+                            <option th:each="gender : ${T(com.example.cydomotix.Model.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
                         </select><br><br>
 
                         <label for="birthDate">Date de naissance :</label><br>
@@ -120,10 +118,9 @@
 
                         <label for="memberType">Type de membre :</label><br>
                         <select th:field="*{memberType}" id="memberType">
-                            <option value="">-- Choisir --</option>
-                            <option value="mère">Mère</option>
-                            <option value="père">Père</option>
-                            <option value="enfant">Enfant</option>
+                            <option value="" selected disabled>-- Choisir --</option>
+                            <!-- Display all possible values as options for enum MemberType -->
+                            <option th:each="memberType : ${T(com.example.cydomotix.Model.MemberType).values()}" th:value="${memberType}" th:text="${memberType.displayName}"></option>
                         </select><br><br>
 
                         <!--

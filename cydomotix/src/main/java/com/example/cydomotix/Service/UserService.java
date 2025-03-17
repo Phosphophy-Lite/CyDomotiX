@@ -1,5 +1,6 @@
 package com.example.cydomotix.Service;
 
+import com.example.cydomotix.Model.AccessType;
 import com.example.cydomotix.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,7 +44,7 @@ public class UserService {
 
         // Encode password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccessType("USER"); // Default role for new users
+        user.setAccessType(AccessType.USER); // Default role for new users
 
         // Use a CrudRepository method to save the user object into the corresponding database
         return userRepository.save(user);

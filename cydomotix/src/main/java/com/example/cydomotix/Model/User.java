@@ -11,12 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 
-@Entity // Annotation qui dit que cette classe correspond à une table de notre BDD sql
-@Table(name="`User`") // indique le nom de cette table associée
+@Entity // This class corresponds to an entity in the database
+@Table(name="`User`") // associated SQL table name
 public class User implements UserDetails {
 
-    @Id // indique que cet attribut est la primary key de la table
-    @GeneratedValue(strategy= GenerationType.IDENTITY) // id_user doit être auto incrémenté
+    @Id // primary key in the SQL table
+    @GeneratedValue(strategy= GenerationType.IDENTITY) // automatically incremented
     private Integer id_user;
 
     @Column(nullable = false, unique = true)
@@ -29,26 +29,30 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private String access_type = "USER"; // par défaut
+    @Enumerated(EnumType.STRING)
+    private AccessType access_type = AccessType.USER; // default access type granted on registration
 
-    private int age;
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = true) // Allow null values
     private LocalDate birth_date;
 
-    private String member_type;
+    @Enumerated(EnumType.STRING)
+    private MemberType member_type;
+
+    private int points = 0;
+    private int age;
+    private boolean is_connected;
+
     private String photo;
     private String first_name;
     private String last_name;
     private String experience_level;
-    private int points;
-
-    private boolean is_connected;
 
 
-    public User(String username, String password, String access_type) {
+    public User(String username, String password, AccessType access_type) {
         this.username = username;
         this.password = password;
         this.access_type = access_type;
@@ -101,13 +105,13 @@ public class User implements UserDetails {
     public int getAge(){
         return this.age;
     }
-    public String getGender(){
+    public Gender getGender(){
         return this.gender;
     }
     public LocalDate getBirthDate(){
         return this.birth_date;
     }
-    public String getMemberType(){
+    public MemberType getMemberType(){
         return this.member_type;
     }
     public String getPhoto(){
@@ -119,7 +123,7 @@ public class User implements UserDetails {
     public String getLastName(){
         return this.last_name;
     }
-    public String getAccessType(){
+    public AccessType getAccessType(){
         return this.access_type;
     }
     public String getExperienceLevel(){
@@ -139,13 +143,13 @@ public class User implements UserDetails {
     public void setAge(int newAge){
         this.age = newAge;
     }
-    public void setGender(String newGender){
+    public void setGender(Gender newGender){
         this.gender = newGender;
     }
     public void setBirthDate(LocalDate newBirthDate){
         this.birth_date = newBirthDate;
     }
-    public void setMemberType(String newMemberType){
+    public void setMemberType(MemberType newMemberType){
         this.member_type = newMemberType;
     }
     public void setPhoto(String newPhoto){
@@ -157,7 +161,7 @@ public class User implements UserDetails {
     public void setLastName(String newLastName){
         this.last_name = newLastName;
     }
-    public void setAccessType(String newAccessType){
+    public void setAccessType(AccessType newAccessType){
         this.access_type = newAccessType;
     }
     public void setExperienceLevel(String newExperienceLevel){
