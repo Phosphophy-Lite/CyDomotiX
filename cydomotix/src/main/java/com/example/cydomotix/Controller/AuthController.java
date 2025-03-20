@@ -23,11 +23,10 @@ public class AuthController {
      * Reception d'une requête POST du formulaire register sur la page de login pour l'inscription
      * @param user
      * @param bindingResult
-     * @param model
      * @return
      */
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String registerUser(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
            @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
 
@@ -103,6 +102,4 @@ public class AuthController {
 
         return "auth/login";
     }
-
-
 }

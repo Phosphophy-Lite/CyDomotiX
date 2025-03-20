@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Création Type d'Objet</title>
+    <script src="/js/objTypeCreation.js" defer></script>
+</head>
+
+<body>
+    <table id="obj-types-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Champs</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <!-- Affichage de chaque ligne d'un type d'objet -->
+            <tr th:each="objectType : ${objectTypes}">
+                <td th:text="${objectType.name}"></td>
+                <td>
+                    <!-- Affichage de sa liste d'attributs et leur type -->
+                    <ul>
+                        <li th:each="attribute : ${objectType.attributes}">
+                            <!-- th:text="|...|" : concaténation de chaînes formattées -->
+                            <p th:text="|${attribute.name} : ${attribute.valueType}|"></p>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <a class="delete-btn" href="#" th:data-id="${objectType.id}">
+                        <button>Supprimer</button>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
+
+    <h1>Créer un nouveau Type d'Objet</h1>
+
+    <form th:action="@{/create}" method="POST" th:object="${objectType}">
+        <label for="name">Nom du type d'objet:</label>
+        <input type="text" id="name" th:field="*{name}" required>
+        <br>
+
+        <h3>Attributs du type d'objet:</h3>
+
+        <table id="attributesTable">
+            <thead>
+                <tr>
+                    <th>Nom de l'attribut</th>
+                    <th>Type de la valeur</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="attribute, iterStat : *{attributes}">
+                    <td><input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required></td>
+                    <td><input type="text" th:field="*{attributes[__${iterStat.index}__].valueType}" required></td>
+                    <td><button type="button" onclick="removeRow(this)">Supprimer</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="button" onclick="addRow()">Ajouter un attribut</button><br>
+        <button type="submit">Enregistrer</button><br>
+
+
+        <!-- Affichage de l'erreur -->
+        <div th:if="${#fields.hasErrors('name')}">
+            <p style="color: red;" th:errors="*{name}"></p>
+        </div>
+
+        <!-- Affichage du message de succès -->
+        <div th:if="${successMessage}" style="color: green; font-weight: bold;">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+    </form>
+
+</body>
+</html>

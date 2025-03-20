@@ -37,16 +37,16 @@ public class UserService {
     public User registerUser(User user) {
         System.out.println("Creating new user " + user.getUsername());
 
-        // Check if username isn't already taken by another registered user
+        // Vérifie que le pseudo n'est pas déjà utilisé par un autre utilisateur dans la BDD
         if (usernameExists(user.getUsername())) {
             throw new IllegalArgumentException("Pseudonym already in use.");
         }
 
-        // Encode password
+        // Chiffre le mot de passe
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAccessType(AccessType.USER); // Default role for new users
 
-        // Use a CrudRepository method to save the user object into the corresponding database
+        // Utilise une méthode de CrudRepository pour sauvegarder l'utilisateur dans la BDD
         return userRepository.save(user);
     }
 
@@ -63,8 +63,8 @@ public class UserService {
 
         if (optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
-            existingUser.setPhoto(pfpUrl);  // Update profile picture link
-            return userRepository.save(user); // Save changes
+            existingUser.setPhoto(pfpUrl);  // Mets à jour le lien de l'image
+            return userRepository.save(user); // Sauvegarde les changements
         } else {
             throw new RuntimeException("User not found with ID: " + user.getId());
         }

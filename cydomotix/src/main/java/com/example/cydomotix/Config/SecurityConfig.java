@@ -2,12 +2,18 @@ package com.example.cydomotix.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 /**
  * Configures authentication and authorization for the web app
@@ -15,6 +21,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Imports HttpSecurityConfiguration
 @Configuration // config automatically loaded when app launched
 public class SecurityConfig {
+
+    /**
+     * Defines the role hierarchy of users so higher roles are granted all permissions of lower roles
+     * @return
+     */
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.fromHierarchy("ROLE_DEV > ROLE_ADMIN > ROLE_USER");
+    }
 
     /**
      * Defines :
@@ -38,7 +53,7 @@ public class SecurityConfig {
                     }
 
                     auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Public pages (no authentication required)
-                    auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages in /admin/ are restricted to ADMIN users
+                    auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages in /admin/ are restricted to ADMIN users or higher
                     auth.requestMatchers("/dev/**", "/h2-console").hasRole("DEV");
 
                     auth.anyRequest().authenticated(); // All other requests need authentication

@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collection;
 
 @Entity // This class corresponds to an entity in the database
@@ -43,7 +44,6 @@ public class User implements UserDetails {
     private MemberType member_type;
 
     private int points = 0;
-    private int age;
     private boolean is_connected;
 
     private String photo;
@@ -102,9 +102,12 @@ public class User implements UserDetails {
         return this.id_user;
     }
 
-    public int getAge(){
-        return this.age;
+    private int calculateAge(){
+        LocalDate current_date = LocalDate.now();
+        Period period = Period.between(birth_date, current_date);
+        return period.getYears();
     }
+
     public Gender getGender(){
         return this.gender;
     }
@@ -140,9 +143,7 @@ public class User implements UserDetails {
     public void setUsername(String newUsername){
         this.username = newUsername;
     }
-    public void setAge(int newAge){
-        this.age = newAge;
-    }
+
     public void setGender(Gender newGender){
         this.gender = newGender;
     }
