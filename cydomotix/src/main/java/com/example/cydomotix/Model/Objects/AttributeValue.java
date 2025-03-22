@@ -9,7 +9,10 @@ public class AttributeValue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_attribute_value;
-    private String value;
+
+    private Integer int_value;
+    private Double double_value;
+    private String string_value;
 
     // Many instances of AttributeValue can be associated to one instance of these entities
 
@@ -28,14 +31,6 @@ public class AttributeValue {
         return id_attribute_value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     public ConnectedObject getConnectedObject() {
         return connectedObject;
     }
@@ -50,5 +45,29 @@ public class AttributeValue {
 
     public void setObjectAttribute(ObjectAttribute objectAttribute) {
         this.objectAttribute = objectAttribute;
+    }
+
+    public Integer getInt_value() {
+        return int_value;
+    }
+
+    public void setInt_value(Integer int_value) {
+        this.int_value = int_value;
+    }
+
+    public Double getDouble_value() {
+        return double_value;
+    }
+
+    public void setDouble_value(Double double_value) {
+        this.double_value = double_value;
+    }
+
+    public String getString_value() {
+        return string_value;
+    }
+
+    public void setString_value(String string_value) {
+        this.string_value = string_value;
     }
 }

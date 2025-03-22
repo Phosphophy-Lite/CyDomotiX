@@ -20,14 +20,14 @@ public class ObjectTypeController {
     private ObjectTypeService objectTypeService;
 
     @GetMapping("/admin/objtypes")
-    public String objectTypeForm(HttpSession session, Model model) {
+    public String objectTypeForm(Model model) {
         ObjectType objectType = new ObjectType();
         objectType.setAttributes(new ArrayList<>());
 
         // Liste des types déjà enregistrés
         model.addAttribute("objectTypes", objectTypeService.getAllObjectTypes());
 
-        // Pour le nouvel objet à enregistrer avec le formulaire
+        // Pour le nouveau type d'objet à enregistrer avec le formulaire
         model.addAttribute("objectType", objectType);
         model.addAttribute("attributes", objectType.getAttributes()); // sa liste d'attributs associés
 
@@ -47,7 +47,7 @@ public class ObjectTypeController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("objectTypes", objectTypeService.getAllObjectTypes());
 
-            // Pour le nouvel objet à enregistrer avec le formulaire
+            // Pour le nouveau type d'objet à enregistrer avec le formulaire
             model.addAttribute("objectType", objectType);
             model.addAttribute("attributes", objectType.getAttributes()); // sa liste d'attributs associés
 

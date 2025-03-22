@@ -13,7 +13,7 @@ import java.time.Period;
 import java.util.Collection;
 
 @Entity // This class corresponds to an entity in the database
-@Table(name="`User`") // associated SQL table name
+@Table(name="Users") // associated SQL table name
 public class User implements UserDetails {
 
     @Id // primary key in the SQL table

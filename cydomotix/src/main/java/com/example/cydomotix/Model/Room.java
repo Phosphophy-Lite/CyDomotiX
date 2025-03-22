@@ -12,9 +12,8 @@ public class Room {
 
     private String name;
     private String type;
-    private Integer id_house; // Clé étangère
 
-    public Integer getId_room(){
+    public Integer getId(){
         return this.id_room;
     }
     public String getName(){
@@ -23,21 +22,13 @@ public class Room {
     public String getType(){
         return this.type;
     }
-    public Integer getId_house(){
-        return this.id_room;
-    }
 
-    public void setId_room(Integer NewId_room){
-        this.id_room = NewId_room;
-    }
+
     public void setName(String NewName){
         this.name = NewName;
     }
     public void setType(String NewType){
         this.type = NewType;
-    }
-    public void setId_house(Integer NewId_house){
-        this.id_house = NewId_house;
     }
 
 }

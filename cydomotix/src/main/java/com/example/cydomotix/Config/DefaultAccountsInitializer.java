@@ -15,7 +15,7 @@ import java.util.Optional;
  * And a default Dev account
  */
 @Component
-public class AdminInitializer implements CommandLineRunner {
+public class DefaultAccountsInitializer implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
@@ -24,12 +24,12 @@ public class AdminInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
 
-    private void createPriviledgedUser(String username, String password, AccessType role){
+    private void createDefaultUser(String username, String password, AccessType role){
 
         // Check if user already exists
-        Optional<User> priviledgedUser = userRepository.findByUsername(username);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
 
-        if (priviledgedUser.isEmpty()) {
+        if (optionalUser.isEmpty()) {
             // Create a new user
             User usr = new User(
                     username,
@@ -38,7 +38,7 @@ public class AdminInitializer implements CommandLineRunner {
             );
 
             userRepository.save(usr);
-            System.out.println("Initialized admin account with credentials : " + usr.getUsername() + "/" + password);
+            System.out.println("Initialized default account with credentials : " + usr.getUsername() + "/" + password);
 
         }else{
             System.out.println(username + "already exists.");
@@ -48,8 +48,9 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        createPriviledgedUser("admin", "adminpassword", AccessType.ADMIN);
-        createPriviledgedUser("dev", "devpassword", AccessType.DEV);
+        createDefaultUser("admin", "adminpassword", AccessType.ADMIN);
+        createDefaultUser("dev", "devpassword", AccessType.DEV);
+        createDefaultUser("user", "userpassword", AccessType.USER);
 
     }
 }

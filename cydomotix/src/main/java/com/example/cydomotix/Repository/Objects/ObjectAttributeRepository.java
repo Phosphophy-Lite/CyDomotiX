@@ -3,9 +3,11 @@ package com.example.cydomotix.Repository.Objects;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface ObjectAttributeRepository extends CrudRepository<ObjectAttribute, Integer> {
 
     /*

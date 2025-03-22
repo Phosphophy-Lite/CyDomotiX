@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Création Object Connecté</title>
+    <script src="/js/connectedObjCreation.js" defer></script>
+</head>
+
+<body>
+    <!--
+    <table id="obj-types-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Champs</th>
+                <th>Valeurs</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>-->
+        <!-- Affichage de chaque ligne. 1 ligne = 1 object connecté -->
+            <!--<tr th:each="connectedObject : ${connectedObjects}">
+                <td th:text="${connectedObject.name}"></td>
+                <td th:text="${connectedObject.objectType.name}"></td>
+                <td>-->
+                    <!-- Affichage de sa liste d'attributs et leur type -->
+                    <!--<tr th:each="attribute : ${connectedObject.objectType.attributes}">
+                        <td>
+                            <p th:text="${attribute.name}"></p>
+                        </td>
+                    </tr>
+                </td>
+                <td>-->
+                    <!-- Affichage des valeurs des champs d'attributs -->
+                    <!--<tr th:each="attribute : ${connectedObject.objectType.attributes}">
+                        <td>
+                            <p th:text="${attribute.attributeValue.value}"></p>
+                        </td>
+                    </tr>
+                </td>
+                <td>
+                    <a class="delete-btn" href="#" th:data-id="${connectedObject.id}">
+                        <button>Supprimer</button>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>-->
+
+    <br/><br/>
+
+    <h1>Ajouter un nouvel object connecté</h1>
+
+    <form th:action="@{/add}" method="POST" th:object="${connectedObject}">
+        <label for="name">Nom de l'objet :</label>
+        <input type="text" id="name" th:field="*{name}" required>
+        <br>
+        <label for="type">Type de l'objet :</label>
+        <select id="type" name="objectType" onchange="loadAttributes(this.value)" required>
+            <option value="" th:disabled="disabled" th:selected="selected">-- Choisir un type --</option>
+            <option th:each="objectType : ${objectTypes}" th:value="${objectType.id}" th:text="${objectType.name}"></option>
+        </select>
+
+        <h3>Champs :</h3>
+
+        <table id="attributesTable">
+            <thead>
+                <tr>
+                    <th>Attribut</th>
+                    <th>Valeur</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <!-- Attributs spécifiques au type selectionné -->
+            </tbody>
+        </table>
+
+        <button type="submit">Enregistrer</button><br>
+
+
+        <!-- Affichage de l'erreur -->
+        <div th:if="${#fields.hasErrors('name')}">
+            <p style="color: red;" th:errors="*{name}"></p>
+        </div>
+
+        <!-- Affichage du message de succès -->
+        <div th:if="${successMessage}" style="color: green; font-weight: bold;">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+    </form>
+
+</body>
+</html>

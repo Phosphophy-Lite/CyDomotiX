@@ -21,7 +21,7 @@ public class ObjectType {
 
     // Can be associated to multiple instances of ConnectedObjects
     @OneToMany(mappedBy = "objectType", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ConnectedObject> objects;  // Liste des objets de ce type
+    private List<ConnectedObject> objects = new ArrayList<>();  // Liste des objets de ce type
 
     public Integer getId() {
         return id_object_type;

@@ -23,21 +23,6 @@ public class ObjectAttributeService {
         System.out.println("object attribute saved");
     }
 
-    /**
-     * Save multiple attributes for a specified type of object
-     * @param objType The object type to save
-     * @param attributeNames The names of the attributes
-     * @param attributeTypeValues The types of the attributes (INT, BOOLEAN...)
-     */
-    public void saveAttributesForObjectType(ObjectType objType, List<String> attributeNames, List<String> attributeTypeValues) {
-        for (int i = 0; i < attributeNames.size(); i++) {
-            ObjectAttribute objectAttribute = new ObjectAttribute();
-            objectAttribute.setName(attributeNames.get(i));
-            objectAttribute.setValueType(attributeTypeValues.get(i));
-            objectAttribute.setObjectType(objType);  // Associate attribute to object type
-            save(objectAttribute);
-        }
-    }
 
     // Récupérer tous les attributs d'un type d'objet
     public List<ObjectAttribute> getAttributesForObjectType(ObjectType objType) {

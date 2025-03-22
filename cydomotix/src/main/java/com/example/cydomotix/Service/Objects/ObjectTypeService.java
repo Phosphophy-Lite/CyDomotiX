@@ -33,6 +33,7 @@ public class ObjectTypeService {
             throw new IllegalArgumentException("Object Type name already exists.");
         }
 
+        // Sauvegarde automatiquement les liste des attributs aussi grace à CascadeType.ALL spécifié dans l'attribut de classe
         objectTypeRepository.save(objectType);
     }
 
@@ -42,6 +43,20 @@ public class ObjectTypeService {
      */
     public List<ObjectType> getAllObjectTypes() {
         return objectTypeRepository.findAll();
+    }
+
+    /**
+     * Récupère le type d'objet de l'id spécifié
+     * @param id
+     * @return
+     */
+    public ObjectType getObjectTypeById(Integer id) {
+        if(objectTypeRepository.findById(id).isPresent()) {
+            return objectTypeRepository.findById(id).get();
+        }
+        else {
+            throw new IllegalArgumentException("Object Type with id " + id + " does not exist.");
+        }
     }
 
     /**
