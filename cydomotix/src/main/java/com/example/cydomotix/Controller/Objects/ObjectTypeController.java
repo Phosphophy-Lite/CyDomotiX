@@ -1,7 +1,12 @@
 package com.example.cydomotix.Controller.Objects;
 
+import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
+import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
+import com.example.cydomotix.Service.Objects.AttributeValueService;
+import com.example.cydomotix.Service.Objects.ConnectedObjectService;
+import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RequestMapping("/admin/object-type") // Toutes les méthodes de cette classe seront relative à une URL commençant par ceci (pas besoin d'être un vrai dossier)
 @Controller
@@ -18,6 +24,13 @@ public class ObjectTypeController {
 
     @Autowired
     private ObjectTypeService objectTypeService;
+
+    @Autowired
+    private ConnectedObjectService connectedObjectService;
+    @Autowired
+    private AttributeValueService attributeValueService;
+    @Autowired
+    private ObjectAttributeService objectAttributeService;
 
     /**
      * Afficher la page avec le formulaire pour créer un nouveau type objet (ObjectType).
@@ -87,8 +100,23 @@ public class ObjectTypeController {
      */
     @GetMapping("/delete/{id}")
     public String deleteObjectType(@PathVariable("id") Integer id) {
+
+        List<ConnectedObject> connectedObjectsList = connectedObjectService.getConnectedObjectsByObjectTypeId(id);
+        for (ConnectedObject obj : connectedObjectsList) {
+            // Supprimer d'abord les AttributeValue liés aux ConnectedObjects du type à supprimer
+            attributeValueService.deleteByConnectedObjectId(obj.getId());
+
+            // Supprimer les ConnectedObjects du type à supprimer
+            connectedObjectService.deleteConnectedObject(obj.getId());
+        }
+
+        // Supprimer les ObjectAttributes liés au type à supprimer
+        objectAttributeService.deleteByObjectTypeId(id);
+
+        // Supprimer le type
         objectTypeService.deleteObjectType(id);
         return "redirect:/admin/object-type"; // Recharge la page avec la nouvelle liste
     }
 
 }
+

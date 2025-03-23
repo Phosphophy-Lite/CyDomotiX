@@ -1,5 +1,7 @@
 package com.example.cydomotix.Service.Objects;
 
+import com.example.cydomotix.Model.Objects.AttributeValue;
+import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
 import com.example.cydomotix.Repository.Objects.ObjectAttributeRepository;
@@ -13,6 +15,8 @@ public class ObjectAttributeService {
 
     @Autowired
     private ObjectAttributeRepository objectAttributeRepository;
+    @Autowired
+    private ObjectTypeService objectTypeService;
 
     /**
      * Save an attribute (for an object type)
@@ -36,6 +40,16 @@ public class ObjectAttributeService {
         else {
             throw new IllegalArgumentException("Object Attribute with id " + id + " does not exist.");
         }
+    }
+
+    /**
+     * Supprime tous les champs d'un type d'objet spécifié par id
+     * @param id Id du type d'objet (ObjectType)
+     */
+    public void deleteByObjectTypeId(Integer id){
+        ObjectType type = objectTypeService.getObjectTypeById(id);
+        List<ObjectAttribute> attributes = type.getAttributes();
+        objectAttributeRepository.deleteAll(attributes);
     }
 
 }

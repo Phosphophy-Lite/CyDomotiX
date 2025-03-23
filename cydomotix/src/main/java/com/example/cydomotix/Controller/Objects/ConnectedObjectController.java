@@ -129,3 +129,4 @@ public class ConnectedObjectController {
         return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
     }
 }
+
