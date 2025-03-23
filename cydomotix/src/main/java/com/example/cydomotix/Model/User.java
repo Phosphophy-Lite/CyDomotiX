@@ -12,11 +12,11 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
 
-@Entity // This class corresponds to an entity in the database
-@Table(name="Users") // associated SQL table name
+@Entity // Annotation qui dit que cette classe correspond à une table de notre BDD sql
+@Table(name="Users") // Table SQL associée
 public class User implements UserDetails {
 
-    @Id // primary key in the SQL table
+    @Id // clé primaire
     @GeneratedValue(strategy= GenerationType.IDENTITY) // automatically incremented
     private Integer id_user;
 
@@ -31,13 +31,13 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AccessType access_type = AccessType.USER; // default access type granted on registration
+    private AccessType access_type = AccessType.USER; // permissions par défaut après inscription
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = true) // Allow null values
+    @Column(nullable = true) // Autoriser les valeurs null si l'utilisateur ne veut pas renseigner sa date de naissance
     private LocalDate birth_date;
 
     @Enumerated(EnumType.STRING)
@@ -62,7 +62,7 @@ public class User implements UserDetails {
 
     }
 
-    // Security methods for Spring Security
+    // Méthode de récupération des permissions pour Spring Security
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("ROLE_" + access_type);

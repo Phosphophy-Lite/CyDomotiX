@@ -26,16 +26,16 @@ public class ConnectedObject {
 
     private Integer id_room; // Clé étrangère
 
-    // Many instances of ConnectedObject can be associated to one instance of ObjectType
-    // <=> Foreign key pointing to parent entity ObjectType
+    // Plusieurs instances de ConnectedObject peuvent être associées à 1 instance d'ObjectType
+    // Clé étrangère pointant vers entité mère (ObjectType)
     @ManyToOne
     @JoinColumn(name = "id_type", nullable = false)
     private ObjectType objectType;
 
-    // One instance of ConnectedObject can have multiple attribute values
-    // mappedBy : owner of the relationship
-    // cascade : all operations (persist, merge, remove) are spread to associated entities
-    // orphanRemoval : delete child entity if no longer associated by parent entity
+    // Une seule instance de ConnectedObject peut avoir plusieurs AttributeValue associées
+    // mappedBy : propriétaire de la relation
+    // cascade : toutes les opérations (persist, merge, remove) sont étendues aux entités associées
+    // orphanRemoval : supprimer l'entité enfant si il n'a plus de parent
     @OneToMany(mappedBy = "connectedObject", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AttributeValue> attributeValueList = new ArrayList<>();
 

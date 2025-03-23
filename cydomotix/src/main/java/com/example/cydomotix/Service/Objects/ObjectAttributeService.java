@@ -1,7 +1,5 @@
 package com.example.cydomotix.Service.Objects;
 
-import com.example.cydomotix.Model.Objects.AttributeValue;
-import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
 import com.example.cydomotix.Repository.Objects.ObjectAttributeRepository;

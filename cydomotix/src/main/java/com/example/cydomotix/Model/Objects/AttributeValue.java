@@ -15,14 +15,14 @@ public class AttributeValue {
     private Double double_value;
     private String string_value;
 
-    // Many instances of AttributeValue can be associated to one instance of these entities
+    // Plusieurs instances d'AttributeValue peuvent être associées à 1 instance des entités ci dessous
 
-    // <=> Foreign key pointing to parent entity (ConnectedObject)
+    // Clé étrangère pointant vers entité mère (ConnectedObject)
     @ManyToOne
     @JoinColumn(name = "connected_object_id", nullable = false)
     private ConnectedObject connectedObject;
 
-    // Foreign key pointing to parent ObjectAttribute entity
+    // Clé étrangère pointant vers entité mère (ObjectAttribute)
     @ManyToOne
     @JoinColumn(name = "object_attribute_id", nullable = false)
     private ObjectAttribute objectAttribute;

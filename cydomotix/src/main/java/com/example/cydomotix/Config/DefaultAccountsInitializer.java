@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * Initializes a default Admin account for project showcase & testing purposes
- * And a default Dev account
+ * Initialise des comptes par défaut (admin, dev, user normal) pour showcase et tester
  */
 @Component
 public class DefaultAccountsInitializer implements CommandLineRunner {
@@ -23,14 +22,13 @@ public class DefaultAccountsInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
     private void createDefaultUser(String username, String password, AccessType role){
 
-        // Check if user already exists
+        // Vérifier que l'utilisateur n'existe pas déjà
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
         if (optionalUser.isEmpty()) {
-            // Create a new user
+            // Créer un nouvel utilisateur
             User usr = new User(
                     username,
                     passwordEncoder.encode(password),
@@ -47,10 +45,8 @@ public class DefaultAccountsInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
         createDefaultUser("admin", "adminpassword", AccessType.ADMIN);
         createDefaultUser("dev", "devpassword", AccessType.DEV);
         createDefaultUser("user", "userpassword", AccessType.USER);
-
     }
 }

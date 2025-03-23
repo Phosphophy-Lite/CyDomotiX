@@ -17,8 +17,8 @@ public class ObjectAttribute {
     @Column(nullable = false)
     private String value_type; // Ex : "INTEGER", "BOOLEAN", "STRING", "DOUBLE"...
 
-    // Many instances of ObjectAttribute can be associated to one instance of ObjectType
-    // <=> Foreign key pointing to parent entity
+    // Plusieurs instances d'ObjectAttribute peuvent être associées à 1 instance d'ObjectType
+    // Clé étrangère pointant vers entité mère (ObjectType)
     @ManyToOne
     @JoinColumn(name = "object_type_id", nullable = false)
     @JsonIgnore // Ignorer cette propriété lors de la sérialisation en JSON pour les requêtes et ainsi éviter une référence circulaire infinie

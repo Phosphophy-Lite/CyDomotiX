@@ -3,7 +3,6 @@ package com.example.cydomotix.Controller.Objects;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
-import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
 import com.example.cydomotix.Service.Objects.AttributeValueService;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;

@@ -20,7 +20,7 @@ public class AuthController {
     private UserService userService;
 
     /**
-     * Reception d'une requête POST du formulaire register sur la page de login pour l'inscription
+     * Réception d'une requête POST du formulaire register sur la page de login pour l'inscription
      * @param user
      * @param bindingResult
      * @return
@@ -96,7 +96,6 @@ public class AuthController {
             model.addAttribute("errorMessage", errorMessage); // Afficher le message d'erreur
             session.removeAttribute("errorMessage"); // Le consomme immédiatement et le supprime de la session pour ne pas le réafficher après un rafraichissement de la page
         }
-
 
         model.addAttribute("user", new User()); // Nécessaire pour le formulaire d'inscription caché
 

@@ -16,11 +16,11 @@ public class ObjectType {
     @Column(nullable = false, unique = true)
     private String name;
 
-    // Can be associated to multiple instances of ObjectAttributes
+    // Une seule instance d'ObjectType peut avoir plusieurs ObjectAttribute associés
     @OneToMany(mappedBy = "objectType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ObjectAttribute> attributes = new ArrayList<>();
 
-    // Can be associated to multiple instances of ConnectedObjects
+    // Une seule instance d'ObjectType peut avoir plusieurs ConnectedObject associés
     @OneToMany(mappedBy = "objectType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ConnectedObject> objects = new ArrayList<>();  // Liste des objets de ce type
 

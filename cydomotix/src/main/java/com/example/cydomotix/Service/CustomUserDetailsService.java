@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Retrieve user-related data from DB and encapsulate that data
- * for Spring Security to authenticate the user
+ * Récupère les données relatives à un utilisateur de la BDD et encapsule ces données
+ * pour que Spring Security authentifie l'utilisateur
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,17 +24,18 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /**
      * Method called by Spring Security to retrieve user details
-     * (through the login form configured in SecurityConfig)
-     * Compares the password provided by the user during login with the encoded password in the database
-     * @param username
-     * @return
+     * Méthode appelée par Spring Security pour récupérer les données utilisateur
+     * grâce au formulaire de login configuré dans SecurityConfig
+     * Compare le mot de passe donné par l'utilisateur dans le formulaire avec le mot de passe chiffré de la BDD
+     * @param username Nom d'utilisateur envoyé par le formulaire de login
+     * @return données utilisateur
      * @throws UsernameNotFoundException
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("Authenticating user : " + username);
 
-        // fetch user from DB by username
+        // Récupère l'utilisateur de la BDD via son nom d'utilisateur
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
                     System.out.println("User not found : " + username);
@@ -43,12 +44,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         System.out.println("User found: " + user.getUsername() + " with role: " + user.getAccessType());
 
-
-        // Return Spring Security UserDetails object with the user's details
+        // Retourne un objet de Spring Security UserDetails
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
-                user.getPassword(), // already encrypted
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getAccessType())) // Access rights (expl : "ROLE_USER")
+                user.getPassword(), // chiffré
+                List.of(new SimpleGrantedAuthority("ROLE_" + user.getAccessType())) // Permissions (expl : "ROLE_USER")
         );
     }
 }

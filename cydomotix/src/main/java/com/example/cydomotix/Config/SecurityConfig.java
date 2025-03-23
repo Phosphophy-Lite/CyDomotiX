@@ -5,26 +5,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.config.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
-import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 /**
- * Configures authentication and authorization for the web app
+ * Configure l'authentification et les autorisations de l'application web
+ * Gère les sessions utilisateur, login et logout
  */
-@EnableWebSecurity // Imports HttpSecurityConfiguration
-@Configuration // config automatically loaded when app launched
+@EnableWebSecurity // Importe HttpSecurityConfiguration
+@Configuration // config automatiquement chargée au lancement de l'application
 public class SecurityConfig {
 
     /**
-     * Defines the role hierarchy of users so higher roles are granted all permissions of lower roles
-     * @return
+     * Définit la hiérarchie des rôles d'utilisateurs
+     * Rôle les plus supérieurs obtiennent toutes les permissions des rôles plus inférieurs
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
@@ -32,13 +29,13 @@ public class SecurityConfig {
     }
 
     /**
-     * Defines :
+     * Définit :
      * - Which pages are accessible to certain types of users
-     * - Which pages require authentication.
-     * - How users authenticate (login, logout, encryption)
-     * Session management and CSRF protection
+     * - Quelles pages sont accessibles à quel type d'utilisateur
+     * - Quelles pages nécessitent une authentification
+     * - Comment les utilisateurs s'authentifient (login, logout, chiffrement...)
+     * - Gestion d'une session utilisateur
      * @param http
-     * @return
      * @throws Exception
      */
     @Bean
@@ -47,58 +44,57 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> {
 
-                    // DELETE FOR PROD
+                    // A SUPPRIMER POUR PROD
                     if ("dev".equals(System.getProperty("spring.profiles.active", "dev"))) {
                         auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
                     }
 
-                    auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Public pages (no authentication required)
-                    auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages in /admin/ are restricted to ADMIN users or higher
-                    auth.requestMatchers("/dev/**", "/h2-console").hasRole("DEV");
+                    auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
+                    auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages dans /admin/ sont restreintes aux rôles ADMIN et supérieurs
+                    auth.requestMatchers("/dev/**", "/h2-console").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs
 
-                    auth.anyRequest().authenticated(); // All other requests need authentication
+                    auth.anyRequest().authenticated(); // Toute autre requête nécessite authentification
                 })
-                .formLogin(login -> login // Configures form-based login
-                        .loginPage("/login") // Redirects users to /login for authentication
-                        .defaultSuccessUrl("/dashboard", true) // Redirect to dashboard page after login
+                .formLogin(login -> login // Configure un login via formulaire
+                        .loginPage("/login") // Redirige les utilisateurs vers /login pour s'authentifier
+                        .defaultSuccessUrl("/dashboard", true) // Redirige vers /dashboard après authentification
                         .permitAll()
-                        .failureHandler((request, response, exception) -> { // If credentials are invalid, give a feedback to the user
+                        .failureHandler((request, response, exception) -> { // Si username/password invalides, afficher les erreurs
                             if (exception instanceof BadCredentialsException) {
                                 request.getSession().setAttribute("errorMessage", "Pseudonyme ou mot de passe invalide.");
                             } else {
                                 request.getSession().setAttribute("errorMessage", "Échec de connexion. Veuillez réessayer.");
                             }
-                            response.sendRedirect("/login?error=true"); // Redirect back to login page
+                            response.sendRedirect("/login?error=true"); // Redirige les erreurs vers la page de connexion
                         })
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // Custom logout URL
-                        .logoutSuccessUrl("/") // Redirect to home page after logout
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID") // Delete the session cookie
+                        .logoutUrl("/logout") // URL déconnexion
+                        .logoutSuccessUrl("/") // Redirige vers la page d'accueil après déconnexion
+                        .invalidateHttpSession(true) // Ferme la session
+                        .deleteCookies("JSESSIONID") // Supprime le cookie de session
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.disable()) //disable csrf protection ; not recommended for prod. H2 console doesn't work with CSRF enabled.
-                .headers(headers -> headers.frameOptions((frameOptions) -> frameOptions.disable())); // Can be necessary to properly display H2-Console
+                .csrf(csrf -> csrf.disable()) // désactive csrf protection ; par recommendé pour prod mais nécessaire car H2 console ne marche pas avec csrf activé.
+                .headers(headers -> headers.frameOptions((frameOptions) -> frameOptions.disable())); // Peut être nécessaire pour afficher correctement H2-Console
 
-        // Manage user sessions
+        // Gère les session utilisateur
         http.sessionManagement(session -> session
-                .invalidSessionUrl("/login?expired=true") // Redirect if user tries to access protected page with invalid session (expired ID or manually deleted cookie)
-                .maximumSessions(1) // Limit to one session per user
-                .expiredUrl("/login?session-expired=true") // Redirect when session is now expired (inactivity/timeout)
+                .invalidSessionUrl("/login?expired=true") // Redirige si l'utilisateur tente d'accéder à une page protégée avec une session invalide (expirée ou cookie supprimé manuellement)
+                .maximumSessions(1) // Limiter à une session par utilisateur
+                .expiredUrl("/login?session-expired=true") // Rediriger quand la session est expirée (timeout/logout)
         );
 
         http.exceptionHandling(exceptionHandling -> exceptionHandling
-                .accessDeniedPage("/error") // Custom error page
+                .accessDeniedPage("/error") // Rediriger les autres erreurs/pages protégées sans permissions vers page d'erreur custom
         );
-
 
         return http.build();
     }
 
     /**
-     * Uses BCryptPasswordEncoder to encode passwords before storing them in the database
-     * @return encoded password
+     * Utilise BCryptPasswordEncoder pour chiffrer les mots de passe avant de les stocker en BDD
+     * @return mot de passe chiffré
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
