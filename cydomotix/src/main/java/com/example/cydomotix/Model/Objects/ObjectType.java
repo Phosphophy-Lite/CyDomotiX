@@ -10,7 +10,8 @@ import java.util.List;
 public class ObjectType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_object_type;
+    @Column(name="id_object_type")
+    private Integer id;
 
     @Column(nullable = false, unique = true)
     private String name;
@@ -24,7 +25,7 @@ public class ObjectType {
     private List<ConnectedObject> objects = new ArrayList<>();  // Liste des objets de ce type
 
     public Integer getId() {
-        return id_object_type;
+        return id;
     }
 
     public String getName() {

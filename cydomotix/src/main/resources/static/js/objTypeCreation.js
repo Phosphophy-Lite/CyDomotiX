@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const confirmation = confirm("Supprimer ce Type d'objet ?");
             if (confirmation) {
                 // Si confirmé, redirige vers l'URL de suppression
-                window.location.href = `/delete/${objTypeId}`;
+                window.location.href = `object-type/delete/${objTypeId}`;
             }
         });
     });

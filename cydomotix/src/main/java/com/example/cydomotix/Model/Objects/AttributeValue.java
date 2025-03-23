@@ -8,7 +8,8 @@ public class AttributeValue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_attribute_value;
+    @Column(name="id_attribute_value")
+    private Integer id;
 
     private Integer int_value;
     private Double double_value;
@@ -28,7 +29,7 @@ public class AttributeValue {
 
 
     public Integer getId() {
-        return id_attribute_value;
+        return id;
     }
 
     public ConnectedObject getConnectedObject() {

@@ -41,7 +41,7 @@
 
     <h1>Créer un nouveau Type d'Objet</h1>
 
-    <form th:action="@{/create}" method="POST" th:object="${objectType}">
+    <form th:action="@{/admin/object-type/create}" method="POST" th:object="${objectType}">
         <label for="name">Nom du type d'objet:</label>
         <input type="text" id="name" th:field="*{name}" required>
         <br>

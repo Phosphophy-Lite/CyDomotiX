@@ -29,4 +29,13 @@ public class ObjectAttributeService {
         return objectAttributeRepository.findByObjectType(objType);
     }
 
+    public ObjectAttribute getObjectAttributeById(Integer id) {
+        if(objectAttributeRepository.findById(id).isPresent()) {
+            return objectAttributeRepository.findById(id).get();
+        }
+        else {
+            throw new IllegalArgumentException("Object Attribute with id " + id + " does not exist.");
+        }
+    }
+
 }

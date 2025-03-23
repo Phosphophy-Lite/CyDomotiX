@@ -11,7 +11,8 @@ public class ConnectedObject {
 
     @Id // indique que cet attribut est la primary key de la table
     @GeneratedValue(strategy= GenerationType.IDENTITY) // id_house doit être auto incrémenté
-    private Integer id_object;
+    @Column(name="id_object")
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -39,7 +40,7 @@ public class ConnectedObject {
     private List<AttributeValue> attributeValueList = new ArrayList<>();
 
     public Integer getId() {
-        return id_object;
+        return id;
     }
 
     public String getMode() {

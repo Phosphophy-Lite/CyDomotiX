@@ -8,7 +8,8 @@ import jakarta.persistence.*;
 public class ObjectAttribute {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_object_attribute;
+    @Column(name="id_object_attribute")
+    private Integer id;
 
     @Column(nullable = false)
     private String name;
@@ -25,7 +26,7 @@ public class ObjectAttribute {
     private ObjectType objectType;
 
     public Integer getId() {
-        return id_object_attribute;
+        return id;
     }
 
     public String getName() {
