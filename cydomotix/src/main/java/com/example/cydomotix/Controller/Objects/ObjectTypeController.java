@@ -3,6 +3,7 @@ package com.example.cydomotix.Controller.Objects;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
+import com.example.cydomotix.Model.Objects.ValueType;
 import com.example.cydomotix.Service.Objects.AttributeValueService;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
@@ -15,7 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequestMapping("/admin/object-type") // Toutes les méthodes de cette classe seront relative à une URL commençant par ceci (pas besoin d'être un vrai dossier)
 @Controller
@@ -115,6 +119,18 @@ public class ObjectTypeController {
         // Supprimer le type
         objectTypeService.deleteObjectType(id);
         return "redirect:/admin/object-type"; // Recharge la page avec la nouvelle liste
+    }
+
+    @GetMapping("/valueTypes")
+    @ResponseBody
+    public List<Map<String, String>> getValueTypes() {
+        // Créer une liste d'objets avec le vrai nom et le displayName des valeurs d'enum ValueType
+        return Arrays.stream(ValueType.values())
+                .map(valueType -> Map.of(
+                        "name", valueType.name(),  // Nom de l'enum
+                        "displayName", valueType.getDisplayName()  // displayName de l'enum
+                ))
+                .collect(Collectors.toList());
     }
 
 }

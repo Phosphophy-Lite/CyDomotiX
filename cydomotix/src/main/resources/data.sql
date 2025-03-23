@@ -4,8 +4,8 @@ VALUES ('Thermostat'),
        ('Lampe');
 
 INSERT INTO ObjectAttribute(name, value_type, object_type_id)
-VALUES ('Température actuelle', 'INTEGER', 1),
-       ('Température cible', 'INTEGER', 1),
-       ('Intervalle', 'INTEGER', 2),
+VALUES ('Température actuelle', 'TEMPERATURE', 1),
+       ('Température cible', 'TEMPERATURE', 1),
+       ('Intervalle', 'MINUTES', 2),
        ('Couleur', 'STRING', 3),
-       ('Intensité', 'INTEGER', 3);
+       ('Intensité', 'PERCENTAGE', 3);

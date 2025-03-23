@@ -7,9 +7,11 @@ function loadAttributes(objectTypeId) {
         .then(data => {
             data.forEach((attribute, index) => {
                 let row = document.createElement("tr");
+                let inputField = ConditionalInputField(attribute.valueType, index);
+
                 row.innerHTML = `
                     <td>${attribute.name}</td>
-                    <td><input type="text" name="attributeValueList[${index}].string_value" required></td>
+                    <td>${inputField}</td>
                     <input type="hidden" name="attributeValueList[${index}].objectAttribute" value="${attribute.id}">
                 `;
 
@@ -39,3 +41,35 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+function ConditionalInputField(valueType, index){
+    let inputField = "";
+    switch(valueType){
+        case "STRING":
+            inputField = `<input type="text" name="attributeValueList[${index}].string_value" required>`;
+            break;
+        case "INTEGER":
+            inputField = `<input type="number" name="attributeValueList[${index}].int_value" required>`;
+            break;
+        case "DOUBLE":
+            inputField = `<input type="number" step="0.01" name="attributeValueList[${index}].double_value" required>`;
+            break;
+        case "TEMPERATURE":
+            inputField = `<input type="number" min="-100" max="100" name="attributeValueList[${index}].int_value" required><span> °C</span>`;
+            break;
+        case "HOURS":
+            inputField = `<input type="number" min="0" name="attributeValueList[${index}].int_value" required><span> h</span>`;
+            break;
+        case "MINUTES":
+            inputField = `<input type="number" min="0" name="attributeValueList[${index}].int_value" required><span> min</span>`;
+            break;
+        case "SECONDS":
+            inputField = `<input type="number" min="0" name="attributeValueList[${index}].int_value" required><span> s</span>`;
+            break;
+        case "PERCENTAGE":
+            inputField = `<input type="number" min="0" max="100" name="attributeValueList[${index}].int_value" required><span> %</span>`;
+            break;
+    }
+
+    return inputField;
+}

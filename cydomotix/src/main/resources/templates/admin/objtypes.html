@@ -24,7 +24,7 @@
                     <ul>
                         <li th:each="attribute : ${objectType.attributes}">
                             <!-- th:text="|...|" : concaténation de chaînes formattées -->
-                            <p th:text="|${attribute.name} : ${attribute.valueType}|"></p>
+                            <p th:text="|${attribute.name} : ${attribute.valueType.displayName}|"></p>
                         </li>
                     </ul>
                 </td>
@@ -58,8 +58,10 @@
             </thead>
             <tbody>
                 <tr th:each="attribute, iterStat : *{attributes}">
-                    <td><input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required></td>
-                    <td><input type="text" th:field="*{attributes[__${iterStat.index}__].valueType}" required></td>
+                    <td><!--<input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required>--></td>
+                    <td>
+
+                    </td>
                     <td><button type="button" onclick="removeRow(this)">Supprimer</button></td>
                 </tr>
             </tbody>

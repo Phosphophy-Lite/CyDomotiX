@@ -15,7 +15,8 @@ public class ObjectAttribute {
     private String name;
 
     @Column(nullable = false)
-    private String value_type; // Ex : "INTEGER", "BOOLEAN", "STRING", "DOUBLE"...
+    @Enumerated(EnumType.STRING)
+    private ValueType value_type; // Ex : "INTEGER", "STRING", "DOUBLE"...
 
     // Plusieurs instances d'ObjectAttribute peuvent être associées à 1 instance d'ObjectType
     // Clé étrangère pointant vers entité mère (ObjectType)
@@ -37,11 +38,11 @@ public class ObjectAttribute {
         this.name = name;
     }
 
-    public String getValueType() {
+    public ValueType getValueType() {
         return value_type;
     }
 
-    public void setValueType(String value_type) {
+    public void setValueType(ValueType value_type) {
         this.value_type = value_type;
     }
 
