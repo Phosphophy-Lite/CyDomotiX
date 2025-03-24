@@ -19,8 +19,13 @@ public class ConnectedObject {
 
     private String brand;
     private boolean is_active;
-    private String mode;
-    private String connectivity;
+
+    @Enumerated(EnumType.STRING)
+    private Mode mode;
+
+    @Enumerated(EnumType.STRING)
+    private Connectivity connectivity;
+
     private LocalDateTime last_interaction;
     private int battery_status;
 
@@ -43,19 +48,19 @@ public class ConnectedObject {
         return id;
     }
 
-    public String getMode() {
+    public Mode getMode() {
         return mode;
     }
 
-    public void setMode(String mode) {
+    public void setMode(Mode mode) {
         this.mode = mode;
     }
 
-    public String getConnectivity() {
+    public Connectivity getConnectivity() {
         return connectivity;
     }
 
-    public void setConnectivity(String connectivity) {
+    public void setConnectivity(Connectivity connectivity) {
         this.connectivity = connectivity;
     }
 

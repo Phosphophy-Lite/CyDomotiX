@@ -45,7 +45,7 @@ CREATE TABLE ObjectType (
 CREATE TABLE ObjectAttribute (
                                  id_object_attribute INT AUTO_INCREMENT PRIMARY KEY,
                                  name VARCHAR(255) UNIQUE NOT NULL, -- Ex: "Température", "Mode"
-                                 value_type ENUM('STRING', 'INTEGER', 'DOUBLE', 'TEMPERATURE', 'HOURS', 'MINUTES', 'SECONDS', 'PERCENTAGE') NOT NULL,
+                                 value_type ENUM('STRING', 'INTEGER', 'DOUBLE', 'TEMPERATURE', 'HOURS', 'MINUTES', 'SECONDS', 'PERCENTAGE'),
                                  object_type_id INT NOT NULL, -- Relie l'attribut à un type spécifique d'objet connecté
                                  FOREIGN KEY (object_type_id) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE,
                                  CONSTRAINT unique_attribute_per_type UNIQUE (name, object_type_id) -- On peut avoir un champ avec le même nom pour deux types différents mais pas deux fois le même champs pour 1 seul type
@@ -55,8 +55,8 @@ CREATE TABLE ObjectAttribute (
 CREATE TABLE ConnectedObject (
                                  id_object INT AUTO_INCREMENT PRIMARY KEY,
                                  name VARCHAR(255) NOT NULL,
-                                 mode VARCHAR(30),
-                                 connectivity VARCHAR(30),
+                                 mode ENUM('AUTOMATIC', 'SCHEDULED', 'ECO', 'PERFORMANCE', 'NIGHT', 'AWAY', 'MANUAL'),
+                                 connectivity ENUM('WIFI_WEAK', 'WIFI_STRONG', 'BLUETOOTH', 'ZIGBEE', 'Z_WAVE', 'ETHERNET', 'CELLULAR', 'NFC', 'INFRARED', 'NONE'),
                                  brand VARCHAR(50),
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
