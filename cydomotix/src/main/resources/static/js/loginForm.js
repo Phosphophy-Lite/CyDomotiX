@@ -6,24 +6,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const signupForm = document.getElementById("signupForm");
     const main = document.getElementById("main");
 
+    function switchForm(formToShow, formToHide, addClass) {
+        formToHide.classList.add("fade-out"); // Applique l'effet de disparition
+        setTimeout(() => {
+            formToHide.classList.add("hidden");
+            formToHide.classList.remove("fade-out");
+
+            formToShow.classList.remove("hidden");
+            formToShow.classList.add("fade-in");
+
+            setTimeout(() => {
+                formToShow.classList.remove("fade-in"); // Retire la classe après l'animation
+            }, 500);
+        }, 250); // Délai avant que l'autre formulaire apparaisse
+
+        if (addClass) {
+            main.classList.add("inscription-mode");
+        } else {
+            main.classList.remove("inscription-mode");
+        }
+    }
+
     if (show === "register") {
-        signupForm.classList.remove("hidden");
-        loginForm.classList.add("hidden");
+        switchForm(signupForm, loginForm, true);
     } else {
-        loginForm.classList.remove("hidden");
-        signupForm.classList.add("hidden");
+        switchForm(loginForm, signupForm, false);
     }
 
     document.getElementById("pChangeForm").addEventListener("click", function () {
-        loginForm.classList.add("hidden");
-        signupForm.classList.remove("hidden");
-        main.classList.toggle("inscription-mode");
+        switchForm(signupForm, loginForm, true);
     });
 
     document.getElementById("pChangeToLogin").addEventListener("click", function () {
-        signupForm.classList.add("hidden");
-        loginForm.classList.remove("hidden");
-        main.classList.remove("inscription-mode");
+        switchForm(loginForm, signupForm, false);
     });
 });
-

@@ -3,6 +3,14 @@ body {
     font-family: sans-serif;
 }
 
+#main {
+    transition: all 0.3s ease-in-out;
+}
+
+
+
+
+
 #mainContainer {
     display: flex;
     justify-content: center;
@@ -25,6 +33,19 @@ body {
     opacity: 1; /* Rendre l'élément visible */
 }
 
+.hidden {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.show {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+}
+
 #main {
     background-color: white;
     display: inline-block;
@@ -35,11 +56,11 @@ body {
     padding: 2%;
     margin-top: 1%;
     transition: width 0.5s ease; /* Animation fluide */
-    
+
 }
 
 #main.inscription-mode {
-    width: 28em;  /* Taille agrandie quand on passe en mode inscription */
+    width: 25em;  /* Taille agrandie quand on passe en mode inscription */
 }
 
 h1 {
@@ -95,13 +116,14 @@ p {
     font-weight: bold;
 }
 
-.inscription{
+.center{
     text-align: center;
     font-size: 0.9em;
 }
 
 #pChangeForm:hover, #pChangeToLogin:hover{
     text-decoration: underline ;
+    cursor: pointer;
 }
 
 #containerSignUp{
@@ -121,17 +143,26 @@ p {
 .signUpPartLine{
     border-bottom: lightgrey 2px solid;
     margin-top: 1em;
-    margin-left: 3em;
+    width: 11em;
+    height: 3em;
 }
 
 .signUpPart{
-    margin-right: 3em;
+
+    width: 30em;
     
 }
 
 .endPage{
     text-align: center;
 }
+
+
+
+
+
+
+
 
 /* Version mobile */
 @media (max-width: 600px) {
