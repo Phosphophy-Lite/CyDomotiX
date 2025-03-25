@@ -5,6 +5,7 @@ import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,15 +71,28 @@ public class ConnectedObjectService {
      * @return ConnectedObject de l'id spécifié
      */
     public ConnectedObject getConnectedObjectById(Integer id) {
-        if(connectedObjectRepository.findById(id).isPresent()) {
-            return connectedObjectRepository.findById(id).get();
-        }
-        else {
-            throw new IllegalArgumentException("Connected object with id " + id + " does not exist.");
-        }
+        ConnectedObject connectedObject = connectedObjectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Connected object with id " + id + " does not exist."));
+        return connectedObject;
     }
 
+    public void switchStatus(Integer id) {
+        // Vérifie si l'objet connecté existe dans la base de données
+        ConnectedObject connectedObject = connectedObjectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Connected object with id " + id + " does not exist."));
 
+        boolean currentStatus = connectedObject.getIsActive();
+
+        // Met à jour le champ status par son inverse
+        connectedObject.setIsActive(!currentStatus);
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+
+        connectedObject.setLastInteraction(currentDateTime);
+
+        // Sauvegarde l'objet mis à jour dans la BDD
+        connectedObjectRepository.save(connectedObject);
+    }
 }
 
 

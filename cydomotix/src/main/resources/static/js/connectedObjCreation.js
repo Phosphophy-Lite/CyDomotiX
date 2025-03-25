@@ -91,3 +91,17 @@ lastInteractionElements.forEach(element => {
     let formattedDate = formatDateTime(rawValue); // Formatter la date
     element.textContent = formattedDate;
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Sélectionner tous les boutons "Supprimer"
+    const powerBtn = document.querySelectorAll('.power-btn');
+
+    powerBtn.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Empêche le comportement par défaut (le lien qui se déclenche)
+
+            const connectedObjId = this.getAttribute('data-id'); // Récupère l'ID de l'objet connecté
+            window.location.href = `connected-object/status/${connectedObjId}`; // Changer son status
+        });
+    });
+});

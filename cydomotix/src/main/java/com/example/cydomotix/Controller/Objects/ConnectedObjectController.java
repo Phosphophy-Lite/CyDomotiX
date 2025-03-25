@@ -128,5 +128,16 @@ public class ConnectedObjectController {
         connectedObjectService.deleteConnectedObject(id);
         return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
     }
+
+    /**
+     * Change le status (activé/désactivé) d'un objet connecté de la BDD en récupérant la requête via le bouton Activer/Désactiver de la page
+     * @param id Id de l'objet passé dynamiquement par l'URL
+     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     */
+    @GetMapping("/status/{id}")
+    public String switchObjectStatus(@PathVariable("id") Integer id) {
+        connectedObjectService.switchStatus(id);
+        return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
+    }
 }
 
