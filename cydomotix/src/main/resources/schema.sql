@@ -44,7 +44,7 @@ CREATE TABLE ObjectType (
 -- Table des attributs d'objets
 CREATE TABLE ObjectAttribute (
                                  id_object_attribute INT AUTO_INCREMENT PRIMARY KEY,
-                                 name VARCHAR(255) UNIQUE NOT NULL, -- Ex: "Température", "Mode"
+                                 name VARCHAR(255) NOT NULL, -- Ex: "Température", "Mode"
                                  value_type ENUM('STRING', 'INTEGER', 'DOUBLE', 'TEMPERATURE', 'HOURS', 'MINUTES', 'SECONDS', 'PERCENTAGE'),
                                  object_type_id INT NOT NULL, -- Relie l'attribut à un type spécifique d'objet connecté
                                  FOREIGN KEY (object_type_id) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE,

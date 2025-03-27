@@ -9,3 +9,15 @@ VALUES ('Température actuelle', 'TEMPERATURE', 1),
        ('Intervalle', 'MINUTES', 2),
        ('Couleur', 'STRING', 3),
        ('Intensité', 'PERCENTAGE', 3);
+
+INSERT INTO ConnectedObject(name, mode, connectivity, brand, last_interaction, battery_status, is_active, id_type)
+VALUES ('Lampe Philips HUE', 'AUTOMATIC', 'BLUETOOTH', 'Philips', '2025-03-24 19:45:00', 85, FALSE, 3),
+       ('Thermostat Salon', 'ECO', 'WIFI_STRONG', 'Netatmo', '2025-03-25 14:17:00', 65, FALSE, 1),
+       ('Distributeur pour chat', 'AUTOMATIC', 'WIFI_STRONG', 'Catit Pixi Smart', '2025-03-25 12:05:00', 90, FALSE, 2);
+
+INSERT INTO AttributeValue(int_value, double_value, string_value, connected_object_id, object_attribute_id)
+VALUES (null, null, 'Blanc', 1, 4),
+       (70, null, null, 1, 5),
+       (21, null, null, 2, 1),
+       (23, null, null, 2, 2),
+       (160, null, null, 3, 3);

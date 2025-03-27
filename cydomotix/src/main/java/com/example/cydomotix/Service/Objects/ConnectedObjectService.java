@@ -1,6 +1,8 @@
 package com.example.cydomotix.Service.Objects;
 
 import com.example.cydomotix.Model.Objects.ConnectedObject;
+import com.example.cydomotix.Model.Objects.Connectivity;
+import com.example.cydomotix.Model.Objects.Mode;
 import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,6 +95,11 @@ public class ConnectedObjectService {
         // Sauvegarde l'objet mis à jour dans la BDD
         connectedObjectRepository.save(connectedObject);
     }
+
+    public List<ConnectedObject> searchObjects(String keyword, Integer objectTypeId, String brand, Mode mode, Connectivity connectivity) {
+        return connectedObjectRepository.searchObjects(keyword, objectTypeId, brand, mode, connectivity);
+    }
+
 }
 
 
