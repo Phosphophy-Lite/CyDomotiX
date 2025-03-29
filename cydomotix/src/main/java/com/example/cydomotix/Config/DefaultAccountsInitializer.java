@@ -36,7 +36,7 @@ public class DefaultAccountsInitializer implements CommandLineRunner {
             );
 
             userRepository.save(usr);
-            System.out.println("Initialized default account with credentials : " + usr.getUsername() + "/" + password);
+            System.out.println("Initialized default " + usr.getAccessType() + " account with credentials : " + usr.getUsername() + "/" + password);
 
         }else{
             System.out.println(username + "already exists.");
@@ -46,7 +46,7 @@ public class DefaultAccountsInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         createDefaultUser("admin", "adminpassword", AccessType.ADMIN);
-        createDefaultUser("dev", "devpassword", AccessType.DEV);
-        createDefaultUser("user", "userpassword", AccessType.USER);
+        createDefaultUser("engineer", "devpassword", AccessType.DEV);
+        createDefaultUser("crewmate", "userpassword", AccessType.USER);
     }
 }

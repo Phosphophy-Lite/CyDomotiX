@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Création Object Connecté</title>
     <script src="/js/connectedObjCreation.js" defer></script>
+    <script src="/js/interactionDate.js" defer></script>
 </head>
 
 <body>
@@ -89,6 +90,9 @@
     <h1>Ajouter un nouvel object connecté</h1>
 
     <form th:action="@{/admin/connected-object/add}" method="POST" th:object="${connectedObject}">
+        <!-- Input cachée pour stockée l'ID -->
+        <input type="hidden" th:field="*{id}">
+
         <label for="name">Nom de l'objet :</label>
         <input type="text" id="name" th:field="*{name}" required>
         <br>

@@ -18,15 +18,6 @@ public class AttributeValueService {
     private ConnectedObjectService connectedObjectService;
 
     /**
-     * Sauvegarde la valeur d'un attribut dans la BDD.
-     * @param attributeValue
-     */
-    public void save(AttributeValue attributeValue) {
-        attributeValueRepository.save(attributeValue);
-        System.out.println("attribute value saved");
-    }
-
-    /**
      * Supprime toutes les valeurs d'attribut d'un objet connecté spécifié par son id
      * @param id Id de l'object connecté (Connected Object)
      */

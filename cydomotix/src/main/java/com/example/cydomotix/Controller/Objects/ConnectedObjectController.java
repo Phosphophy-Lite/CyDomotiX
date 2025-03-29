@@ -50,7 +50,6 @@ public class ConnectedObjectController {
 
         // Pour le nouvel objet à enregistrer avec le formulaire
         model.addAttribute("connectedObject", connectedObject);
-        model.addAttribute("attributeValues", connectedObject.getAttributeValueList()); // sa liste de valeurs d'attributs associés
 
         return "admin/connectedobj";  // Retourne le vrai chemin de la vue pour le formulaire de création
     }
@@ -99,7 +98,6 @@ public class ConnectedObjectController {
 
             // Pour le nouvel objet à enregistrer avec le formulaire
             model.addAttribute("connectedObject", connectedObject);
-            model.addAttribute("attributeValues", connectedObject.getAttributeValueList()); // sa liste de valeurs d'attributs associés
 
             return "admin/connectedobj";  // Retourne à la page du formulaire avec les erreurs
         }

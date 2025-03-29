@@ -1,14 +1,18 @@
 package com.example.cydomotix.Service.Objects;
 
+import com.example.cydomotix.Model.Objects.AttributeValue;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.Connectivity;
 import com.example.cydomotix.Model.Objects.Mode;
+import com.example.cydomotix.Repository.Objects.AttributeValueRepository;
 import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,6 +20,8 @@ public class ConnectedObjectService {
 
     @Autowired
     private ConnectedObjectRepository connectedObjectRepository;
+    @Autowired
+    private AttributeValueRepository attributeValueRepository;
 
     /**
      * Vérifie si un objet connecté au nom donné n'est pas déjà existant dans la BDD
@@ -39,6 +45,73 @@ public class ConnectedObjectService {
 
         connectedObjectRepository.save(connectedObject);
     }
+
+    /**
+     * Mettre à jour un objet existant
+     * @param id Identifiant de l'objet connecté
+     * @param updatedObject Objet mis à jour avec les nouvelles valeurs
+     */
+    public void update(Integer id, ConnectedObject updatedObject) {
+        connectedObjectRepository.findById(id).ifPresent(existingObject -> {
+            // Met à jour les champs basiques en évitant les valeurs vides
+            updateBasicFields(existingObject, updatedObject);
+
+            // Met à jour les valeurs des attributs dynamiques
+            updateAttributeValues(existingObject, updatedObject.getAttributeValueList());
+
+            // Sauvegarde les modifications
+            connectedObjectRepository.save(existingObject);
+        });
+    }
+
+    /**
+     * Met à jour les champs basiques d'un objet connecté
+     */
+    private void updateBasicFields(ConnectedObject existingObject, ConnectedObject updatedObject) {
+        existingObject.setName(getUpdatedValue(updatedObject.getName(), existingObject.getName()));
+        existingObject.setBrand(getUpdatedValue(updatedObject.getBrand(), existingObject.getBrand()));
+        existingObject.setMode(updatedObject.getMode());
+        existingObject.setConnectivity(updatedObject.getConnectivity());
+        existingObject.setBatteryStatus(updatedObject.getBatteryStatus());
+        existingObject.setLastInteraction(LocalDateTime.now());
+    }
+
+    /**
+     * Met à jour les valeurs des attributs dynamiques
+     */
+    private void updateAttributeValues(ConnectedObject existingObject, List<AttributeValue> updatedValues) {
+        Map<Integer, AttributeValue> existingValuesMap = existingObject.getAttributeValueList()
+                .stream().collect(Collectors.toMap(av -> av.getObjectAttribute().getId(), av -> av));
+
+        for (AttributeValue updatedValue : updatedValues) {
+            AttributeValue existingValue = existingValuesMap.get(updatedValue.getObjectAttribute().getId());
+
+            if (existingValue != null) {
+                existingValue.setInt_value(getUpdatedValue(updatedValue.getInt_value(), existingValue.getInt_value()));
+                existingValue.setDouble_value(getUpdatedValue(updatedValue.getDouble_value(), existingValue.getDouble_value()));
+                if (existingValue.getString_value() != null) { // s'assurer qu'il n'est pas null avant d'appeler trim()
+                    existingValue.setString_value(getUpdatedValue(updatedValue.getString_value(), existingValue.getString_value()));
+                }
+                attributeValueRepository.save(existingValue);
+            }
+        }
+    }
+
+    /**
+     * Retourne une valeur mise à jour, ou conserve l'ancienne si la nouvelle est vide
+     */
+    private String getUpdatedValue(String newValue, String oldValue) {
+        return (newValue != null && !newValue.trim().isEmpty()) ? newValue : oldValue;
+    }
+
+    private Integer getUpdatedValue(Integer newValue, Integer oldValue) {
+        return (newValue != null ? newValue : oldValue);
+    }
+
+    private Double getUpdatedValue(Double newValue, Double oldValue) {
+        return (newValue != null ? newValue : oldValue);
+    }
+
 
     /**
      * Récupère tous les objets connectés
