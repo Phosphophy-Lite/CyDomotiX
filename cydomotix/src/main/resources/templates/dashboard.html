@@ -14,6 +14,14 @@
         <a th:href="@{/admin/object-type}">Créer un type d'objet</a>
     </div>
 
+    <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
+         car une requête GET (lien clickable) ne transmet pas de token CSRF
+         donc Spring Security la bloquerait pour un logout
+         (potentiellement dangereux sans protection CSRF) -->
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Déconnexion</button>
+    </form>
+
 
 </body>
 </html>

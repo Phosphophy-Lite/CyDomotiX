@@ -92,7 +92,6 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/") // Redirige vers la page d'accueil après déconnexion
                         .invalidateHttpSession(true) // Ferme la session
                         .deleteCookies("JSESSIONID") // Supprime le cookie de session
-                        .permitAll()
                 )
                 .headers(headers -> headers.frameOptions((frameOptions) -> frameOptions.disable())); // Peut être nécessaire pour afficher correctement H2-Console
 
