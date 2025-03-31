@@ -1,22 +1,18 @@
 package com.example.cydomotix.Controller.Objects;
 
-import com.example.cydomotix.Model.Objects.AttributeValue;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
-import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
+@EnableMethodSecurity(prePostEnabled = true) // Pour utiliser les annotations @PreAuthorize
 @Controller
 @RequestMapping("/object")
 public class ObjectViewController {
@@ -44,6 +40,7 @@ public class ObjectViewController {
     }
 
     @PostMapping("/{id}/update")
+    @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
     public String createConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, RedirectAttributes redirectAttributes) {
 
         ConnectedObject existingObject = connectedObjectService.getConnectedObjectById(id);
@@ -61,5 +58,28 @@ public class ObjectViewController {
         connectedObjectService.update(id, updatedObject);  // Sauvegarder ConnectedObject et ses attributs en BDD
         redirectAttributes.addFlashAttribute("successMessage", "Objet connecté modifié avec succès !");
         return "redirect:/object/"+id;
+    }
+
+    /**
+     * Supprime un objet connecté de la BDD en récupérant la requête via le bouton Supprimer de la page
+     * @param id Id de l'objet à supprimer passé dynamiquement par l'URL
+     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     */
+    @GetMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
+    public String deleteObjectType(@PathVariable("id") Integer id) {
+        connectedObjectService.deleteConnectedObject(id);
+        return "redirect:/vizualisation"; // Recharge la page avec la nouvelle liste
+    }
+
+    /**
+     * Change le status (activé/désactivé) d'un objet connecté de la BDD en récupérant la requête via le bouton Activer/Désactiver de la page
+     * @param id Id de l'objet passé dynamiquement par l'URL
+     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     */
+    @GetMapping("/{id}/status")
+    public String switchObjectStatus(@PathVariable("id") Integer id) {
+        connectedObjectService.switchStatus(id);
+        return "redirect:/object/"+id; // Recharge la page avec les informations mises à jour
     }
 }

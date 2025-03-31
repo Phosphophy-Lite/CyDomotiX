@@ -1,7 +1,9 @@
 package com.example.cydomotix.Config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -11,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Arrays;
+
 /**
  * Configure l'authentification et les autorisations de l'application web
  * Gère les sessions utilisateur, login et logout
@@ -18,6 +22,19 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Importe HttpSecurityConfiguration
 @Configuration // config automatiquement chargée au lancement de l'application
 public class SecurityConfig {
+
+    @Autowired
+    private Environment environment; // pour accéder à la propriété de l'appli des profils actifs
+
+    /**
+     * Vérifier si un profil d'execution de l'application est actif dans les propriétés de l'application
+     * @param profile - Le nom du profile
+     */
+    private boolean isProfileActive(String profile) {
+        final String[] profiles = environment.getActiveProfiles();
+        return Arrays.asList(profiles).contains(profile);
+    }
+
 
     /**
      * Définit la hiérarchie des rôles d'utilisateurs
@@ -45,13 +62,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
 
                     // A SUPPRIMER POUR PROD
-                    if ("dev".equals(System.getProperty("spring.profiles.active", "dev"))) {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
+                    if (isProfileActive("dev")) {
+                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("ADMIN");
+                    } else {
+                        auth.requestMatchers("/h2-console/**", "/h2-console").denyAll();
                     }
 
                     auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages dans /admin/ sont restreintes aux rôles ADMIN et supérieurs
-                    auth.requestMatchers("/dev/**", "/h2-console").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs
+                    auth.requestMatchers("/dev/**").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs
 
                     auth.anyRequest().authenticated(); // Toute autre requête nécessite authentification
                 })
@@ -75,8 +94,12 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID") // Supprime le cookie de session
                         .permitAll()
                 )
-                .csrf(csrf -> csrf.disable()) // désactive csrf protection ; par recommendé pour prod mais nécessaire car H2 console ne marche pas avec csrf activé.
                 .headers(headers -> headers.frameOptions((frameOptions) -> frameOptions.disable())); // Peut être nécessaire pour afficher correctement H2-Console
+
+        // Désactive csrf protection ; par recommendé pour prod mais nécessaire en mode dev car H2 console ne marche pas avec csrf activé.
+        if (isProfileActive("dev")) {
+            http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
+        }
 
         // Gère les session utilisateur
         http.sessionManagement(session -> session
