@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     /**
-     * Method called by Spring Security to retrieve user details
      * Méthode appelée par Spring Security pour récupérer les données utilisateur
      * grâce au formulaire de login configuré dans SecurityConfig
      * Compare le mot de passe donné par l'utilisateur dans le formulaire avec le mot de passe chiffré de la BDD
