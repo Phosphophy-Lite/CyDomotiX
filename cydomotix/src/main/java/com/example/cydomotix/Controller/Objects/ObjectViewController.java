@@ -41,7 +41,7 @@ public class ObjectViewController {
 
     @PostMapping("/{id}/update")
     @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
-    public String createConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, RedirectAttributes redirectAttributes) {
+    public String updateConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, RedirectAttributes redirectAttributes) {
 
         ConnectedObject existingObject = connectedObjectService.getConnectedObjectById(id);
         if (existingObject == null) {
@@ -63,11 +63,11 @@ public class ObjectViewController {
     /**
      * Supprime un objet connecté de la BDD en récupérant la requête via le bouton Supprimer de la page
      * @param id Id de l'objet à supprimer passé dynamiquement par l'URL
-     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     * @return "redirect:/object/"+id -- La vue html mise à jour
      */
     @GetMapping("/{id}/delete")
     @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
-    public String deleteObjectType(@PathVariable("id") Integer id) {
+    public String deleteConnectedObject(@PathVariable("id") Integer id) {
         connectedObjectService.deleteConnectedObject(id);
         return "redirect:/vizualisation"; // Recharge la page avec la nouvelle liste
     }

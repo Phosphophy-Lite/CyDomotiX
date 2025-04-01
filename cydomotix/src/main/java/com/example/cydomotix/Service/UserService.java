@@ -3,6 +3,10 @@ package com.example.cydomotix.Service;
 import com.example.cydomotix.Model.AccessType;
 import com.example.cydomotix.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.cydomotix.Repository.UserRepository;
@@ -17,6 +21,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     /**
      * Vérifie si un pseudonyme donné n'est pas déjà utilisé dans la BDD
@@ -72,6 +79,47 @@ public class UserService {
 
     public Optional<User> getByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    /**
+     * Mettre à jour un utilisateur existant
+     * @param id Identifiant de l'utilisateur
+     * @param updatedUser Données du formulaire de l'utilisateur mis à jour avec les nouvelles valeurs
+     */
+    public void update(Authentication authentication, Integer id, User updatedUser) {
+        userRepository.findById(id).ifPresent(existingUser -> {
+
+            String newUsername = getUpdatedValue(updatedUser.getUsername(), existingUser.getUsername());
+            boolean usernameChanged = !newUsername.equals(existingUser.getUsername());
+
+            existingUser.setUsername(newUsername);
+            existingUser.setGender(updatedUser.getGender());
+
+            // Sauvegarde les modifications
+            userRepository.save(existingUser);
+
+            if(usernameChanged){
+                UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(newUsername);
+
+                // Create a new authentication token with updated details
+                // Créer un nouveau token d'authentification dans le contexte de Spring Security avec les infos mises à jour
+                Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                        updatedUserDetails,
+                        authentication.getCredentials(),
+                        updatedUserDetails.getAuthorities()
+                );
+
+                // Mettre à jour le contexte Spring Security
+                SecurityContextHolder.getContext().setAuthentication(newAuth);
+            }
+        });
+    }
+
+    /**
+     * Retourne une valeur mise à jour, ou conserve l'ancienne si la nouvelle est vide
+     */
+    private String getUpdatedValue(String newValue, String oldValue) {
+        return (newValue != null && !newValue.trim().isEmpty()) ? newValue : oldValue;
     }
 
 }

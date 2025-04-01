@@ -122,7 +122,7 @@ public class ConnectedObjectController {
      * @return "redirect:/admin/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/delete/{id}")
-    public String deleteObjectType(@PathVariable("id") Integer id) {
+    public String deleteConnectedObject(@PathVariable("id") Integer id) {
         connectedObjectService.deleteConnectedObject(id);
         return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
     }
