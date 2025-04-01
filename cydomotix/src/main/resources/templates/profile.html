@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon profil</title>
+</head>
+
+<body>
+    <h2>Mon Profil</h2>
+
+    <form th:action="@{/profile/update}" method="post" th:object="${user}">
+        <table>
+            <tr>
+                <td><label for="username">Pseudonyme :</label></td>
+                <td><input type="text" id="username" th:field="*{username}"></td>
+            </tr>
+            <tr>
+                <td><label for="gender">Genre :</label></td>
+                <td>
+                    <select th:field="*{gender}" id="gender">
+                        <option th:each="gender : ${T(com.example.cydomotix.Model.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
+                    </select>
+                </td>
+
+            </tr>
+        </table>
+
+        <button type="submit">Enregistrer</button>
+        <br>
+
+
+        <!-- Affichage de l'erreur -->
+        <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- Affichage du message de succès -->
+        <div th:if="${successMessage}" style="color: green; font-weight: bold;">
+            <p th:text="${successMessage}"></p>
+        </div>
+
+    </form>
+
+</body>
+</html>
