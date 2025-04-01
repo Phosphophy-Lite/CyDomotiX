@@ -20,9 +20,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Controller
 public class AuthController {
@@ -37,7 +34,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult, @RequestParam("photo") MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("pfp") MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
         /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
            @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
 
@@ -45,8 +42,6 @@ public class AuthController {
 
            User stocke l'objet utilisateur temporaire contenant les attributs remplis lors de l'inscription.
         */
-
-
 
 
         // Vérifie si le nom d'utilisateur existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
@@ -63,32 +58,23 @@ public class AuthController {
 
         // Afficher tous les messages d'erreur à la vue utilisateur
         if (bindingResult.hasErrors()) {
+            System.out.println("Form has errors:");
+            bindingResult.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
+
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
             redirectAttributes.addFlashAttribute("user", user);
             redirectAttributes.addFlashAttribute("registrationError", "Veuillez corriger les erreurs dans le formulaire.");
             return "redirect:/login?show=register"; // Redirection vers le formulaire avec messages stockés temporairement
         }
 
-        System.out.println("Avant enregistrement");
         // Enregistrer l'utilisateur dans la BDD (avec encryption de mot de passe) et récupère ses infos dans un objet
         User registeredUser = userService.registerUser(user);
 
         // Gérer l'upload de l'image
-        System.out.println("Avant le if ntm");
-        if (!profilePicture.isEmpty()) {
-            System.out.println("Coucou je suis dans le if");
+        if (profilePicture != null && !profilePicture.isEmpty()) {
             String imageName = saveProfilePicture(profilePicture, registeredUser.getId());
             userService.setUserProfilePicture(registeredUser,imageName); // Stocker le nom du fichier dans la BDD
         }
-
-        // Nous ne voulons pas stocker une image avant d'enregistrer l'utilisateur,
-        // sinon nous stockerions des images inutiles en cas d'erreur lors de l'enregistrement de l'utilisateur.
-
-        // Nous avons besoin d'un moyen pour récupérer l'image envoyée dans le formulaire,
-        // et obtenir un String uniqueFileName si l'enregistrement de l'image réussit également.
-
-        // Mettre à jour la photo de profil de l'utilisateur enregistré
-        // setUserProfilePicture(registeredUser, uniqueFileName);
 
         System.out.println("Successfully added " + user.getUsername() + "to the database.");
 
@@ -128,7 +114,7 @@ public class AuthController {
         try {
             // Vérifier si le fichier est vide
             if (file == null || file.isEmpty()) {
-                System.out.println("Erreur : Aucun fichier reçu !");
+                System.out.println("Error : No file received.");
                 return null;
             }
             // Créer un répertoire si inexistant
@@ -136,12 +122,13 @@ public class AuthController {
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();
-                System.out.println("Crated new directory: " + uploadDir);
+                System.out.println("Created new directory: " + uploadDir);
             }
+
             // Vérifier et récupérer l'extension du fichier
             String originalFilename = file.getOriginalFilename();
             if (originalFilename == null || !originalFilename.contains(".")) {
-                System.out.println("Erreur : Impossible de déterminer l'extension du fichier !");
+                System.out.println("Error : invalid file extension.");
                 return null;
             }
 
@@ -149,7 +136,6 @@ public class AuthController {
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String uniqueFileName = "profile_" + userId + fileExtension;
             File outputFile = new File(uploadDir + uniqueFileName);
-            System.out.println("Test 1");
 
             // Compression de l'image avec Thumbnailator
             InputStream inputStream = file.getInputStream();
@@ -159,9 +145,8 @@ public class AuthController {
                     .size(100, 100) // Resize de l'image à 100x100 pixels
                     .outputQuality(0.7) // Réduction de la qualité à 70% de celle de l'originale
                     .toFile(outputFile);
-            System.out.println("Resize de l'image");
 
-            return uniqueFileName;
+            return "img/profilePictures/" + uniqueFileName;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
