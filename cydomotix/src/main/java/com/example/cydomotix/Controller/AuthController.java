@@ -37,7 +37,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult, @RequestParam("profilePicture") MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
+    public String registerUser(@Valid User user, BindingResult bindingResult, @RequestParam("photo") MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
         /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
            @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
 
@@ -69,11 +69,14 @@ public class AuthController {
             return "redirect:/login?show=register"; // Redirection vers le formulaire avec messages stockés temporairement
         }
 
+        System.out.println("Avant enregistrement");
         // Enregistrer l'utilisateur dans la BDD (avec encryption de mot de passe) et récupère ses infos dans un objet
         User registeredUser = userService.registerUser(user);
 
         // Gérer l'upload de l'image
+        System.out.println("Avant le if ntm");
         if (!profilePicture.isEmpty()) {
+            System.out.println("Coucou je suis dans le if");
             String imageName = saveProfilePicture(profilePicture, registeredUser.getId());
             userService.setUserProfilePicture(registeredUser,imageName); // Stocker le nom du fichier dans la BDD
         }
@@ -123,17 +126,30 @@ public class AuthController {
 
     private String saveProfilePicture(MultipartFile file, Integer userId) {
         try {
+            // Vérifier si le fichier est vide
+            if (file == null || file.isEmpty()) {
+                System.out.println("Erreur : Aucun fichier reçu !");
+                return null;
+            }
             // Créer un répertoire si inexistant
             String uploadDir = "src/main/resources/static/img/profilePictures/";
             File directory = new File(uploadDir);
             if (!directory.exists()) {
                 directory.mkdirs();
+                System.out.println("Crated new directory: " + uploadDir);
+            }
+            // Vérifier et récupérer l'extension du fichier
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || !originalFilename.contains(".")) {
+                System.out.println("Erreur : Impossible de déterminer l'extension du fichier !");
+                return null;
             }
 
             // Générer un nom de fichier unique
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String uniqueFileName = "profile_" + userId + fileExtension;
             File outputFile = new File(uploadDir + uniqueFileName);
+            System.out.println("Test 1");
 
             // Compression de l'image avec Thumbnailator
             InputStream inputStream = file.getInputStream();
@@ -143,6 +159,7 @@ public class AuthController {
                     .size(100, 100) // Resize de l'image à 100x100 pixels
                     .outputQuality(0.7) // Réduction de la qualité à 70% de celle de l'originale
                     .toFile(outputFile);
+            System.out.println("Resize de l'image");
 
             return uniqueFileName;
         } catch (IOException e) {
