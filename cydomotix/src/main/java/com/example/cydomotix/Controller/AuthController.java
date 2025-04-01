@@ -56,6 +56,12 @@ public class AuthController {
             user.setBirthDate(null); // Remplir alors cet attribut par null si le String envoyé est vide
         }
 
+        // Vérifie la taille du fichier uploadé si il n'est pas trop gros
+        if (profilePicture.getSize() > 10485760) { // 10MB in bytes
+            System.out.println("trop gros connard");
+            bindingResult.rejectValue("pfp", "error.user", "La taille du fichier est trop grande.");
+        }
+
         // Afficher tous les messages d'erreur à la vue utilisateur
         if (bindingResult.hasErrors()) {
             System.out.println("Form has errors:");
@@ -71,7 +77,7 @@ public class AuthController {
         User registeredUser = userService.registerUser(user);
 
         // Gérer l'upload de l'image
-        if (profilePicture != null && !profilePicture.isEmpty()) {
+        if (!profilePicture.isEmpty()) {
             String imageName = saveProfilePicture(profilePicture, registeredUser.getId());
             userService.setUserProfilePicture(registeredUser,imageName); // Stocker le nom du fichier dans la BDD
         }
