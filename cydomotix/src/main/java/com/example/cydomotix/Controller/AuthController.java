@@ -43,7 +43,6 @@ public class AuthController {
            User stocke l'objet utilisateur temporaire contenant les attributs remplis lors de l'inscription.
         */
 
-
         // Vérifie si le nom d'utilisateur existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
         if (userService.usernameExists(user.getUsername())) {
             bindingResult.rejectValue("username", "error.user", "Le nom d'utilisateur existe déjà.");
@@ -57,9 +56,8 @@ public class AuthController {
         }
 
         // Vérifie la taille du fichier uploadé si il n'est pas trop gros
-        if (profilePicture.getSize() > 10485760) { // 10MB en bytes
-            System.out.println("trop gros connard");
-            bindingResult.rejectValue("pfp", "error.user", "La taille du fichier est trop grande.");
+        if (profilePicture != null && profilePicture.getSize() > 10485760) { // 10MB en bytes
+            bindingResult.rejectValue("photo", "error.user", "La taille du fichier est trop grande.");
         }
 
         // Afficher tous les messages d'erreur à la vue utilisateur
@@ -76,10 +74,12 @@ public class AuthController {
         // Enregistrer l'utilisateur dans la BDD (avec encryption de mot de passe) et récupère ses infos dans un objet
         User registeredUser = userService.registerUser(user);
 
-        // Gérer l'upload de l'image
-        if (!profilePicture.isEmpty()) {
-            String imageName = saveProfilePicture(profilePicture, registeredUser.getId());
-            userService.setUserProfilePicture(registeredUser,imageName); // Stocker le nom du fichier dans la BDD
+        if (profilePicture != null) {
+            // Gérer l'upload de l'image
+            if (!profilePicture.isEmpty()) {
+                String imageName = userService.saveProfilePicture(profilePicture, registeredUser.getId());
+                userService.setUserProfilePicture(registeredUser,imageName); // Stocker le nom du fichier dans la BDD
+            }
         }
 
         System.out.println("Successfully added " + user.getUsername() + "to the database.");
@@ -114,48 +114,5 @@ public class AuthController {
         model.addAttribute("user", new User()); // Nécessaire pour le formulaire d'inscription caché
 
         return "auth/login";
-    }
-
-    private String saveProfilePicture(MultipartFile file, Integer userId) {
-        try {
-            // Vérifier si le fichier est vide
-            if (file == null || file.isEmpty()) {
-                System.out.println("Error : No file received.");
-                return null;
-            }
-            // Créer un répertoire si inexistant
-            String uploadDir = "src/main/resources/static/img/profilePictures/";
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-                System.out.println("Created new directory: " + uploadDir);
-            }
-
-            // Vérifier et récupérer l'extension du fichier
-            String originalFilename = file.getOriginalFilename();
-            if (originalFilename == null || !originalFilename.contains(".")) {
-                System.out.println("Error : invalid file extension.");
-                return null;
-            }
-
-            // Générer un nom de fichier unique
-            String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
-            String uniqueFileName = "profile_" + userId + fileExtension;
-            File outputFile = new File(uploadDir + uniqueFileName);
-
-            // Compression de l'image avec Thumbnailator
-            InputStream inputStream = file.getInputStream();
-            BufferedImage originalImage = ImageIO.read(inputStream);
-
-            Thumbnails.of(originalImage)
-                    .size(100, 100) // Resize de l'image à 100x100 pixels
-                    .outputQuality(0.7) // Réduction de la qualité à 70% de celle de l'originale
-                    .toFile(outputFile);
-
-            return "img/profilePictures/" + uniqueFileName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

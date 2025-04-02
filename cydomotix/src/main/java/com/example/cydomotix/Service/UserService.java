@@ -2,6 +2,7 @@ package com.example.cydomotix.Service;
 
 import com.example.cydomotix.Model.AccessType;
 import com.example.cydomotix.Model.User;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,7 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.cydomotix.Repository.UserRepository;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 @Service
@@ -95,10 +102,9 @@ public class UserService {
             existingUser.setUsername(newUsername);
             existingUser.setGender(updatedUser.getGender());
             existingUser.setBirthDate(updatedUser.getBirthDate());
-            existingUser.setFirstName(updatedUser.getFirstName());
-            existingUser.setLastName(updatedUser.getLastName());
-            existingUser.setPassword(updatedUser.getPassword());
-            existingUser.setPhoto(updatedUser.getPhoto());
+            existingUser.setFirstName(getUpdatedValue(updatedUser.getFirstName(), existingUser.getFirstName()));
+            existingUser.setLastName(getUpdatedValue(updatedUser.getLastName(), existingUser.getLastName()));
+            //existingUser.setPhoto(updatedUser.getPhoto());
 
             // Sauvegarde les modifications
             userRepository.save(existingUser);
@@ -128,4 +134,50 @@ public class UserService {
         return (newValue != null && !newValue.trim().isEmpty()) ? newValue : oldValue;
     }
 
+    public String saveProfilePicture(MultipartFile file, Integer userId) {
+        try {
+            // Vérifier si le fichier est vide
+            if (file == null || file.isEmpty()) {
+                System.out.println("Error : No file received.");
+                return null;
+            }
+            // Créer un répertoire si inexistant
+            String uploadDir = "src/main/resources/static/img/profilePictures/";
+            File directory = new File(uploadDir);
+            if (!directory.exists()) {
+                directory.mkdirs();
+                System.out.println("Created new directory: " + uploadDir);
+            }
+
+            // Vérifier et récupérer l'extension du fichier
+            String originalFilename = file.getOriginalFilename();
+            if (originalFilename == null || !originalFilename.contains(".")) {
+                System.out.println("Error : invalid file extension.");
+                return null;
+            }
+
+            System.out.println("File gets created");
+
+            // Générer un nom de fichier unique
+            String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+            String uniqueFileName = "profile_" + userId + fileExtension;
+            File outputFile = new File(uploadDir + uniqueFileName);
+
+            // Compression de l'image avec Thumbnailator
+            InputStream inputStream = file.getInputStream();
+            BufferedImage originalImage = ImageIO.read(inputStream);
+            System.out.println("File got compressed");
+
+            Thumbnails.of(originalImage)
+                    .size(100, 100) // Resize de l'image à 100x100 pixels
+                    .outputQuality(0.7) // Réduction de la qualité à 70% de celle de l'originale
+                    .toFile(outputFile);
+
+            return "img/profilePictures/" + uniqueFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error " + e.getMessage());
+            return null;
+        }
+    }
 }

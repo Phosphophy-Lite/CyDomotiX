@@ -46,7 +46,7 @@ public class User implements UserDetails {
     private int points = 0;
     private boolean is_connected;
 
-    private String photo;
+    private String photo = "img/profilePictures/defaultPfp.png";
     private String first_name;
     private String last_name;
     private String experience_level;

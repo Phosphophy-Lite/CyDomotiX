@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.print.DocFlavor;
 import java.util.Optional;
 
 @Controller
@@ -46,7 +46,10 @@ public class ProfileController {
     }
 
     @PostMapping("/update")
-    public String updateProfile(@ModelAttribute("user") User updatedUser, RedirectAttributes redirectAttributes) {
+    public String updateProfile(@ModelAttribute("user") User updatedUser,
+                                @RequestParam(value = "oldPswd", required = false) String oldPswd,
+                                @RequestParam(value = "pfp", required = false) MultipartFile newProfilePicture,
+                                RedirectAttributes redirectAttributes) {
         // Récupère la session authentifiée en cours
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -65,7 +68,40 @@ public class ProfileController {
                     redirectAttributes.addFlashAttribute("errorMessage", "Ce pseudonyme est déjà utilisé.");
                     return "redirect:/profile";
                 }
-                userService.update(authentication, existingUser.getId(), updatedUser);  // Sauvegarder User et ses attributs en BDD
+
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String newPswd = updatedUser.getPassword(); // The new password input
+
+                if(newPswd != null && !newPswd.isEmpty()) {
+                    if(oldPswd == null || !passwordEncoder.matches(oldPswd, existingUser.getPassword())) {
+                        redirectAttributes.addFlashAttribute("errorMessage", "Le mot de passe saisi ne correspond pas à l'ancien mot de passe.");
+                        return "redirect:/profile";
+                    }
+                    if(newPswd.length() < 6){
+                        redirectAttributes.addFlashAttribute("errorMessage", "Le nouveau mot de passe doit faire 6 caractères minimum.");
+                        return "redirect:/profile";
+                    }
+                    existingUser.setPassword(passwordEncoder.encode(newPswd));
+                }
+
+                // Sauvegarder User et ses attributs en BDD
+                userService.update(authentication, existingUser.getId(), updatedUser);
+
+                if(newProfilePicture != null){
+                    System.out.println("sss");
+                    // Vérifie la taille du fichier uploadé si il n'est pas trop gros
+                    if (newProfilePicture.getSize() > 10485760) { // 10MB en bytes
+                        redirectAttributes.addFlashAttribute("errorMessage", "La taille du fichier est trop grande.");
+                        return "redirect:/profile";
+                    }
+
+                    // Gérer l'upload de l'image
+                    if (!newProfilePicture.isEmpty()) {
+                        System.out.println("not empty");
+                        String imageName = userService.saveProfilePicture(newProfilePicture, existingUser.getId());
+                        userService.setUserProfilePicture(existingUser,imageName); // Stocker le nom du fichier dans la BDD
+                    }
+                }
             }
         } else {
             return "redirect:/error";
