@@ -4,6 +4,7 @@ import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
+import com.example.cydomotix.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -26,6 +27,9 @@ public class ObjectViewController {
     @Autowired
     ObjectAttributeService objectAttributeService;
 
+    @Autowired
+    RoomService roomService;
+
     @GetMapping("/{id}")
     public String viewObjectDetails(@PathVariable Integer id, Model model) {
         ConnectedObject connectedObject = connectedObjectService.getConnectedObjectById(id);
@@ -35,6 +39,8 @@ public class ObjectViewController {
 
         // Objet trouvé, l'ajouter à la vue
         model.addAttribute("connectedObject", connectedObject);
+
+        model.addAttribute("rooms", roomService.getAllRooms());
 
         return "object-details";
     }

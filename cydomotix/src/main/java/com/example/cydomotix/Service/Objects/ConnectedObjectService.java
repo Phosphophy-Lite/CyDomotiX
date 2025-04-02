@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -169,8 +168,8 @@ public class ConnectedObjectService {
         connectedObjectRepository.save(connectedObject);
     }
 
-    public List<ConnectedObject> searchObjects(String keyword, Integer objectTypeId, String brand, Mode mode, Connectivity connectivity) {
-        return connectedObjectRepository.searchObjects(keyword, objectTypeId, brand, mode, connectivity);
+    public List<ConnectedObject> searchObjects(String keyword, Integer objectTypeId, Integer roomId, String brand, Mode mode, Connectivity connectivity) {
+        return connectedObjectRepository.searchObjects(keyword, objectTypeId, roomId, brand, mode, connectivity);
     }
 
 }

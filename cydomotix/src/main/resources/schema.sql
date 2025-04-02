@@ -24,8 +24,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Room (
                       id_room INT AUTO_INCREMENT PRIMARY KEY,
-                      name VARCHAR(50),
-                      type VARCHAR(50)
+                      name VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Tool (
@@ -61,9 +60,9 @@ CREATE TABLE ConnectedObject (
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
                                  is_active BOOLEAN,
-                                 id_room INT, -- Relie l'objet à une pièce de la maison
+                                 id_room INT NOT NULL, -- Relie l'objet à une pièce de la maison
                                  id_type INT NOT NULL, -- Relie l'objet à un type spécifique ("Thermostat", "TV" ..)
-                                 FOREIGN KEY(id_room) REFERENCES Room(id_room),
+                                 FOREIGN KEY(id_room) REFERENCES Room(id_room) ON DELETE CASCADE,
                                  FOREIGN KEY (id_type) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE
 );
 

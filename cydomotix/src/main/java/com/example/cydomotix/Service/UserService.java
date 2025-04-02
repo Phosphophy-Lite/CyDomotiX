@@ -98,6 +98,7 @@ public class UserService {
             // Sauvegarde les modifications
             userRepository.save(existingUser);
 
+            // Si l'username a changé, updater aussi le username de la session du context Spring Security
             if(usernameChanged){
                 UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(newUsername);
 

@@ -57,7 +57,7 @@ public class AuthController {
         }
 
         // Vérifie la taille du fichier uploadé si il n'est pas trop gros
-        if (profilePicture.getSize() > 10485760) { // 10MB in bytes
+        if (profilePicture.getSize() > 10485760) { // 10MB en bytes
             System.out.println("trop gros connard");
             bindingResult.rejectValue("pfp", "error.user", "La taille du fichier est trop grande.");
         }

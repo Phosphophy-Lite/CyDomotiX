@@ -16,6 +16,15 @@
         <br>
         <p>Filtres : </p>
 
+        <label for="room">Pièce :</label>
+        <select id="room" name="roomId">
+            <option value="" selected>-- Choisir une pièce --</option>
+
+            <!-- Boucle sur les types disponibles pour peupler dyanmiquement le menu -->
+            <option th:each="room : ${rooms}" th:value="${room.id}" th:selected="${room.id == roomId}" th:text="${room.name}"></option>
+        </select>
+        <br>
+
         <label for="type">Type de l'objet :</label>
         <select id="type" name="objectTypeId">
             <option value="" selected>-- Choisir un type --</option>
@@ -49,6 +58,7 @@
                 <tr>
                     <th>Nom</th>
                     <th>Type</th>
+                    <th>Pièce</th>
                     <th>Champs de base</th>
                     <th>Champs spécifiques au type</th>
                 </tr>
@@ -58,6 +68,7 @@
                 <tr th:each="connectedObject : ${connectedObjects}" th:attr="onclick=|window.location.href='/object/${connectedObject.id}'|" style="cursor: pointer;">
                     <td th:text="${connectedObject.name}"></td> <!-- Nom de l'objet -->
                     <td th:text="${connectedObject.objectType.name}"></td> <!-- Type de l'objet -->
+                    <td th:text="${connectedObject.room.name}"></td> <!-- Pièce où se situe l'objet -->
                     <!-- Champs de base de l'objet -->
                     <td>
                         <table>

@@ -4,9 +4,11 @@ import com.example.cydomotix.Model.Objects.AttributeValue;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
+import com.example.cydomotix.Model.Room;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
+import com.example.cydomotix.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,9 @@ public class ConnectedObjectController {
     @Autowired
     private ObjectAttributeService objectAttributeService;
 
+    @Autowired
+    private RoomService roomService;
+
     /**
      * Afficher la page avec le formulaire pour créer un nouvel objet connecté.
      * Initialise les objets java à récupérer via le formulaire.
@@ -50,6 +55,9 @@ public class ConnectedObjectController {
 
         // Pour le nouvel objet à enregistrer avec le formulaire
         model.addAttribute("connectedObject", connectedObject);
+
+        // Liste des pièces
+        model.addAttribute("rooms", roomService.getAllRooms());
 
         return "admin/connectedobj";  // Retourne le vrai chemin de la vue pour le formulaire de création
     }
@@ -82,6 +90,10 @@ public class ConnectedObjectController {
         ObjectType existingType = objectTypeService.getObjectTypeById(connectedObject.getObjectType().getId());
         connectedObject.setObjectType(existingType); // On remplace l'instance transiente par une instance persistante
 
+        // Vérifie que la Room sélectionnée et envoyée via le formulaire existe bien en BDD
+        Room existingRoom = roomService.getRoomById(connectedObject.getRoom().getId());
+        connectedObject.setRoom(existingRoom); // On remplace l'instance transiente par une instance persistante
+
         // Vérifie si le nom existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
         if (connectedObjectService.objectExists(connectedObject.getName())) {
             bindingResult.rejectValue("name", "error.connectedObject", "Un objet connecté avec ce nom existe déjà.");
@@ -98,6 +110,9 @@ public class ConnectedObjectController {
 
             // Pour le nouvel objet à enregistrer avec le formulaire
             model.addAttribute("connectedObject", connectedObject);
+
+            // Liste des pièces
+            model.addAttribute("rooms", roomService.getAllRooms());
 
             return "admin/connectedobj";  // Retourne à la page du formulaire avec les erreurs
         }

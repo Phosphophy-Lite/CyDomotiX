@@ -19,6 +19,9 @@
                 <td colspan="2" style="text-align: center" th:text="${connectedObject.objectType.name}"></td>
             </tr>
             <tr>
+                <td colspan="2" style="text-align: center" th:text="${connectedObject.room.name}"></td>
+            </tr>
+            <tr>
                 <td>Marque :</td>
                 <td th:text="${connectedObject.brand}"></td>
             </tr>
@@ -85,27 +88,38 @@
             <label for="name">Nom de l'objet :</label>
             <input type="text" id="name" th:field="*{name}">
             <br>
+
             <!-- Type d'objet en read only pour l'esthétique et pour envoyer les infos complètes avec le form -->
             <label>Type d'objet :</label>
             <input type="text" th:value="${connectedObject.objectType.name}" readonly>
             <br>
+
+            <label>Pièce :</label>
+            <select th:field="*{room}" id="room">
+                <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}"></option>
+            </select>
+            <br>
+
             <label for="brand">Marque :</label>
             <input type="text" id="brand" th:field="*{brand}">
             <br>
+
             <label for="mode">Mode :</label>
             <select th:field="*{mode}" id="mode">
                 <option th:each="mode : ${T(com.example.cydomotix.Model.Objects.Mode).values()}" th:value="${mode}" th:text="${mode.displayName}"></option>
             </select>
-
             <br>
+
             <label for="connectivity">Connectivité :</label>
             <select th:field="*{connectivity}" id="connectivity">
                 <option th:each="connectvitiy : ${T(com.example.cydomotix.Model.Objects.Connectivity).values()}" th:value="${connectvitiy}" th:text="${connectvitiy.displayName}"></option>
             </select>
             <br>
+
             <label for="batteryStatus">État de batterie :</label>
             <input type="number" min="0" max="100" id="batteryStatus" th:field="*{batteryStatus}"><span> %</span>
             <br>
+
             <h3>Champs :</h3>
 
             <table id="attributesTable">

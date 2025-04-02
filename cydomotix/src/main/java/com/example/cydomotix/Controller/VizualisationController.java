@@ -7,6 +7,7 @@ import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
+import com.example.cydomotix.Service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,15 +31,19 @@ public class VizualisationController {
     @Autowired
     ObjectAttributeService objectAttributeService;
 
+    @Autowired
+    RoomService roomService;
+
     @GetMapping
     public String vizualisation(@RequestParam(required = false) String keyword,
                                 @RequestParam(required = false) Integer objectTypeId,
+                                @RequestParam(required = false) Integer roomId,
                                 @RequestParam(required = false) String brand,
                                 @RequestParam(required = false) Mode mode,
                                 @RequestParam(required = false) Connectivity connectivity,
                                 Model model){
 
-        List<ConnectedObject> results = connectedObjectService.searchObjects(keyword, objectTypeId, brand, mode, connectivity);
+        List<ConnectedObject> results = connectedObjectService.searchObjects(keyword, objectTypeId, roomId, brand, mode, connectivity);
 
         // Liste des objets connectés trouvés
         model.addAttribute("connectedObjects", results);
@@ -46,12 +51,16 @@ public class VizualisationController {
         // Liste des types enregistrés pour peupler le menu déroulant des types à sélectionner
         model.addAttribute("objectTypes", objectTypeService.getAllObjectTypes());
 
+        // Liste des pièces enregistrées pour peupler le menu déroulant des pièces à sélectionner
+        model.addAttribute("rooms", roomService.getAllRooms());
+
         // Filtres à récupérer avec requête GET
         model.addAttribute("keyword", keyword);
         model.addAttribute("mode", mode);
         model.addAttribute("connectivity", connectivity);
         model.addAttribute("brand", brand);
         model.addAttribute("objectTypeId", objectTypeId);
+        model.addAttribute("roomId", roomId);
 
         return "vizualisation";
     }

@@ -13,6 +13,7 @@
             <tr>
                 <th>Nom</th>
                 <th>Type</th>
+                <th>Pièce</th>
                 <th>Champs de base</th>
                 <th>Champs spécifiques au type</th>
                 <th>Action</th>
@@ -23,6 +24,7 @@
             <tr th:each="connectedObject : ${connectedObjects}">
                 <td th:text="${connectedObject.name}"></td> <!-- Nom de l'objet -->
                 <td th:text="${connectedObject.objectType.name}"></td> <!-- Type de l'objet -->
+                <td th:text="${connectedObject.room.name}"></td> <!-- Pièce où se situe l'objet -->
                 <!-- Champs de base de l'objet -->
                 <td>
                     <table>
@@ -96,6 +98,7 @@
         <label for="name">Nom de l'objet :</label>
         <input type="text" id="name" th:field="*{name}" required>
         <br>
+
         <label for="type">Type de l'objet :</label>
         <select id="type" name="objectType" onchange="loadAttributes(this.value)" required>
             <option value="" selected disabled>-- Choisir un type --</option>
@@ -104,9 +107,20 @@
             <option th:each="objectType : ${objectTypes}" th:value="${objectType.id}" th:text="${objectType.name}"></option>
         </select>
         <br>
+
+        <label for="room">Pièce :</label>
+        <select id="room" name="room" required>
+            <option value="" selected disabled>-- Choisir une pièce --</option>
+
+            <!-- Boucle sur les pièces disponibles pour peupler dyanmiquement le menu -->
+            <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}"></option>
+        </select>
+        <br>
+
         <label for="brand">Marque :</label>
         <input type="text" id="brand" th:field="*{brand}" required>
         <br>
+
         <label for="mode">Mode :</label>
         <select th:field="*{mode}" id="mode">
             <option th:each="mode : ${T(com.example.cydomotix.Model.Objects.Mode).values()}" th:value="${mode}" th:text="${mode.displayName}"></option>
@@ -118,9 +132,11 @@
             <option th:each="connectvitiy : ${T(com.example.cydomotix.Model.Objects.Connectivity).values()}" th:value="${connectvitiy}" th:text="${connectvitiy.displayName}"></option>
         </select>
         <br>
+
         <label for="batteryStatus">État de batterie :</label>
         <input type="number" min="0" max="100" id="batteryStatus" th:field="*{batteryStatus}" required><span> %</span>
         <br>
+
         <label for="lastInteraction">Dernière interaction :</label>
         <input type="datetime-local" id="lastInteraction" th:field="*{lastInteraction}" required>
 
