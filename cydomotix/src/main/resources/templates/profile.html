@@ -21,7 +21,30 @@
                         <option th:each="gender : ${T(com.example.cydomotix.Model.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
                     </select>
                 </td>
-
+            </tr>
+            <tr>
+                <td><label for="password">Mot de passe :</label></td>
+                <td><input type="text" id="password"></td>
+            </tr>
+            <tr>
+                <td><label for="password">Confirmez le mot de passe :</label></td>
+                <td><input type="text" id="password"></td>
+            </tr>
+            <tr>
+                <td><label for="birth_date">Date de naissance :</label></td>
+                <td><input type="date" id="birth_date" th:field="*{birthDate}"></td>
+            </tr>
+            <tr>
+                <td><label for="first_name">Prénom :</label></td>
+                <td><input type="text" id="first_name" th:field="*{firstName}"></td>
+            </tr>
+            <tr>
+                <td><label for="last_name">Nom :</label></td>
+                <td><input type="text" id="last_name" th:field="*{lastName}"></td>
+            </tr>
+            <tr>
+                <td><label for="photo">Image de profil :</label></td>
+                <td><input type="file" id="photo"></td>
             </tr>
         </table>
 

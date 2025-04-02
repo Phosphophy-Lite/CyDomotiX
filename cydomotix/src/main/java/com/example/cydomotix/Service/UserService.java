@@ -94,6 +94,11 @@ public class UserService {
 
             existingUser.setUsername(newUsername);
             existingUser.setGender(updatedUser.getGender());
+            existingUser.setBirthDate(updatedUser.getBirthDate());
+            existingUser.setFirstName(updatedUser.getFirstName());
+            existingUser.setLastName(updatedUser.getLastName());
+            existingUser.setPassword(updatedUser.getPassword());
+            existingUser.setPhoto(updatedUser.getPhoto());
 
             // Sauvegarde les modifications
             userRepository.save(existingUser);
