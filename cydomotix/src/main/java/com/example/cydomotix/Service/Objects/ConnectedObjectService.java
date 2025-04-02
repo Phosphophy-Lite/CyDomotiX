@@ -67,6 +67,7 @@ public class ConnectedObjectService {
      * Met à jour les champs basiques d'un objet connecté
      */
     private void updateBasicFields(ConnectedObject existingObject, ConnectedObject updatedObject) {
+        existingObject.setRoom(updatedObject.getRoom());
         existingObject.setName(getUpdatedValue(updatedObject.getName(), existingObject.getName()));
         existingObject.setBrand(getUpdatedValue(updatedObject.getBrand(), existingObject.getBrand()));
         existingObject.setMode(updatedObject.getMode());
