@@ -104,7 +104,6 @@ public class UserService {
             existingUser.setBirthDate(updatedUser.getBirthDate());
             existingUser.setFirstName(getUpdatedValue(updatedUser.getFirstName(), existingUser.getFirstName()));
             existingUser.setLastName(getUpdatedValue(updatedUser.getLastName(), existingUser.getLastName()));
-            //existingUser.setPhoto(updatedUser.getPhoto());
 
             // Sauvegarde les modifications
             userRepository.save(existingUser);
@@ -113,7 +112,6 @@ public class UserService {
             if(usernameChanged){
                 UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(newUsername);
 
-                // Create a new authentication token with updated details
                 // Créer un nouveau token d'authentification dans le contexte de Spring Security avec les infos mises à jour
                 Authentication newAuth = new UsernamePasswordAuthenticationToken(
                         updatedUserDetails,
@@ -156,8 +154,6 @@ public class UserService {
                 return null;
             }
 
-            System.out.println("File gets created");
-
             // Générer un nom de fichier unique
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String uniqueFileName = "profile_" + userId + fileExtension;
@@ -166,7 +162,6 @@ public class UserService {
             // Compression de l'image avec Thumbnailator
             InputStream inputStream = file.getInputStream();
             BufferedImage originalImage = ImageIO.read(inputStream);
-            System.out.println("File got compressed");
 
             Thumbnails.of(originalImage)
                     .size(100, 100) // Resize de l'image à 100x100 pixels
@@ -176,7 +171,6 @@ public class UserService {
             return "img/profilePictures/" + uniqueFileName;
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error " + e.getMessage());
             return null;
         }
     }

@@ -87,7 +87,6 @@ public class ProfileController {
                 userService.update(authentication, existingUser.getId(), updatedUser);
 
                 if(newProfilePicture != null){
-                    System.out.println("sss");
                     // Vérifie la taille du fichier uploadé si il n'est pas trop gros
                     if (newProfilePicture.getSize() > 10485760) { // 10MB en bytes
                         redirectAttributes.addFlashAttribute("errorMessage", "La taille du fichier est trop grande.");
@@ -96,7 +95,6 @@ public class ProfileController {
 
                     // Gérer l'upload de l'image
                     if (!newProfilePicture.isEmpty()) {
-                        System.out.println("not empty");
                         String imageName = userService.saveProfilePicture(newProfilePicture, existingUser.getId());
                         userService.setUserProfilePicture(existingUser,imageName); // Stocker le nom du fichier dans la BDD
                     }
