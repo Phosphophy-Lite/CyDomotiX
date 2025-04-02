@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+
+        <!-- Afficher la photo de profil. -->
+        <img th:src="@{${user.photo}}" alt="Profile Picture" width="100px" height="100px">
+
+        <table>
+            <tr>
+                <th colspan="2" th:text="${user.username}"></th>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center" th:text="${user.accessType}"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center" th:text="${user.memberType} ?: '???'"></td>
+            </tr>
+            <tr>
+                <td>Genre :</td>
+                <td th:text="${user.gender} ?: '???'"></td>
+            </tr>
+            <tr>
+                <td>Date de naissance :</td>
+                <td th:text="${user.birthDate} ?: '???'"></td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>
