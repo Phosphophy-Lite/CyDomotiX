@@ -18,8 +18,7 @@ CREATE TABLE Users (
                         last_name VARCHAR(255),
                         experience_level VARCHAR(20),
                         points INT,
-                        password VARCHAR(255) NOT NULL,
-                        is_connected BOOLEAN
+                        password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Room (
