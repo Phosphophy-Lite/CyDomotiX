@@ -13,7 +13,7 @@
 <!-- BARRE CENTRALE -->
 
 <div id="upRod">
-    <a class="link"  th:href="@{/vizualisation}">Visualisation</a>
+    <a class="link"  th:href="@{/visualization}">Visualisation</a>
     <a class="link">Gestion</a>
     <a class="link">Administration</a>
     <a class="link" th:href="@{/profile}">Profil</a>
@@ -40,7 +40,7 @@
         <h1 th:text="${user != null ? user.username : 'Utilisateur anonyme'}"></h1>
 
         <div id="visualisation">
-            <a th:href="@{/vizualisation}" id="visualisationLink" class="title-link">VISUALISATION</a>
+            <a th:href="@{/visualization}" id="visualisationLink" class="title-link">VISUALISATION</a>
             <img id="imageAmongUs" src="/img/background/visualisation.jpg" alt="fondAmongUs">
         </div>
 

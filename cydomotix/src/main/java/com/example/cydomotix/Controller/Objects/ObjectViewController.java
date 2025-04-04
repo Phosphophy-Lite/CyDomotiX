@@ -75,7 +75,7 @@ public class ObjectViewController {
     @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
     public String deleteConnectedObject(@PathVariable("id") Integer id) {
         connectedObjectService.deleteConnectedObject(id);
-        return "redirect:/vizualisation"; // Recharge la page avec la nouvelle liste
+        return "redirect:/visualisation"; // Recharge la page avec la nouvelle liste
     }
 
     /**

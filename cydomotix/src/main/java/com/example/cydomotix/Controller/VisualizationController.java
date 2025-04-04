@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("/vizualisation")
-public class VizualisationController {
+@RequestMapping("/visualization")
+public class VisualizationController {
 
     @Autowired
     ConnectedObjectService connectedObjectService;
@@ -35,7 +35,7 @@ public class VizualisationController {
     RoomService roomService;
 
     @GetMapping
-    public String vizualisation(@RequestParam(required = false) String keyword,
+    public String visualization(@RequestParam(required = false) String keyword,
                                 @RequestParam(required = false) Integer objectTypeId,
                                 @RequestParam(required = false) Integer roomId,
                                 @RequestParam(required = false) String brand,
@@ -62,7 +62,7 @@ public class VizualisationController {
         model.addAttribute("objectTypeId", objectTypeId);
         model.addAttribute("roomId", roomId);
 
-        return "vizualisation";
+        return "visualization";
     }
 
     /**
