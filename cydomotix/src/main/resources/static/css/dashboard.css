@@ -1,0 +1,494 @@
+/**************************************** Dynamic Stars ****************************************/
+
+/* Ajout d'étoiles filantes occasionnelles */
+@keyframes shootingStar {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100vw) translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.shooting-star {
+    position: fixed;
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    animation: shootingStar 3s linear forwards;
+    z-index: -1;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 1px white;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Étoiles scintillantes */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.twinkle-star {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: -1;
+    animation: twinkle 5s infinite;
+    pointer-events: none;
+}
+
+
+/**************************************** Titres globaux ****************************************/
+@font-face {
+    font-family: amongus;
+    src: url('/img/font/amaticBold.ttf');
+}
+
+/*@font-face {
+    font-family: 'VCR_OSD_MONO';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/img/font/VCR_OSD_MONO.woff');
+}*/
+  
+
+body {
+    font-family: amongus;
+    margin: 0;
+    padding: 0;
+    background-image: url('/img/background/espace.jpg');
+    color: white;
+}
+
+h5{
+    margin:1em;
+}
+
+
+
+ul {
+    list-style-type: none; /* Supprime les puces */
+    padding: 0;
+    margin: 0;
+    padding-left: 0; /* Pour enlever le décalage */
+    margin-left: 0; /* Supprime également la marge gauche si nécessaire */
+}
+
+ul li {
+    margin: 0;
+    padding: 0;
+}
+
+/**************************************** BARRE CENTRALE ****************************************/
+
+#upRod{
+    display: flex;
+    height: 5em;
+    border-radius: 0 0 2em 2em;
+    justify-content: center;
+    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.5);
+    background-color: white;
+    color: black;
+}
+
+.link{
+    margin: auto;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.link:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.link:hover::after {
+    transform: scaleX(1);
+}
+
+.button
+{
+    width:13em;
+    height: 3em;
+    border-radius: 3em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(66, 144, 253, 0.59);
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: all 0.3s ease;
+}
+
+.button:hover::before {
+    left: 100%;
+}
+
+
+
+/**************************************** DIV CONTAINER PAGE ****************************************/
+
+#containerPage{
+    display: flex;
+    justify-content: center;
+}
+
+/*************************** PARTIE GAUCHE ***************************/
+#leftSide{
+    display: inline-block;
+    width: 70%; /*Lien vers rightSide*/
+    height: 38em;
+    text-align: center;
+}
+
+
+#visualisation, #gestion, #administration {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+
+
+#visualisation {
+    display: inline-block;
+    box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4);
+    width: 70%;
+    height: 35%;
+    border-radius: 3em;
+    position: relative;
+    overflow: hidden; /* Pour masquer les débordements d'image */
+}
+
+#visualisation:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 0px 40px rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Image de gauche */
+#imageAmongUs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%; /* Moitié de la largeur */
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    opacity: 0.5; /* Opacité réduite */
+    border-radius: 3em 0 0 3em; /* Arrondi uniquement du côté gauche */
+}
+
+/* Image de droite (nouvelle) */
+#visualisation::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%; /* Moitié de la largeur */
+    height: 100%;
+    background-image: url('/img/background/visualisation.jpg');
+    background-size: cover;
+    background-position: right center;
+    z-index: 1;
+    opacity: 0.5; /* Opacité réduite */
+    border-radius: 0 3em 3em 0; /* Arrondi uniquement du côté droit */
+}
+
+.title-link {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 10px 25px;
+    border-radius: 15px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    
+    /* Styles de texte pour qu'il ressemble à un h1 */
+    font-size: 2em;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    
+    /* Centrage vertical */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.title-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(calc(-50% - 2px));
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.4);
+}
+
+
+#containerGestAdmin{
+    display: flex;
+    justify-content: center;
+    height: 17em;
+}
+
+
+
+
+
+#gestion{
+    box-shadow: 0px 0px 30px rgba(66, 144, 253, 0.6);
+    background: linear-gradient(to bottom right, #4290fd, #4290fd9b);
+}
+
+
+#gestion:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 0px 40px rgba(66, 144, 253, 0.8);
+}
+
+#administration{
+    box-shadow: 0px 0px 30px rgba(227, 10, 243, 0.6);
+    background: linear-gradient(to bottom right, #e30af3, #e30af39f);
+}
+
+#administration:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 0px 40px rgba(227, 10, 243, 0.8);
+}
+
+
+#gestion, #administration {
+    
+    display: flex;
+    opacity: 0.9;
+    width: 32%;
+    height: 80%;
+    border-radius: 3em;
+    margin: 2em;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    /*pointer-events: none;*/ /*Permet de lock l'utilisation de la div*/
+    overflow: hidden;
+
+    
+}
+
+
+
+/* Mettre le cadena au centre avec le titre */
+#gestion .lock-overlay, #administration .lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+/* Amélioration de l'overlay cadenas */
+#gestion .lock-overlay svg, #administration .lock-overlay svg {
+    width: 80px;
+    height: 80px;
+    fill: rgba(4, 0, 0, 0.7);
+}
+
+/* Chaînes */
+#gestion::before, #gestion::after, 
+#administration::before, #administration::after {
+    content: '';
+    position: absolute;
+    width: 120%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    z-index: 5;
+}
+
+#gestion::before, #administration::before {
+    transform: rotate(45deg);
+}
+
+#gestion::after, #administration::after {
+    transform: rotate(-45deg);
+}
+
+
+/* Style de bouton similaire à visualisation pour gestion et administration */
+.admin-button, .gestion-button {
+    position: relative;
+    z-index: 15; /* Au-dessus du cadenas */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 10px 25px;
+    border-radius: 15px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    
+    /* Styles de texte pour qu'il ressemble à un h1 */
+    font-size: 2em;
+    font-weight: bold;
+    font-family: amongus; /* Utilisation de la même police */
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+.admin-button:hover, .gestion-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.4);
+}
+
+
+/*************************** PARTIE DROITE ***************************/
+
+/******************** Div user ********************/
+
+#rightSide{
+    display: inline-block;
+    justify-content: center;
+    width: 25%; /*Lien avec leftSide*/
+    height: 38em;
+}  
+
+#user{
+    display: inline-block;
+    box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4);
+    width: 80%;
+    height: 55%;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    background-color: white;
+    color: black;
+    overflow-y: scroll;
+    border-radius: 3em;
+
+}
+
+#containerProfil{
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+    border-bottom: black solid 2px;
+
+    
+}
+
+#profilePictureDashboard{
+    border-radius: 100%;
+    object-fit: cover;
+    height: 5em;
+    margin-right: 1em;
+
+}
+
+#user, #ptsScore {
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+#user:hover, #ptsScore:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 0px 35px rgba(255, 255, 255, 0.6);
+}
+
+/** Unités des liste utilisateurs **/
+
+.user{
+    display: flex;
+    width: 100%;
+    height: 4em;
+    border-bottom: black solid 2px;
+    border-top: lightgrey solid 2px;
+    padding-bottom: 1em;
+}
+
+.user:hover{
+    background-color: lightgray;
+}
+
+.pp{
+    border-radius: 100%;
+    object-fit: cover;
+    height: 3em;    
+    padding: 1em;
+    
+}
+
+.pseudoPP{
+    padding: 1em;
+}
+
+/******************** Div score ********************/
+
+#ptsScore{
+    display: inline-block;
+    box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4);
+    width: 80%;
+    height: 30%;
+    border-radius: 3em;
+    text-align: center;
+    background-color: white;
+    color: black;
+}
+
+
+#containerDifferentPts{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+
+
+
+
+
+
+
+

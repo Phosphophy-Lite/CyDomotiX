@@ -3,8 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <title>dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/dashboard.css" th:href="@{/css/dashboard.css}" />
+    <script src="/js/dynamicStars.js" defer></script>
+    <script src="/js/dashboard.js" defer></script>
+
 </head>
 <body>
-<h2>salut</h2>
+
+<!-- BARRE CENTRALE -->
+
+<div id="upRod">
+    <a class="link">Visualisation</a>
+    <a class="link">Gestion</a>
+    <a class="link">Administration</a>
+    <a class="link">Profil</a>
+    <div class="link">
+        <input class="button" type="button" value="Déconnexion">
+    </div>
+</div>
+
+<!-- DIV CONTAINER PAGE -->
+
+<div id="containerPage">
+
+
+    <div id="leftSide">
+
+        <h4>Bienvenue</h4>
+        <h1>Pseudonyme</h1>
+
+        <div id="visualisation">
+            <a th:href="@{/vizualisation}" id="visualisationLink" class="title-link">VISUALISATION</a>
+            <img id="imageAmongUs" src="/img/background/visualisation.jpg" alt="fondAmongUs">
+        </div>
+
+        <div id="containerGestAdmin">
+            <div id="gestion">
+                <button class="gestion-button">GESTION</button>
+                <div class="lock-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M17 9V7C17 4.243 14.756 2 12 2S7 4.243 7 7V9C4.243 9 2 11.243 2 14V19C2 21.757 4.243 22 7 22H17C19.757 22 22 21.757 22 19V14C22 11.243 19.757 9 17 9ZM12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18ZM15 9H9V7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V9Z"/>
+                    </svg>
+                </div>
+            </div>
+            <div id="administration">
+                <button class="admin-button">ADMINISTRATION</button>
+                <div class="lock-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M17 9V7C17 4.243 14.756 2 12 2S7 4.243 7 7V9C4.243 9 2 11.243 2 14V19C2 21.757 4.243 22 7 22H17C19.757 22 22 21.757 22 19V14C22 11.243 19.757 9 17 9ZM12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18ZM15 9H9V7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V9Z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rightSide">
+
+        <div id="user">
+
+            <div id="containerProfil">
+                <img id="profilePictureDashboard" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
+                <div>
+                    <p>Pseudonyme</p>
+                    <a href="https://www.chess.com">voir plus</a>
+                </div>
+            </div>
+
+
+            <li>
+                <ul>
+                    <div class="user">
+                        <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
+                        <p class="pseudoPP">PapaAmonAmongus</p>
+                    </div>
+                </ul>
+                <ul>
+                    <div class="user">
+                        <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
+                        <p class="pseudoPP">MamaAmonAmongus</p>
+                    </div>
+                </ul>
+                <ul>
+                    <div class="user">
+                        <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
+                        <p class="pseudoPP">PitiAmonAmongus</p>
+                    </div>
+                </ul>
+            </li>
+
+
+
+
+
+        </div>
+
+        <div id="ptsScore">
+            <div id="containerDifferentPts">
+                <div id="coPts"><h5>Connexion</h5><p>XXX pts</p></div>
+                <div id="searchPts"><h5>Recheche</h5><p>XXX pts</p></div>
+            </div>
+            <h2>TOTAL</h2>
+            <p>XXX pts</p>
+        </div>
+
+    </div>
+
+</div>
+
 </body>
 </html>
