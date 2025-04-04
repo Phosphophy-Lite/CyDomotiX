@@ -35,9 +35,6 @@ public class VisualizationController {
     @Autowired
     RoomService roomService;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping
     public String visualization(@RequestParam(required = false) String keyword,
                                 @RequestParam(required = false) Integer objectTypeId,
