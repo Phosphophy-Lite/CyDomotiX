@@ -1,7 +1,7 @@
 package com.example.cydomotix.Repository;
 
-import com.example.cydomotix.Model.User;
-import org.springframework.data.repository.CrudRepository;
+import com.example.cydomotix.Model.Users.User;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Integer> {
+public interface UserRepository extends ListCrudRepository<User, Integer> {
 
     // Ici, inclure des méthodes CRUD personnalisées
     // Ces méthodes sont automatiquement reconnues par CrudRepository comme des opérations CRUD (Créer, Lire, Mettre à jour, Supprimer) sur les attributs d'un utilisateur dans la base de données
@@ -23,4 +23,5 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
     Optional<User> findById(Integer id);
+    Optional<User> findByEmail(String email);
 }

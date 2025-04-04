@@ -1,7 +1,7 @@
 package com.example.cydomotix.Config;
 
-import com.example.cydomotix.Model.AccessType;
-import com.example.cydomotix.Model.User;
+import com.example.cydomotix.Model.Users.AccessType;
+import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

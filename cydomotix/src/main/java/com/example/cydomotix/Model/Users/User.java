@@ -1,4 +1,4 @@
-package com.example.cydomotix.Model;
+package com.example.cydomotix.Model.Users;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +24,9 @@ public class User implements UserDetails {
     @NotBlank(message = "Un pseudonyme est obligatoire.")
     private String username;
 
+    @Column(unique = true)
+    private String email;
+
     @Column(nullable = false)
     @NotBlank(message = "Un mot de passe est obligatoire.")
     @Size(min = 6, message = "Le mot de passe doit faire au moins 6 caractères.")
@@ -31,7 +34,7 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AccessType access_type = AccessType.USER; // permissions par défaut après inscription
+    private com.example.cydomotix.Model.Users.AccessType access_type = com.example.cydomotix.Model.Users.AccessType.USER; // permissions par défaut après inscription
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -50,11 +53,15 @@ public class User implements UserDetails {
     private String last_name;
     private String experience_level;
 
+    @Column(nullable = false)
+    private boolean enabled = false;
 
-    public User(String username, String password, AccessType access_type) {
+
+    public User(String username, String password, com.example.cydomotix.Model.Users.AccessType access_type) {
         this.username = username;
         this.password = password;
         this.access_type = access_type;
+        this.enabled = true; // pour l'initialisation des comptes de base qui ne nécessitent pas de vérification
     }
 
     public User() {
@@ -125,7 +132,7 @@ public class User implements UserDetails {
     public String getLastName(){
         return this.last_name;
     }
-    public AccessType getAccessType(){
+    public com.example.cydomotix.Model.Users.AccessType getAccessType(){
         return this.access_type;
     }
     public String getExperienceLevel(){
@@ -134,6 +141,7 @@ public class User implements UserDetails {
     public int getPoints(){
         return this.points;
     }
+    public boolean getEnabled(){ return this.enabled; }
 
     public void setUsername(String newUsername){
         this.username = newUsername;
@@ -168,6 +176,18 @@ public class User implements UserDetails {
     }
     public void setPassword(String newPassword){
         this.password = newPassword;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public void addPoints(int nbr){this.points += nbr;} // Ajoute nbr aux nombres de points de l'utilisateur

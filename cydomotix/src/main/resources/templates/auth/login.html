@@ -44,31 +44,20 @@
                     <p class="center" style="color: red;" th:text="${errorMessage}"></p>
                 </div>
 
-
                 <div class="endPage">
-
                     <div id="SeConnecter">
                         <input type="submit" class="bouton" value="SE CONNECTER">
                     </div>
-
                 </div>
-
-
                 <br><br>
-
                 <div class="center">
                     <p class="center">Ou inscrivez-vous ici</p>
 
                     <p class="center" id="pChangeForm">Inscription</p>
-
-
                 </div>
             </form>
 
         </div>
-
-
-
 
 
 
@@ -92,6 +81,11 @@
                         </div>
 
                         <div class="signUpPartLine">
+                            <label for="email">Email :</label><br>
+                            <input type="email" class="SignUpInput" th:field="*{email}" id="email" placeholder="Entrez votre adresse email" required><br><br>
+                        </div><br>
+
+                        <div class="signUpPartLine">
                             <label for="lastName">Nom :</label><br>
                             <input type="text" class="SignUpInput" th:field="*{lastName}" id="lastName" placeholder="Entrez votre nom" required><br><br>
                         </div><br>
@@ -99,17 +93,8 @@
                         <label for="gender">Sexe :</label><br>
                         <select th:field="*{gender}" id="gender">
                             <!-- Display all possible values as options for enum Gender -->
-                            <option th:each="gender : ${T(com.example.cydomotix.Model.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
+                            <option th:each="gender : ${T(com.example.cydomotix.Model.Users.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
                         </select><br><br>
-
-                        <label for="memberType">Type de membre :</label><br>
-                        <select th:field="*{memberType}" id="memberType">
-                            <option value="" selected disabled>-- Choisir --</option>
-                            <!-- Display all possible values as options for enum MemberType -->
-                            <option th:each="memberType : ${T(com.example.cydomotix.Model.MemberType).values()}" th:value="${memberType}" th:text="${memberType.displayName}"></option>
-                        </select><br><br>
-
-
 
                     </div>
 
@@ -129,6 +114,13 @@
                         <label for="birthDate">Date de naissance :</label><br>
                         <input type="date" th:field="*{birthDate}" id="birthDate"><br><br>
 
+                        <label for="memberType">Type de membre :</label><br>
+                        <select th:field="*{memberType}" id="memberType">
+                            <option value="" selected disabled>-- Choisir --</option>
+                            <!-- Display all possible values as options for enum MemberType -->
+                            <option th:each="memberType : ${T(com.example.cydomotix.Model.Users.MemberType).values()}" th:value="${memberType}" th:text="${memberType.displayName}"></option>
+                        </select><br><br>
+
                         <label for="pfp">Photo :</label>
                         <input type="file" name="pfp" id="pfp" accept="image/*">
 
@@ -145,6 +137,11 @@
                     <p class="center" style="color:red" th:errors="*{username}"></p>
                 </div>
 
+                <!-- Erreur de validation du nom d'utilisateur -->
+                <div th:if="${#fields.hasErrors('email')}">
+                    <p class="center" style="color:red" th:errors="*{email}"></p>
+                </div>
+
                 <!-- Erreur de validation du mot de passe -->
                 <div th:if="${#fields.hasErrors('password')}">
                     <p class="center" style="color:red" th:errors="*{password}"></p>
@@ -158,17 +155,13 @@
                 <div class="endPage">
                     <input type="submit" class="bouton" value="S'INSCRIRE">
                 </div>
+                <div class="center">
+                    <p class="center" >Déjà un compte ?</p>
+                    <p class="center" id="pChangeToLogin">Se connecter</p>
+                </div>
 
 
             </form>
-
-
-
-
-            <div class="center">
-                <p class="center" >Déjà un compte ?</p>
-                <p class="center" id="pChangeToLogin">Se connecter</p>
-            </div>
 
         </div>
 

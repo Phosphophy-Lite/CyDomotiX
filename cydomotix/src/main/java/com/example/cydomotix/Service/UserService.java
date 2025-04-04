@@ -1,7 +1,9 @@
 package com.example.cydomotix.Service;
 
-import com.example.cydomotix.Model.AccessType;
-import com.example.cydomotix.Model.User;
+import com.example.cydomotix.Model.Users.AccessType;
+import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Model.Users.VerificationToken;
+import com.example.cydomotix.Repository.VerificationTokenRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +20,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -31,6 +36,10 @@ public class UserService {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+    @Autowired
+    private EmailService emailService;
 
     /**
      * Vérifie si un pseudonyme donné n'est pas déjà utilisé dans la BDD
@@ -40,6 +49,10 @@ public class UserService {
     public boolean usernameExists(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
+    public boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
 
     /**
      * Enregistre un nouvel utilisateur dans la BDD
@@ -53,7 +66,12 @@ public class UserService {
 
         // Vérifie que le pseudo n'est pas déjà utilisé par un autre utilisateur dans la BDD
         if (usernameExists(user.getUsername())) {
-            throw new IllegalArgumentException("Pseudonym already in use.");
+            throw new IllegalArgumentException("Username already in use.");
+        }
+
+        // Vérifie que le pseudo n'est pas déjà utilisé par un autre utilisateur dans la BDD
+        if (emailExists(user.getEmail())) {
+            throw new IllegalArgumentException("Email already in use.");
         }
 
         // Chiffre le mot de passe
@@ -61,7 +79,27 @@ public class UserService {
         user.setAccessType(AccessType.USER); // Default role for new users
 
         // Utilise une méthode de CrudRepository pour sauvegarder l'utilisateur dans la BDD
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Envoie l'email de vérification du compte
+        sendVerificationToken(savedUser);
+
+        return savedUser;
+    }
+
+    public void sendVerificationToken(User user){
+        // Création du token de vérification
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        verificationToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // expire après 24h
+
+        // Enregistrement dans la BDD
+        verificationTokenRepository.save(verificationToken);
+
+        // Envoie l'email de vérification du compte
+        emailService.sendVerificationEmail(user, token);
     }
 
     /**
@@ -173,5 +211,9 @@ public class UserService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 }

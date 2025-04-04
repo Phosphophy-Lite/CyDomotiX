@@ -1,4 +1,4 @@
-package com.example.cydomotix.Model;
+package com.example.cydomotix.Model.Users;
 
 public enum MemberType {
     MOTHER("Mère"),

@@ -24,7 +24,7 @@
                 <td><label for="gender">Genre :</label></td>
                 <td>
                     <select th:field="*{gender}" id="gender">
-                        <option th:each="gender : ${T(com.example.cydomotix.Model.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
+                        <option th:each="gender : ${T(com.example.cydomotix.Model.Users.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
                     </select>
                 </td>
             </tr>

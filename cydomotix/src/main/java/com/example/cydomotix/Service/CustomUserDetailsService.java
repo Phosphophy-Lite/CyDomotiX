@@ -1,8 +1,9 @@
 package com.example.cydomotix.Service;
 
-import com.example.cydomotix.Model.User;
+import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,9 +38,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         // Récupère l'utilisateur de la BDD via son nom d'utilisateur
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> {
-                    System.out.println("User not found : " + username);
                     return new UsernameNotFoundException("User not found");
                 });
+
+        if (!user.isEnabled()) {
+            throw new DisabledException("Account not verified.");
+        }
 
         System.out.println("User found: " + user.getUsername() + " with role: " + user.getAccessType());
 
@@ -47,6 +51,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(), // chiffré
+                user.isEnabled(),
+                true,true,true,
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getAccessType())) // Permissions (expl : "ROLE_USER")
         );
     }
