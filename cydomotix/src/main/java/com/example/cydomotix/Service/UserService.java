@@ -217,8 +217,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void updatePoints(User updatedUser){
-        // call fonction add et save dans la bdd
-        System.out.println("test");
+    public void updatePoints(User updatedUser, int nbr){
+        // Call la fonction add et save dans la bdd
+        updatedUser.addPoints(nbr);
+        userRepository.save(updatedUser);
     }
 }
