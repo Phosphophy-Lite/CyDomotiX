@@ -73,19 +73,6 @@ public class MainController {
         return "dashboard";
     }
 
-    @GetMapping("/{username}")
-    public String viewPublicUserProfile(@PathVariable String username, Model model) {
-        // Récupérer l'entité complète User de la BDD
-        Optional<User> userOptional = userService.getByUsername(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            model.addAttribute("user", user);
-        }
-        else{
-            return "redirect:/error";
-        }
 
-        return "public-profile";
-    }
 
 }

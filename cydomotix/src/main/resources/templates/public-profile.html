@@ -15,14 +15,15 @@
                 <th colspan="2" th:text="${user.username}"></th>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center" th:text="${user.accessType}"></td>
+                <td colspan="2" style="text-align: center" th:text="${user.accessType.displayName}"></td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: center" th:text="${user.memberType} ?: '???'"></td>
+                <!-- Afficher '???' si memberType est null (memberType?) ou si memberType est vide (?:) -->
+                <td colspan="2" style="text-align: center" th:text="${user.memberType?.displayName} ?: '???'"></td>
             </tr>
             <tr>
                 <td>Genre :</td>
-                <td th:text="${user.gender} ?: '???'"></td>
+                <td th:text="${user.gender?.displayName} ?: '???'"></td>
             </tr>
             <tr>
                 <td>Date de naissance :</td>

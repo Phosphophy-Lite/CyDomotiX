@@ -13,7 +13,7 @@
 <!-- BARRE CENTRALE -->
 
 <div id="upRod">
-    <a class="link"  th:href="@{/visualization}">Visualisation</a>
+    <a class="link" th:href="@{/visualization}">Visualisation</a>
     <a class="link">Gestion</a>
     <a class="link">Administration</a>
     <a class="link" th:href="@{/profile}">Profil</a>
@@ -76,31 +76,14 @@
                 </div>
             </div>
 
-
             <li>
                 <ul th:each="user : ${userList}">
                     <div class="user">
                         <img class="pp" th:src="@{${user.photo}}" alt="profilePicture">
-                        <a class="pseudoPP" th:text="${user.username}" th:href="@{/{username}(username=${user.username})}"></a>
+                        <a class="pseudoPP" th:text="${user.username}" th:href="@{/profile/{username}(username=${user.username})}"></a>
                     </div>
                 </ul>
-                <!--<ul>
-                    <div class="user">
-                        <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
-                        <p class="pseudoPP">MamaAmonAmongus</p>
-                    </div>
-                </ul>
-                <ul>
-                    <div class="user">
-                        <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
-                        <p class="pseudoPP">PitiAmonAmongus</p>
-                    </div>
-                </ul>-->
             </li>
-
-
-
-
 
         </div>
 

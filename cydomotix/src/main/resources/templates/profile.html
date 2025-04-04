@@ -11,7 +11,7 @@
     <!-- Afficher la photo de profil. -->
     <img th:src="@{${user.photo}}" alt="Profile Picture" width="100px" height="100px"><br>
 
-    <a th:href="@{/{username}(username=${user.username})}">Voir mon profil public</a><br>
+    <a th:href="@{/profile/{username}(username=${user.username})}">Voir mon profil public</a><br>
 
     <!-- Champs à modifier -->
     <form th:action="@{/profile/update}" method="post" enctype="multipart/form-data" th:object="${user}">

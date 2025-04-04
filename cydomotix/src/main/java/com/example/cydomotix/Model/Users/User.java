@@ -48,24 +48,24 @@ public class User implements UserDetails {
 
     private int points = 0;
 
-    private String photo = "img/profilePictures/defaultPfp.png";
+    private String photo = "/img/profilePictures/defaultPfp.png";
     private String first_name;
     private String last_name;
     private String experience_level;
 
     @Column(nullable = false)
-    private boolean enabled = false;
+    private boolean enabled;
 
 
     public User(String username, String password, com.example.cydomotix.Model.Users.AccessType access_type) {
         this.username = username;
         this.password = password;
         this.access_type = access_type;
-        this.enabled = true; // pour l'initialisation des comptes de base qui ne nécessitent pas de vérification
+        this.enabled = false;
     }
 
     public User() {
-
+        this.enabled = false;
     }
 
     // Méthode de récupération des permissions pour Spring Security
@@ -85,23 +85,8 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
     public Integer getId(){
@@ -141,7 +126,6 @@ public class User implements UserDetails {
     public int getPoints(){
         return this.points;
     }
-    public boolean getEnabled(){ return this.enabled; }
 
     public void setUsername(String newUsername){
         this.username = newUsername;

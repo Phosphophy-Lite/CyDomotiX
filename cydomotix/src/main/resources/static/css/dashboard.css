@@ -103,6 +103,8 @@ ul li {
     margin: auto;
     transition: all 0.3s ease;
     position: relative;
+    color: black;
+    text-decoration: none; /* pas souligné */
 }
 
 .link:hover {
@@ -138,6 +140,7 @@ ul li {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 
@@ -461,6 +464,8 @@ ul li {
 
 .pseudoPP{
     padding: 1em;
+    color: black;
+    text-decoration: none; /* pas souligné */
 }
 
 /******************** Div score ********************/

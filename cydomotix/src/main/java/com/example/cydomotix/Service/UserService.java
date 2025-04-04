@@ -77,6 +77,7 @@ public class UserService {
         // Chiffre le mot de passe
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAccessType(AccessType.USER); // Default role for new users
+        user.setEnabled(false);
 
         // Utilise une méthode de CrudRepository pour sauvegarder l'utilisateur dans la BDD
         User savedUser = userRepository.save(user);
@@ -206,7 +207,7 @@ public class UserService {
                     .outputQuality(0.7) // Réduction de la qualité à 70% de celle de l'originale
                     .toFile(outputFile);
 
-            return "img/profilePictures/" + uniqueFileName;
+            return "/img/profilePictures/" + uniqueFileName;
         } catch (IOException e) {
             e.printStackTrace();
             return null;

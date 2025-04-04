@@ -13,7 +13,7 @@ CREATE TABLE Users (
                         gender ENUM('MALE', 'FEMALE', 'OTHER'),
                         access_type ENUM('USER', 'ADMIN', 'DEV') NOT NULL,
                         birth_date DATE,
-                        member_type ENUM('MOTHER', 'FATHER', 'CHILD'),
+                        member_type ENUM('FATHER', 'MOTHER', 'CHILD'),
                         photo VARCHAR(255),
                         first_name VARCHAR(255),
                         last_name VARCHAR(255),
