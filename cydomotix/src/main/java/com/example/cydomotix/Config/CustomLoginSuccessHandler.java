@@ -29,7 +29,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
             User user = userOpt.get();
 
             // Ajoute des points à chaque login
-            userService.updatePoints(user);
+            userService.updatePoints(user,1);
         }
 
         // Redirection normale après connexion

@@ -1,17 +1,24 @@
 package com.example.cydomotix.Controller.Objects;
 
 import com.example.cydomotix.Model.Objects.ConnectedObject;
+import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import com.example.cydomotix.Service.RoomService;
+import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
 
 @EnableMethodSecurity(prePostEnabled = true) // Pour utiliser les annotations @PreAuthorize
 @Controller
@@ -19,16 +26,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ObjectViewController {
 
     @Autowired
-    ConnectedObjectService connectedObjectService;
+    private ConnectedObjectService connectedObjectService;
 
     @Autowired
-    ObjectTypeService objectTypeService;
+    private ObjectTypeService objectTypeService;
 
     @Autowired
-    ObjectAttributeService objectAttributeService;
+    private ObjectAttributeService objectAttributeService;
 
     @Autowired
-    RoomService roomService;
+    private RoomService roomService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/{id}")
     public String viewObjectDetails(@PathVariable Integer id, Model model) {
@@ -39,8 +49,24 @@ public class ObjectViewController {
 
         // Objet trouvé, l'ajouter à la vue
         model.addAttribute("connectedObject", connectedObject);
-
         model.addAttribute("rooms", roomService.getAllRooms());
+
+
+        // Récupère la session authentifiée en cours (dans l'optique d'ajouter des points lors de la visite d'un objet)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+            // Récupérer le pseudo de l'utilisateur authentifié, dans le contexte du User de Spring Security (qui ne stocke que mdp + login)
+            String username = authentication.getName();
+
+            // Récupérer l'entité complète User de la BDD
+            Optional<User> userOptional = userService.getByUsername(username);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                //L'utilisateur est connecté. Ajout des points
+                userService.updatePoints(user, 2);
+            }
+        }
+
 
         return "object-details";
     }
