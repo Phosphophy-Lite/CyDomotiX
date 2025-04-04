@@ -8,6 +8,7 @@ import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import com.example.cydomotix.Service.RoomService;
+import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +34,9 @@ public class VisualizationController {
 
     @Autowired
     RoomService roomService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public String visualization(@RequestParam(required = false) String keyword,
