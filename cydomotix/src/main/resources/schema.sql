@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS ObjectType;
 CREATE TABLE Users (
                         id_user INT AUTO_INCREMENT PRIMARY KEY,
                         username VARCHAR(255) UNIQUE NOT NULL,
+                        email VARCHAR(255) UNIQUE,
                         gender ENUM('MALE', 'FEMALE', 'OTHER'),
                         access_type ENUM('USER', 'ADMIN', 'DEV') NOT NULL,
                         birth_date DATE,
@@ -18,7 +19,8 @@ CREATE TABLE Users (
                         last_name VARCHAR(255),
                         experience_level VARCHAR(20),
                         points INT,
-                        password VARCHAR(255) NOT NULL
+                        password VARCHAR(255) NOT NULL,
+                        enabled BOOLEAN NOT NULL
 );
 
 CREATE TABLE Room (
@@ -76,3 +78,11 @@ CREATE TABLE AttributeValue (
                                 FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE,
                                 FOREIGN KEY (object_attribute_id) REFERENCES ObjectAttribute(id_object_attribute) ON DELETE CASCADE
 );
+
+CREATE TABLE VerificationToken (
+                                    id_token INT AUTO_INCREMENT PRIMARY KEY,
+                                    token VARCHAR(255),
+                                    expiry_date DATE,
+                                    user_id INT NOT NULL,
+                                    FOREIGN KEY (user_id) REFERENCES Users(id_user)
+)

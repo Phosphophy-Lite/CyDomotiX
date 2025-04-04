@@ -1,6 +1,6 @@
 package com.example.cydomotix.Controller;
 
-import com.example.cydomotix.Model.User;
+import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

@@ -1,10 +1,12 @@
 package com.example.cydomotix.Controller;
 
-import com.example.cydomotix.Model.User;
+import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Model.Users.VerificationToken;
+import com.example.cydomotix.Repository.UserRepository;
+import com.example.cydomotix.Repository.VerificationTokenRepository;
 import com.example.cydomotix.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,11 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Controller
 public class AuthController {
@@ -27,20 +26,22 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    VerificationTokenRepository verificationTokenRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
     /**
      * Réception d'une requête POST du formulaire register sur la page de login pour l'inscription
-     * @param user
-     * @param bindingResult
+     * @param user Stocke l'objet utilisateur temporaire contenant les attributs envoyés par le formulaire
+     * @param bindingResult Erreurs de validation si l'objet ne satisfait pas les contraintes
      * @return
      */
     @PostMapping("/register")
     public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("pfp") MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
         /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
            @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
-
-           BindingResult contient les erreurs de validation si l'objet ne satisfait pas ces contraintes.
-
-           User stocke l'objet utilisateur temporaire contenant les attributs remplis lors de l'inscription.
         */
 
         // Vérifie si le nom d'utilisateur existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
@@ -48,9 +49,14 @@ public class AuthController {
             bindingResult.rejectValue("username", "error.user", "Le nom d'utilisateur existe déjà.");
         }
 
-        // Autorise à ne pas remplir forcément le champ date de naissance
-        // Si le champ du formulaire est laissé vide par l'utilisateur, le formulaire va envoyer un String vide
-        // C'est un problème car on autorise les valeurs null, mais pas les String non null mais vide car il y aura un problème de format de Date non reconnu
+        // Vérifie si le mail existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
+        if (userService.emailExists(user.getEmail())) {
+            bindingResult.rejectValue("email", "error.user", "L'adresse email est déjà utilisée.");
+        }
+
+        /* Autorise à ne pas remplir forcément le champ date de naissance
+         Si le champ du formulaire est laissé vide par l'utilisateur, le formulaire va envoyer un String vide
+         C'est un problème car on autorise les valeurs null, mais pas les String non null mais vide car il y aura un problème de format de Date non reconnu */
         if (user.getBirthDate() != null && user.getBirthDate().toString().isEmpty()) {
             user.setBirthDate(null); // Remplir alors cet attribut par null si le String envoyé est vide
         }
@@ -115,4 +121,30 @@ public class AuthController {
 
         return "auth/login";
     }
+
+    @GetMapping("/verify")
+    public String verifyAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
+        Optional<VerificationToken> tokenOptional = verificationTokenRepository.findByToken(token);
+
+        if (tokenOptional.isPresent()) {
+            VerificationToken verificationToken = tokenOptional.get();
+
+            if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Le lien de vérification a expiré.");
+                return "redirect:/register";
+            }
+
+            User user = verificationToken.getUser(); // Récupérer l'utilisateur associé à ce token unique
+            user.setEnabled(true); // Activer son compte
+            userRepository.save(user); // Enregistrer cet activation dans la BDD
+            verificationTokenRepository.delete(verificationToken); // Supprimer le token après activation
+
+            redirectAttributes.addFlashAttribute("successMessage", "Votre compte a été vérifié avec succès !");
+        }
+        else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lien de vérification invalide.");
+        }
+        return "redirect:/login";
+    }
+
 }

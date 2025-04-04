@@ -13,12 +13,19 @@
 <!-- BARRE CENTRALE -->
 
 <div id="upRod">
-    <a class="link">Visualisation</a>
+    <a class="link"  th:href="@{/vizualisation}">Visualisation</a>
     <a class="link">Gestion</a>
     <a class="link">Administration</a>
-    <a class="link">Profil</a>
+    <a class="link" th:href="@{/profile}">Profil</a>
     <div class="link">
-        <input class="button" type="button" value="Déconnexion">
+        <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
+      car une requête GET (lien clickable) ne transmet pas de token CSRF
+      donc Spring Security la bloquerait pour un logout
+      (potentiellement dangereux sans protection CSRF) -->
+        <form th:action="@{/logout}" method="post">
+            <button class="button" type="submit">Déconnexion</button>
+        </form>
+        <!--<input class="button" type="button" value="Déconnexion">-->
     </div>
 </div>
 
@@ -30,7 +37,7 @@
     <div id="leftSide">
 
         <h4>Bienvenue</h4>
-        <h1>Pseudonyme</h1>
+        <h1 th:text="${user != null ? user.username : 'Utilisateur anonyme'}"></h1>
 
         <div id="visualisation">
             <a th:href="@{/vizualisation}" id="visualisationLink" class="title-link">VISUALISATION</a>
@@ -64,20 +71,20 @@
             <div id="containerProfil">
                 <img id="profilePictureDashboard" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
                 <div>
-                    <p>Pseudonyme</p>
-                    <a href="https://www.chess.com">voir plus</a>
+                    <p th:text="${user != null ? user.username : 'Utilisateur anonyme'}">Pseudonyme</p>
+                    <a th:href="@{/profile}">voir plus</a>
                 </div>
             </div>
 
 
             <li>
-                <ul>
+                <ul th:each="user : ${userList}">
                     <div class="user">
-                        <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
-                        <p class="pseudoPP">PapaAmonAmongus</p>
+                        <img class="pp" th:src="@{${user.photo}}" alt="profilePicture">
+                        <a class="pseudoPP" th:text="${user.username}" th:href="@{/{username}(username=${user.username})}"></a>
                     </div>
                 </ul>
-                <ul>
+                <!--<ul>
                     <div class="user">
                         <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
                         <p class="pseudoPP">MamaAmonAmongus</p>
@@ -88,7 +95,7 @@
                         <img class="pp" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
                         <p class="pseudoPP">PitiAmonAmongus</p>
                     </div>
-                </ul>
+                </ul>-->
             </li>
 
 

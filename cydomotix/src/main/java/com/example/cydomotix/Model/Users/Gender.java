@@ -1,4 +1,4 @@
-package com.example.cydomotix.Model;
+package com.example.cydomotix.Model.Users;
 
 public enum Gender {
     MALE("Homme"), // display names

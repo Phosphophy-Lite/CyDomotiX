@@ -49,7 +49,7 @@
 /**************************************** Titres globaux ****************************************/
 @font-face {
     font-family: amongus;
-    src: url('/img/font/amaticBold.ttf');
+    src: url('../img/font/AmaticBold.ttf');
 }
 
 /*@font-face {
@@ -64,7 +64,7 @@ body {
     font-family: amongus;
     margin: 0;
     padding: 0;
-    background-image: url('/img/background/espace.jpg');
+    background-image: url('../img/background/espace.jpg');
     color: white;
 }
 
@@ -223,7 +223,7 @@ ul li {
     right: 0;
     width: 50%; /* Moitié de la largeur */
     height: 100%;
-    background-image: url('/img/background/visualisation.jpg');
+    background-image: url('../img/background/visualisation.jpg');
     background-size: cover;
     background-position: right center;
     z-index: 1;

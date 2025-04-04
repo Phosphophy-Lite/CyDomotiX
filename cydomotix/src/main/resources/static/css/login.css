@@ -3,22 +3,10 @@ body {
     font-family: sans-serif;
 }
 
-#main {
-    transition: all 0.3s ease-in-out;
-}
-
-
-
-
-
 #mainContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.hidden {
-    display: none;
 }
 
 #formConnexion, #formInscription {
@@ -36,14 +24,16 @@ body {
 .hidden {
     opacity: 0;
     visibility: hidden;
-    display: none;
+    display: none !important;
+    position: absolute;
     transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
 
 .show {
     opacity: 1;
     visibility: visible;
-    display: block;
+    display: block !important;
+    position: static;
 }
 
 #main {
@@ -53,7 +43,7 @@ body {
     height: 35em;
     border-radius: 1em;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
-    padding: 2%;
+    padding: 2% 2% 0 2%;
     margin-top: 1%;
     transition: width 0.5s ease; /* Animation fluide */
 
@@ -61,6 +51,7 @@ body {
 
 #main.inscription-mode {
     width: 25em;  /* Taille agrandie quand on passe en mode inscription */
+    height: 100%;
 }
 
 h1 {
@@ -126,9 +117,25 @@ p {
     cursor: pointer;
 }
 
+#signupForm {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    max-width: 100%; /* Évite que le contenu déborde */
+    overflow: hidden; /* Cache le débordement éventuel */
+}
+
+#signupForm form {
+    flex-grow: 1; /* Permet au formulaire de prendre l'espace disponible */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Répartit les sections */
+}
+
 #containerSignUp{
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap; /* Permet d'adapter le contenu si nécessaire */
+    justify-content: space-between;
 }
 
 .SignUpInput{
@@ -136,31 +143,26 @@ p {
     margin: 0.5em;
     border: none; /* Supprime les bordures */
     outline: none; /* Enlève le contour bleu au focus (facultatif) */
-    width: 12em;
+    width: 100%;
+    box-sizing: border-box;
     /*font-size: 1.05em;*/
 }
 
 .signUpPartLine{
     border-bottom: lightgrey 2px solid;
     margin-top: 1em;
-    width: 11em;
     height: 3em;
+    width: 100%; /* Assure que les inputs ne débordent pas */
 }
 
 .signUpPart{
-
-    width: 30em;
-    
+    width: 48%; /* Ajuste la largeur pour qu'elle tienne dans #main */
+    min-width: 12em; /* Empêche de devenir trop étroit */
 }
 
 .endPage{
     text-align: center;
 }
-
-
-
-
-
 
 
 
