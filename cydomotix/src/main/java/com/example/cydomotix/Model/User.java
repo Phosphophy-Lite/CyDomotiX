@@ -169,5 +169,7 @@ public class User implements UserDetails {
     public void setPassword(String newPassword){
         this.password = newPassword;
     }
+
+    public void addPoints(int nbr){this.points += nbr;} // Ajoute nbr aux nombres de points de l'utilisateur
 }
 
