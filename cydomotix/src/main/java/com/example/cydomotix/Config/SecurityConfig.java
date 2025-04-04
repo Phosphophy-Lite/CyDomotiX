@@ -56,7 +56,7 @@ public class SecurityConfig {
      * @throws Exception
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomLoginSuccessHandler loginSuccessHandler) throws Exception {
 
         http
                 .authorizeHttpRequests(auth -> {
@@ -76,7 +76,7 @@ public class SecurityConfig {
                 })
                 .formLogin(login -> login // Configure un login via formulaire
                         .loginPage("/login") // Redirige les utilisateurs vers /login pour s'authentifier
-                        .defaultSuccessUrl("/dashboard", true) // Redirige vers /dashboard après authentification
+                        .successHandler(loginSuccessHandler) // Redirige vers /dashboard après authentification et ajoute des points
                         .permitAll()
                         .failureHandler((request, response, exception) -> { // Si username/password invalides, afficher les erreurs
                             if (exception instanceof BadCredentialsException) {
