@@ -8,27 +8,21 @@ public class Room {
 
     @Id // indique que cet attribut est la primary key de la table
     @GeneratedValue(strategy= GenerationType.IDENTITY) // id_house doit être auto incrémenté
-    private Integer id_room;
+    @Column(name="id_room")
+    private Integer id;
 
+    @Column(nullable = false, unique = true)
     private String name;
-    private String type;
 
     public Integer getId(){
-        return this.id_room;
+        return this.id;
     }
     public String getName(){
         return this.name;
     }
-    public String getType(){
-        return this.type;
-    }
-
 
     public void setName(String NewName){
         this.name = NewName;
-    }
-    public void setType(String NewType){
-        this.type = NewType;
     }
 
 }

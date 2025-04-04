@@ -18,14 +18,12 @@ CREATE TABLE Users (
                         last_name VARCHAR(255),
                         experience_level VARCHAR(20),
                         points INT,
-                        password VARCHAR(255) NOT NULL,
-                        is_connected BOOLEAN
+                        password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Room (
                       id_room INT AUTO_INCREMENT PRIMARY KEY,
-                      name VARCHAR(50),
-                      type VARCHAR(50)
+                      name VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE Tool (
@@ -44,7 +42,7 @@ CREATE TABLE ObjectType (
 -- Table des attributs d'objets
 CREATE TABLE ObjectAttribute (
                                  id_object_attribute INT AUTO_INCREMENT PRIMARY KEY,
-                                 name VARCHAR(255) UNIQUE NOT NULL, -- Ex: "Température", "Mode"
+                                 name VARCHAR(255) NOT NULL, -- Ex: "Température", "Mode"
                                  value_type ENUM('STRING', 'INTEGER', 'DOUBLE', 'TEMPERATURE', 'HOURS', 'MINUTES', 'SECONDS', 'PERCENTAGE'),
                                  object_type_id INT NOT NULL, -- Relie l'attribut à un type spécifique d'objet connecté
                                  FOREIGN KEY (object_type_id) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE,
@@ -61,9 +59,9 @@ CREATE TABLE ConnectedObject (
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
                                  is_active BOOLEAN,
-                                 id_room INT, -- Relie l'objet à une pièce de la maison
+                                 id_room INT NOT NULL, -- Relie l'objet à une pièce de la maison
                                  id_type INT NOT NULL, -- Relie l'objet à un type spécifique ("Thermostat", "TV" ..)
-                                 FOREIGN KEY(id_room) REFERENCES Room(id_room),
+                                 FOREIGN KEY(id_room) REFERENCES Room(id_room) ON DELETE CASCADE,
                                  FOREIGN KEY (id_type) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE
 );
 

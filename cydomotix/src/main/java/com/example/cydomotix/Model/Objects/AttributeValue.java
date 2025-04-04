@@ -32,6 +32,10 @@ public class AttributeValue {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public ConnectedObject getConnectedObject() {
         return connectedObject;
     }

@@ -4,6 +4,7 @@ import com.example.cydomotix.Model.User;
 import com.example.cydomotix.Service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,7 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Controller
 public class AuthController {
@@ -26,7 +34,7 @@ public class AuthController {
      * @return
      */
     @PostMapping("/register")
-    public String registerUser(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String registerUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, @RequestParam("pfp") MultipartFile profilePicture, RedirectAttributes redirectAttributes) {
         /* @Valid garantit que l'objet User reçu via le formulaire respecte les contraintes :
            @NotNull, @Size, etc., définies sur ses attributs dans la classe User.
 
@@ -34,7 +42,6 @@ public class AuthController {
 
            User stocke l'objet utilisateur temporaire contenant les attributs remplis lors de l'inscription.
         */
-
 
         // Vérifie si le nom d'utilisateur existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
         if (userService.usernameExists(user.getUsername())) {
@@ -48,8 +55,16 @@ public class AuthController {
             user.setBirthDate(null); // Remplir alors cet attribut par null si le String envoyé est vide
         }
 
+        // Vérifie la taille du fichier uploadé si il n'est pas trop gros
+        if (profilePicture != null && profilePicture.getSize() > 10485760) { // 10MB en bytes
+            bindingResult.rejectValue("photo", "error.user", "La taille du fichier est trop grande.");
+        }
+
         // Afficher tous les messages d'erreur à la vue utilisateur
         if (bindingResult.hasErrors()) {
+            System.out.println("Form has errors:");
+            bindingResult.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
+
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
             redirectAttributes.addFlashAttribute("user", user);
             redirectAttributes.addFlashAttribute("registrationError", "Veuillez corriger les erreurs dans le formulaire.");
@@ -59,14 +74,13 @@ public class AuthController {
         // Enregistrer l'utilisateur dans la BDD (avec encryption de mot de passe) et récupère ses infos dans un objet
         User registeredUser = userService.registerUser(user);
 
-        // Nous ne voulons pas stocker une image avant d'enregistrer l'utilisateur,
-        // sinon nous stockerions des images inutiles en cas d'erreur lors de l'enregistrement de l'utilisateur.
-
-        // Nous avons besoin d'un moyen pour récupérer l'image envoyée dans le formulaire,
-        // et obtenir un String uniqueFileName si l'enregistrement de l'image réussit également.
-
-        // Mettre à jour la photo de profil de l'utilisateur enregistré
-        // setUserProfilePicture(registeredUser, uniqueFileName);
+        if (profilePicture != null) {
+            // Gérer l'upload de l'image
+            if (!profilePicture.isEmpty()) {
+                String imageName = userService.saveProfilePicture(profilePicture, registeredUser.getId());
+                userService.setUserProfilePicture(registeredUser,imageName); // Stocker le nom du fichier dans la BDD
+            }
+        }
 
         System.out.println("Successfully added " + user.getUsername() + "to the database.");
 

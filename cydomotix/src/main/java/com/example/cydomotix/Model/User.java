@@ -44,9 +44,8 @@ public class User implements UserDetails {
     private MemberType member_type;
 
     private int points = 0;
-    private boolean is_connected;
 
-    private String photo;
+    private String photo = "img/profilePictures/defaultPfp.png";
     private String first_name;
     private String last_name;
     private String experience_level;
@@ -136,10 +135,6 @@ public class User implements UserDetails {
         return this.points;
     }
 
-    public boolean isConnected(){
-        return this.is_connected;
-    }
-
     public void setUsername(String newUsername){
         this.username = newUsername;
     }
@@ -174,9 +169,5 @@ public class User implements UserDetails {
     public void setPassword(String newPassword){
         this.password = newPassword;
     }
-    public void setConnected(boolean newConnected){
-        this.is_connected = newConnected;
-    }
-
 }
 

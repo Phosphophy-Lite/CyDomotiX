@@ -1,5 +1,6 @@
 package com.example.cydomotix.Model.Objects;
 
+import com.example.cydomotix.Model.Room;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +30,11 @@ public class ConnectedObject {
     private LocalDateTime last_interaction;
     private int battery_status;
 
-    private Integer id_room; // Clé étrangère
+    // Plusieurs instances de ConnectedObject peuvent être associées à 1 instance de Room
+    // Clé étrangère pointant vers entité mère (Room)
+    @ManyToOne
+    @JoinColumn(name = "id_room", nullable = false)
+    private Room room; // Clé étrangère
 
     // Plusieurs instances de ConnectedObject peuvent être associées à 1 instance d'ObjectType
     // Clé étrangère pointant vers entité mère (ObjectType)
@@ -104,12 +109,12 @@ public class ConnectedObject {
         this.name = name;
     }
 
-    public Integer getIdRoom() {
-        return id_room;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setIdRoom(Integer id_room) {
-        this.id_room = id_room;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public List<AttributeValue> getAttributeValueList() {
