@@ -61,10 +61,17 @@ public class ProfileController {
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
 
-                // S'assurer que le pseudo (unique) renseigné dans le form n'est pas déjà pris si il est modifié, sauf si il reste inchangé
+                // S'assurer que le pseudo (unique) renseigné dans le form n'est pas déjà pris s'il est modifié, sauf si il reste inchangé
                 boolean nameExists = userService.usernameExists(updatedUser.getUsername());
                 if (nameExists && !existingUser.getUsername().equals(updatedUser.getUsername())) {
                     redirectAttributes.addFlashAttribute("errorMessage", "Ce pseudonyme est déjà utilisé.");
+                    return "redirect:/profile";
+                }
+
+                // S'assurer que l'email (unique) renseigné dans le form n'est pas déjà pris s'il est modifié, sauf si il reste inchangé
+                boolean emailExists = userService.emailExists(updatedUser.getEmail());
+                if (emailExists && !existingUser.getEmail().equals(updatedUser.getEmail())) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Cet email est déjà utilisé.");
                     return "redirect:/profile";
                 }
 

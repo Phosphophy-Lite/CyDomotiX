@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualisation</title>
-    <script src="/js/interactionDate.js" defer></script>
 </head>
 <body>
     <h2>Rechercher un objet connecté</h2>
@@ -88,7 +87,7 @@
                                     <p th:text="${connectedObject.mode.displayName}"></p>
                                     <p th:text="${connectedObject.connectivity.displayName}"></p>
                                     <p th:text="|${connectedObject.batteryStatus}%|"></p>
-                                    <p class="lastInteractionText" th:text="${connectedObject.lastInteraction}"></p>
+                                    <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
                                     <p th:if="${connectedObject.isActive == true}">Activé</p>
                                     <p th:unless="${connectedObject.isActive}">Désactivé</p>
 

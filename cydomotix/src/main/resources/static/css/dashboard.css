@@ -128,6 +128,13 @@ ul li {
     transform: scaleX(1);
 }
 
+.lockedLink{
+    margin: auto;
+    position: relative;
+    color: #777777;
+    text-decoration: none; /* pas souligné */
+}
+
 .button
 {
     width:13em;

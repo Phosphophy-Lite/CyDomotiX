@@ -93,10 +93,11 @@ public class User implements UserDetails {
         return this.id_user;
     }
 
-    private int calculateAge(){
-        LocalDate current_date = LocalDate.now();
-        Period period = Period.between(birth_date, current_date);
-        return period.getYears();
+    public int calculateAge(){
+        if(birth_date == null){
+            return -1;
+        }
+        return Period.between(birth_date, LocalDate.now()).getYears();
     }
 
     public Gender getGender(){

@@ -2,9 +2,8 @@ package com.example.cydomotix.Controller.Objects;
 
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Service.DeletionRequestService;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
-import com.example.cydomotix.Service.Objects.ObjectAttributeService;
-import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import com.example.cydomotix.Service.RoomService;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @EnableMethodSecurity(prePostEnabled = true) // Pour utiliser les annotations @PreAuthorize
@@ -29,16 +29,13 @@ public class ObjectViewController {
     private ConnectedObjectService connectedObjectService;
 
     @Autowired
-    private ObjectTypeService objectTypeService;
-
-    @Autowired
-    private ObjectAttributeService objectAttributeService;
-
-    @Autowired
     private RoomService roomService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DeletionRequestService deletionRequestService;
 
     @GetMapping("/{id}")
     public String viewObjectDetails(@PathVariable Integer id, Model model) {
@@ -101,7 +98,7 @@ public class ObjectViewController {
     @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
     public String deleteConnectedObject(@PathVariable("id") Integer id) {
         connectedObjectService.deleteConnectedObject(id);
-        return "redirect:/visualisation"; // Recharge la page avec la nouvelle liste
+        return "redirect:/visualization"; // Recharge la page avec la nouvelle liste
     }
 
     /**
@@ -114,4 +111,17 @@ public class ObjectViewController {
         connectedObjectService.switchStatus(id);
         return "redirect:/object/"+id; // Recharge la page avec les informations mises à jour
     }
+
+    @PostMapping("/{id}/request-deletion")
+    public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
+        // Récupérer l'utilisateur de la session actuelle
+        Optional<User> user = userService.getByUsername(principal.getName());
+        if (user.isPresent()) {
+            deletionRequestService.submitRequest(id, reason, user.get());
+            redirectAttributes.addFlashAttribute("requestSuccess", "La demande de suppression a bien été transmise aux administrateurs.");
+            return "redirect:/object/"+id;
+        }
+        return "redirect:/error";
+    }
+
 }

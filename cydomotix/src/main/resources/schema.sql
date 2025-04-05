@@ -85,4 +85,14 @@ CREATE TABLE VerificationToken (
                                     expiry_date DATE,
                                     user_id INT NOT NULL,
                                     FOREIGN KEY (user_id) REFERENCES Users(id_user)
-)
+);
+
+CREATE TABLE DeletionRequest (
+                                   id_del_request INT AUTO_INCREMENT PRIMARY KEY,
+                                   reason VARCHAR(255),
+                                   request_date TIMESTAMP,
+                                   connected_object_id INT NOT NULL,
+                                   requester_user_id INT NOT NULL,
+                                   FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE,
+                                   FOREIGN KEY (requester_user_id) REFERENCES Users(id_user) ON DELETE CASCADE
+);

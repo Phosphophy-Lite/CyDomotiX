@@ -126,6 +126,8 @@ public class ConnectedObjectService {
      * @param id : clé primaire id
      */
     public void deleteConnectedObject(final Integer id) {
+        ConnectedObject object = connectedObjectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Connected object with id " + id + " does not exist."));
         connectedObjectRepository.deleteById(id);
     }
 

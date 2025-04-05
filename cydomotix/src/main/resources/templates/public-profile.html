@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${user.username}"></title>
 </head>
 <body>
     <div>
@@ -27,7 +27,11 @@
             </tr>
             <tr>
                 <td>Date de naissance :</td>
-                <td th:text="${user.birthDate} ?: '???'"></td>
+                <td th:text="${user.birthDate != null} ? ${#temporals.format(user.birthDate, 'dd/MM/yyyy')} : '???'"></td>
+            </tr>
+            <tr>
+                <td>Âge :</td>
+                <td th:text="${user.calculateAge() != -1} ? ${user.calculateAge()} + ' ans' : '???'"></td>
             </tr>
         </table>
     </div>

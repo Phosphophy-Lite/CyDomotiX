@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Consulter un objet connecté</title>
-    <script src="/js/interactionDate.js" defer></script>
     <script src="/js/objectDetails.js" defer></script>
 </head>
 <body>
@@ -55,7 +54,8 @@
             </tr>
             <tr>
                 <td>Dernière interaction :</td>
-                <td class="lastInteractionText" th:text="${connectedObject.lastInteraction}"></td>
+                <td th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></td>
+
             </tr>
             <tr>
                 <td>Status :</td>
@@ -76,6 +76,19 @@
             </tr>
         </table>
     </div>
+
+    <br><br>
+
+    <h2>Demander la suppression de cet objet</h2>
+    <form th:action="@{/object/{id}/request-deletion(id=${connectedObject.id})}" method="post">
+        <label>Raison :</label>
+        <input type="text" name="reason">
+        <button type="submit">Demander la suppression</button>
+        <!-- Affichage du message de succès -->
+        <div th:if="${requestSuccess}" style="color: green; font-weight: bold;">
+            <p th:text="${requestSuccess}"></p>
+        </div>
+    </form>
 
     <br><br>
 
