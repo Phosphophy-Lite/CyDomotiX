@@ -1,0 +1,12 @@
+@font-face {
+    font-family: amongus;
+    src: url('../img/font/AmaticBold.ttf');
+}
+
+body {
+    font-family: amongus;
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/background/espace.jpg');
+    color: white;
+}

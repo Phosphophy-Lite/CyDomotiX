@@ -2,17 +2,26 @@
 <html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
-    <link rel="stylesheet" type="text/css" href="/css/login.css" th:href="@{/css/home.css}" />
+    <title>Maison connectée</title>
+    <link rel="stylesheet" type="text/css" href="/css/home.css" th:href="@{/css/home.css}" />
 </head>
+
 <body>
+    <div>
+        <header>
+            <h1>SMARTHOME</h1>
+            <nav>
+            <a href="/login?show=register" class="link">S'inscrire</a>
+            <a href="/login?show=login" class="link">Se connecter</a>
+            </nav>
+        </header>
 
-<p>Page d'accueil</p>
-
-<a th:href="@{/login?show=register}">S'inscrire</a>
-<a th:href="@{/login?show=login}">Se connecter</a>
-
+        <section>
+            <div>
+                <p>Prenez le contrôle de votre maison où que vous soyez.</p>
+            </div>
+        </section>
+    </div>
 </body>
 
 </html>

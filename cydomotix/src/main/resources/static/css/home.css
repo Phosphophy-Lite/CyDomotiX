@@ -1,0 +1,54 @@
+@font-face {
+    font-family: amongus;
+    src: url('../img/font/AmaticBold.ttf');
+}
+
+body {
+    font-family: amongus;
+    margin: 0;
+    padding: 0;
+    background-image: url('/img/background/espace.jpg');
+    color: white;
+}
+
+.links-container {
+    position: absolute;
+    top: 10px; /* Décalage depuis le haut de la page */
+    right: 10px; /* Décalage depuis la droite de la page */
+    font-size: 22px; /* Taille de police plus petite pour les liens */
+}
+.link {
+    margin-right: 15px; /* Espace entre les liens */
+    color: white; /* Couleur du texte des liens */
+    text-decoration: none; /* Enlever le soulignement des liens */
+}
+nav a {
+    font-size: 25px
+    font-family: amongus, sans-serif
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 40px;
+}
+footer {
+    text-align: center;
+    padding: 40px 0;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+p {
+    font-size: 70px; /* Taille de police du texte */
+    text-align: center; /* Centrer le texte */
+    font-family: amongus, sans-serif
+    margin-top: 100px;
+}
+
+
+
+
+
