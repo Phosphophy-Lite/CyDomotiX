@@ -251,4 +251,18 @@ public class UserService {
         updatedUser.addPoints(nbr);
         userRepository.save(updatedUser);
     }
+
+    //Achat d'un rôle
+    public boolean purchaseModule(User user, int moduleCost, String role){
+        if (user.getPoints() >= moduleCost) {
+            //Retrait du nombre de points requis
+            user.setPoints(user.getPoints() - moduleCost);
+
+            //Déblocage du rôle
+            user.setAccessType(AccessType.valueOf(role));
+            userRepository.save(user);
+            return true;
+        }
+        return false; // Si l'utilisateur n'a pas assez de points
+    }
 }
