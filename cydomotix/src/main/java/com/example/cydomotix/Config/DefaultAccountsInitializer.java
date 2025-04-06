@@ -36,6 +36,7 @@ public class DefaultAccountsInitializer implements CommandLineRunner {
             );
 
             usr.setEnabled(true);
+            usr.setApprovedByAdmin(true);
 
             userRepository.save(usr);
             System.out.println("Initialized default " + usr.getAccessType() + " account with credentials : " + usr.getUsername() + "/" + password);

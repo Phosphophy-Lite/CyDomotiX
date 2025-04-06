@@ -1,5 +1,7 @@
 package com.example.cydomotix.Config;
 
+import com.example.cydomotix.Exceptions.EmailNotVerifiedException;
+import com.example.cydomotix.Exceptions.NotApprovedByAdminException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -87,8 +89,12 @@ public class SecurityConfig {
                         .failureHandler((request, response, exception) -> { // Si username/password invalides, afficher les erreurs
                             if (exception instanceof BadCredentialsException) {
                                 request.getSession().setAttribute("errorMessage", "Pseudonyme ou mot de passe invalide.");
-                            } else if (exception instanceof InternalAuthenticationServiceException){
-                                request.getSession().setAttribute("errorMessage", "Veuillez vérifier votre compte via le mail envoyé.");
+                            }
+                            else if (exception instanceof NotApprovedByAdminException){
+                                request.getSession().setAttribute("errorMessage", "Votre compte est en attente de validation par un administrateur.");
+                            }
+                            else if (exception instanceof EmailNotVerifiedException){
+                                request.getSession().setAttribute("errorMessage", "Veuillez vérifier votre compte via l'email envoyé.");
                             }
                             else {
                                 request.getSession().setAttribute("errorMessage", "Échec de connexion. Veuillez réessayer.");

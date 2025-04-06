@@ -59,8 +59,8 @@ public class MainController {
                 User user = userOptional.get();
                 model.addAttribute("user", user);
 
-                // Récupérer la liste des autres utilisateurs
-                List<User> otherUsers = new ArrayList<>(userService.getAllUsers());
+                // Récupérer la liste des autres utilisateurs (valides sur la plateforme, pas ceux en cours d'inscription)
+                List<User> otherUsers = new ArrayList<>(userService.getAllVerifiedUsers());
                 otherUsers.remove(user); // Retirer l'utilisateur actuel de la liste
 
                 model.addAttribute("userList", otherUsers);

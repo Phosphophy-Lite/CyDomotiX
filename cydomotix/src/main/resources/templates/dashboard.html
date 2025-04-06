@@ -79,7 +79,7 @@
         <div id="user">
 
             <div id="containerProfil">
-                <img id="profilePictureDashboard" src="/img/profilePictures/defaultPfp.png" alt="profilePicture">
+                <img id="profilePictureDashboard" th:src="@{${user.photo}}" alt="profilePicture">
                 <div>
                     <p th:text="${user != null ? user.username : 'Utilisateur anonyme'}">Pseudonyme</p>
                     <a th:href="@{/profile}">voir plus</a>

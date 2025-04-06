@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demandes d'inscription</title>
+</head>
+<body>
+<h2>Demandes d'inscription</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Pseudonyme</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${pendingUsers}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+            <form th:action="@{'/admin/registration-requests/' + ${user.id} + '/approve'}" method="post">
+                <button type="submit">Valider</button>
+            </form>
+            <form th:action="@{'/admin/registration-requests/' + ${user.id} + '/reject'}" method="post">
+                <button type="submit">Rejeter</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Affichage du message de succès -->
+<div th:if="${successMessage}" style="color: green; font-weight: bold;">
+    <p th:text="${successMessage}"></p>
+</div>
+
+</body>
+</html>

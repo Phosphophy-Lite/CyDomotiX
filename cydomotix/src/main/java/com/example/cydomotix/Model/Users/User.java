@@ -56,16 +56,21 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(name="approved_by_admin", nullable = false)
+    private boolean approvedByAdmin;
+
 
     public User(String username, String password, com.example.cydomotix.Model.Users.AccessType access_type) {
         this.username = username;
         this.password = password;
         this.access_type = access_type;
         this.enabled = false;
+        this.approvedByAdmin = false;
     }
 
     public User() {
         this.enabled = false;
+        this.approvedByAdmin = false;
     }
 
     // Méthode de récupération des permissions pour Spring Security
@@ -176,5 +181,13 @@ public class User implements UserDetails {
     }
 
     public void addPoints(int nbr){this.points += nbr;} // Ajoute nbr aux nombres de points de l'utilisateur
+
+    public boolean isApprovedByAdmin() {
+        return approvedByAdmin;
+    }
+
+    public void setApprovedByAdmin(boolean approvedByAdmin) {
+        this.approvedByAdmin = approvedByAdmin;
+    }
 }
 

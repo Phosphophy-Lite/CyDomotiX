@@ -1,6 +1,7 @@
 package com.example.cydomotix.Controller;
 
 import com.example.cydomotix.Service.DeletionRequestService;
+import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,9 @@ public class AdminController {
 
     @Autowired
     private DeletionRequestService deletionRequestService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public String viewAdministrationDashboard() {
@@ -40,5 +44,25 @@ public class AdminController {
         deletionRequestService.rejectRequest(id);
         redirectAttributes.addFlashAttribute("successMessage", "La demande de suppression a bien été rejetée.");
         return "redirect:/admin/deletion-requests";
+    }
+
+    @GetMapping("/registration-requests")
+    public String viewRegistrationRequests(Model model) {
+        model.addAttribute("pendingUsers", userService.getUnapprovedUsers());
+        return "admin/registration-requests";
+    }
+
+    @PostMapping("/registration-requests/{id}/approve")
+    public String approveRegistrationRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        userService.approveNewUser(id);
+        redirectAttributes.addFlashAttribute("successMessage", "L'inscription de cet utilisateur a bien été approuvée.");
+        return "redirect:/admin/registration-requests";
+    }
+
+    @PostMapping("/registration-requests/{id}/reject")
+    public String rejectRegistrationRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        userService.rejectNewUser(id);
+        redirectAttributes.addFlashAttribute("successMessage", "La demande d'inscription a bien été rejetée.");
+        return "redirect:/admin/registration-requests";
     }
 }

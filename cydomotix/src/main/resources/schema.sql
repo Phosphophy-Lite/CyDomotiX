@@ -20,7 +20,8 @@ CREATE TABLE Users (
                         experience_level VARCHAR(20),
                         points INT,
                         password VARCHAR(255) NOT NULL,
-                        enabled BOOLEAN NOT NULL
+                        enabled BOOLEAN NOT NULL,
+                        approved_by_admin BOOLEAN NOT NULL
 );
 
 CREATE TABLE Room (

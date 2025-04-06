@@ -76,18 +76,20 @@ public class UserService {
 
         // Chiffre le mot de passe
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccessType(AccessType.USER); // Default role for new users
+        user.setAccessType(AccessType.USER); // Rôle par défaut pour les nouveaux utilisateurs
+
+        // S'assurer que le compte n'est pas activé
         user.setEnabled(false);
+        user.setApprovedByAdmin(false);
 
         // Utilise une méthode de CrudRepository pour sauvegarder l'utilisateur dans la BDD
-        User savedUser = userRepository.save(user);
-
-        // Envoie l'email de vérification du compte
-        sendVerificationToken(savedUser);
-
-        return savedUser;
+        return userRepository.save(user);
     }
 
+    /**
+     * Envoyer un lien de vérification du compte par mail à l'utilisateur s'inscrivant sur la plateforme
+     * @param user
+     */
     public void sendVerificationToken(User user){
         // Création du token de vérification
         String token = UUID.randomUUID().toString();
@@ -101,6 +103,28 @@ public class UserService {
 
         // Envoie l'email de vérification du compte
         emailService.sendVerificationEmail(user, token);
+    }
+
+    public List<User> getUnapprovedUsers(){
+        return userRepository.findByApprovedByAdminIsFalse();
+    }
+
+    public void approveNewUser(Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setApprovedByAdmin(true);
+        userRepository.save(user);
+
+        // Utilisateur approuvé par l'admin, envoyer un email de vérification de compte
+        sendVerificationToken(user);
+    }
+
+    public void rejectNewUser(Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userRepository.delete(user);
     }
 
     /**
@@ -215,12 +239,15 @@ public class UserService {
         }
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    /**
+     * Récupère la liste de tous les utilisateurs de la plateforme qui ont un compte validé et vérifié
+     * @return
+     */
+    public List<User> getAllVerifiedUsers() {
+        return userRepository.findByApprovedByAdminTrueAndEnabledTrue();
     }
 
     public void updatePoints(User updatedUser, int nbr){
-        // Call la fonction add et save dans la bdd
         updatedUser.addPoints(nbr);
         userRepository.save(updatedUser);
     }

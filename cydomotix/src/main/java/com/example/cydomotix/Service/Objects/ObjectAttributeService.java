@@ -17,7 +17,7 @@ public class ObjectAttributeService {
     private ObjectTypeService objectTypeService;
 
     /**
-     * Save an attribute (for an object type)
+     * Sauvegarder un attribut
      * @param objectAttribute
      */
     public void save(ObjectAttribute objectAttribute) {

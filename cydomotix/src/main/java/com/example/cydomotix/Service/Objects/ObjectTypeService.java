@@ -33,7 +33,7 @@ public class ObjectTypeService {
             throw new IllegalArgumentException("Object Type name already exists.");
         }
 
-        // Sauvegarde automatiquement les liste des attributs aussi grace à CascadeType.ALL spécifié dans l'attribut de classe
+        // Sauvegarde automatiquement les listes des attributs aussi grâce à CascadeType.ALL spécifié dans l'attribut de classe
         objectTypeRepository.save(objectType);
     }
 
