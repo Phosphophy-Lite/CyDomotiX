@@ -36,13 +36,13 @@ public class DeletionRequestService {
         return deletionRequestRepo.findAll();
     }
 
-    public void approveRequest(Integer requestId) {
+    public void approveRequest(Integer requestId, String username) {
         DeletionRequest request = deletionRequestRepo.findById(requestId)
                 .orElseThrow(() -> new IllegalArgumentException("Request with id " + requestId + " does not exist."));
 
         ConnectedObject connectedObject = connectedObjectService.getConnectedObjectById(request.getConnectedObject().getId());
         deletionRequestRepo.delete(request);
-        connectedObjectService.deleteConnectedObject(connectedObject.getId());
+        connectedObjectService.deleteConnectedObject(connectedObject.getId(), username); //logger l'action utilisateur
     }
 
     public void rejectRequest(Integer requestId) {

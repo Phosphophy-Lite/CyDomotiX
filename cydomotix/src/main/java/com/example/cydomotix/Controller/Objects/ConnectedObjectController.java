@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ public class ConnectedObjectController {
      * @return "redirect:/admin/connected-object" -- La vue html mise à jour
      */
     @PostMapping("/add")
-    public String createConnectedObject(@ModelAttribute("connectedObject") ConnectedObject connectedObject, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String createConnectedObject(@ModelAttribute("connectedObject") ConnectedObject connectedObject, Principal principal, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         // Vérifie que l'ObjectType sélectionné et envoyé via le formulaire existe bien en BDD
         ObjectType existingType = objectTypeService.getObjectTypeById(connectedObject.getObjectType().getId());
@@ -126,7 +127,7 @@ public class ConnectedObjectController {
             attributeValue.setObjectAttribute(existingAttribute); // On remplace l'instance transiente par une instance persistante
         }
 
-        connectedObjectService.save(connectedObject);  // Sauvegarder ConnectedObject et ses attributs en BDD
+        connectedObjectService.save(connectedObject, principal.getName());  // Sauvegarder ConnectedObject et ses attributs en BDD et logger l'action utilisateur
         redirectAttributes.addFlashAttribute("successMessage", "Objet connecté ajouté avec succès !");
         return "redirect:/admin/connected-object";
     }
@@ -137,8 +138,8 @@ public class ConnectedObjectController {
      * @return "redirect:/admin/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/delete/{id}")
-    public String deleteConnectedObject(@PathVariable("id") Integer id) {
-        connectedObjectService.deleteConnectedObject(id);
+    public String deleteConnectedObject(@PathVariable("id") Integer id, Principal principal) {
+        connectedObjectService.deleteConnectedObject(id, principal.getName()); // supprimer l'objet et logger l'action utilisateur
         return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
     }
 
@@ -148,8 +149,8 @@ public class ConnectedObjectController {
      * @return "redirect:/admin/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/status/{id}")
-    public String switchObjectStatus(@PathVariable("id") Integer id) {
-        connectedObjectService.switchStatus(id);
+    public String switchObjectStatus(@PathVariable("id") Integer id, Principal principal) {
+        connectedObjectService.switchStatus(id, principal.getName()); // changer le status et logger l'action utilisateur
         return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
     }
 }

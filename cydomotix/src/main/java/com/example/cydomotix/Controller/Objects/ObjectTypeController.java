@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +69,7 @@ public class ObjectTypeController {
      * @return "redirect:/admin/object-type" -- La vue html mise à jour
      */
     @PostMapping("/create")
-    public String createObjectType(@ModelAttribute("objectType") ObjectType objectType, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String createObjectType(@ModelAttribute("objectType") ObjectType objectType, Principal principal, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         // Vérifie si le nom existe déjà dans la BDD, si oui, renvoyer un message d'erreur à la vue de l'utilisateur
         if (objectTypeService.objectTypeNameExists(objectType.getName())) {
@@ -91,7 +92,7 @@ public class ObjectTypeController {
             attribute.setObjectType(objectType);
         }
 
-        objectTypeService.save(objectType);  // Save the ObjectType with its attributes
+        objectTypeService.save(objectType, principal.getName());  // Sauvegarder le type d'objet et ses attributs + logger l'action utilisateur
         redirectAttributes.addFlashAttribute("successMessage", "Type d'objet créé avec succès !");
         return "redirect:/admin/object-type";
     }
@@ -102,7 +103,7 @@ public class ObjectTypeController {
      * @return "redirect:/admin/object-type" -- La vue html mise à jour
      */
     @GetMapping("/delete/{id}")
-    public String deleteObjectType(@PathVariable("id") Integer id) {
+    public String deleteObjectType(@PathVariable("id") Integer id, Principal principal) {
 
         List<ConnectedObject> connectedObjectsList = connectedObjectService.getConnectedObjectsByObjectTypeId(id);
         for (ConnectedObject obj : connectedObjectsList) {
@@ -110,14 +111,14 @@ public class ObjectTypeController {
             attributeValueService.deleteByConnectedObjectId(obj.getId());
 
             // Supprimer les ConnectedObjects du type à supprimer
-            connectedObjectService.deleteConnectedObject(obj.getId());
+            connectedObjectService.deleteConnectedObject(obj.getId(), principal.getName());
         }
 
         // Supprimer les ObjectAttributes liés au type à supprimer
         objectAttributeService.deleteByObjectTypeId(id);
 
         // Supprimer le type
-        objectTypeService.deleteObjectType(id);
+        objectTypeService.deleteObjectType(id, principal.getName());
         return "redirect:/admin/object-type"; // Recharge la page avec la nouvelle liste
     }
 

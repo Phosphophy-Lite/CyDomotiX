@@ -1,6 +1,8 @@
 package com.example.cydomotix.Controller;
 
+import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Service.UserActionService;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,9 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserActionService userActionService;
 
     @GetMapping
     public String viewProfile(Model model) {
@@ -106,6 +111,8 @@ public class ProfileController {
                         userService.setUserProfilePicture(existingUser,imageName); // Stocker le nom du fichier dans la BDD
                     }
                 }
+
+                userActionService.logAction(username, ActionType.UPDATE_USER, null);
             }
         } else {
             return "redirect:/error";

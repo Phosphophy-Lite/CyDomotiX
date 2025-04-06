@@ -9,9 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -71,9 +68,9 @@ public class SecurityConfig {
 
                     // A SUPPRIMER POUR PROD
                     if (isProfileActive("dev")) {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("ADMIN");
+                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
                     } else {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").denyAll();
+                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("DEV");
                     }
 
                     auth.requestMatchers("/", "/login", "/register", "/verify", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)

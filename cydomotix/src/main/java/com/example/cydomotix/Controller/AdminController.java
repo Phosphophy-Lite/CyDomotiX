@@ -1,6 +1,7 @@
 package com.example.cydomotix.Controller;
 
 import com.example.cydomotix.Service.DeletionRequestService;
+import com.example.cydomotix.Service.UserActionService;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -20,6 +23,8 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserActionService userActionService;
 
     @GetMapping
     public String viewAdministrationDashboard() {
@@ -33,8 +38,8 @@ public class AdminController {
     }
 
     @PostMapping("/deletion-requests/{id}/approve")
-    public String approveDeletionRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        deletionRequestService.approveRequest(id);
+    public String approveDeletionRequest(@PathVariable Integer id, RedirectAttributes redirectAttributes, Principal principal) {
+        deletionRequestService.approveRequest(id, principal.getName());
         redirectAttributes.addFlashAttribute("successMessage", "L'objet a bien été supprimé.");
         return "redirect:/admin/deletion-requests";
     }
@@ -64,5 +69,11 @@ public class AdminController {
         userService.rejectNewUser(id);
         redirectAttributes.addFlashAttribute("successMessage", "La demande d'inscription a bien été rejetée.");
         return "redirect:/admin/registration-requests";
+    }
+
+    @GetMapping("/history")
+    public String viewHistory(Model model) {
+        model.addAttribute("userActions", userActionService.getAllUserActions());
+        return "admin/history";
     }
 }

@@ -97,3 +97,11 @@ CREATE TABLE DeletionRequest (
                                    FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE,
                                    FOREIGN KEY (requester_user_id) REFERENCES Users(id_user) ON DELETE CASCADE
 );
+
+CREATE TABLE UserAction (
+                            id_user_action INT PRIMARY KEY AUTO_INCREMENT,
+                            timestamp TIMESTAMP,
+                            action_type ENUM('LOGIN', 'ADD_OBJECT', 'UPDATE_OBJECT', 'DELETE_OBJECT', 'ON_OBJECT', 'OFF_OBJECT', 'UPDATE_USER', 'DELETE_USER', 'ADD_TYPE', 'DELETE_TYPE'),
+                            author VARCHAR(255),
+                            related_entity VARCHAR(255)
+);

@@ -70,7 +70,7 @@ public class ObjectViewController {
 
     @PostMapping("/{id}/update")
     @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
-    public String updateConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, RedirectAttributes redirectAttributes) {
+    public String updateConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, Principal principal, RedirectAttributes redirectAttributes) {
 
         ConnectedObject existingObject = connectedObjectService.getConnectedObjectById(id);
         if (existingObject == null) {
@@ -84,7 +84,7 @@ public class ObjectViewController {
             return "redirect:/object/"+id;
         }
 
-        connectedObjectService.update(id, updatedObject);  // Sauvegarder ConnectedObject et ses attributs en BDD
+        connectedObjectService.update(id, updatedObject, principal.getName());  // Sauvegarder ConnectedObject et ses attributs en BDD
         redirectAttributes.addFlashAttribute("successMessage", "Objet connecté modifié avec succès !");
         return "redirect:/object/"+id;
     }
@@ -96,8 +96,8 @@ public class ObjectViewController {
      */
     @GetMapping("/{id}/delete")
     @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
-    public String deleteConnectedObject(@PathVariable("id") Integer id) {
-        connectedObjectService.deleteConnectedObject(id);
+    public String deleteConnectedObject(@PathVariable("id") Integer id, Principal principal) {
+        connectedObjectService.deleteConnectedObject(id, principal.getName()); // supprimer et logger l'action utilisateur
         return "redirect:/visualization"; // Recharge la page avec la nouvelle liste
     }
 
@@ -107,8 +107,8 @@ public class ObjectViewController {
      * @return "redirect:/admin/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/{id}/status")
-    public String switchObjectStatus(@PathVariable("id") Integer id) {
-        connectedObjectService.switchStatus(id);
+    public String switchObjectStatus(@PathVariable("id") Integer id, Principal principal) {
+        connectedObjectService.switchStatus(id, principal.getName()); // changer le status et logger l'action utilisateur
         return "redirect:/object/"+id; // Recharge la page avec les informations mises à jour
     }
 
