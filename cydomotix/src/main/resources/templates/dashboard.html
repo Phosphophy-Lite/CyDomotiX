@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>dashboard</title>
+    <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
     <link rel="stylesheet" type="text/css" href="/css/dashboard.css" th:href="@{/css/dashboard.css}" />
     <script src="/js/dynamicStars.js" defer></script>
     <script src="/js/dashboard.js" defer></script>
@@ -57,20 +59,35 @@
 
         <div id="containerGestAdmin">
             <div id="gestion">
+                <!-- Pour un GESTION -->
+                <a class="unlockedLink" sec:authorize="hasRole('ADMIN')">
+                    <button class="gestion-button">GESTION</button>
+                </a>
+                <!-- Pour un utilisateur sans les droits -->
+                <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
                 <button class="gestion-button">GESTION</button>
                 <div class="lock-overlay">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M17 9V7C17 4.243 14.756 2 12 2S7 4.243 7 7V9C4.243 9 2 11.243 2 14V19C2 21.757 4.243 22 7 22H17C19.757 22 22 21.757 22 19V14C22 11.243 19.757 9 17 9ZM12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18ZM15 9H9V7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V9Z"/>
                     </svg>
                 </div>
+                </a>
             </div>
+
             <div id="administration">
+                <!-- Pour un admin -->
+                <a class="unlockedLink" sec:authorize="hasRole('ADMIN')">
+                    <button class="admin-button">ADMINISTRATION</button>
+                </a>
+                <!-- Pour un utilisateur sans les droits -->
+                <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
                 <button class="admin-button">ADMINISTRATION</button>
                 <div class="lock-overlay">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M17 9V7C17 4.243 14.756 2 12 2S7 4.243 7 7V9C4.243 9 2 11.243 2 14V19C2 21.757 4.243 22 7 22H17C19.757 22 22 21.757 22 19V14C22 11.243 19.757 9 17 9ZM12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18ZM15 9H9V7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V9Z"/>
                     </svg>
                 </div>
+                </a>
             </div>
         </div>
     </div>

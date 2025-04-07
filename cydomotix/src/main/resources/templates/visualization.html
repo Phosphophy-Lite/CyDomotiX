@@ -3,123 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualisation</title>
+    <script src="/js/interactionDate.js" defer></script>
+    <script src="/js/dynamicStars.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/visualization.css" th:href="@{/css/visualization.css}" />
 </head>
 <body>
-    <h2>Rechercher un objet connecté</h2>
 
-    <!-- Search Form -->
-    <form method="GET">
-        <input type="text" name="keyword" th:value="${keyword}">
-        <button type="submit">Rechercher</button>
 
-        <br>
-        <p>Filtres : </p>
+    <!-- BARRE CENTRALE -->
 
-        <label for="room">Pièce :</label>
-        <select id="room" name="roomId">
-            <option value="" selected>-- Choisir une pièce --</option>
+    <div id="upRod">
+        <a class="link"  th:href="@{/vizualisation}">Visualisation</a>
+        <a class="link">Gestion</a>
+        <a class="link">Administration</a>
+        <a class="link" th:href="@{/profile}">Profil</a>
+        <div class="link">
+            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
+          car une requête GET (lien clickable) ne transmet pas de token CSRF
+          donc Spring Security la bloquerait pour un logout
+          (potentiellement dangereux sans protection CSRF) -->
+            <form th:action="@{/logout}" method="post">
+                <button class="button" type="submit">Déconnexion</button>
+            </form>
+            <!--<input class="button" type="button" value="Déconnexion">-->
+        </div>
+    </div>
 
-            <!-- Boucle sur les types disponibles pour peupler dyanmiquement le menu -->
-            <option th:each="room : ${rooms}" th:value="${room.id}" th:selected="${room.id == roomId}" th:text="${room.name}"></option>
-        </select>
-        <br>
 
-        <label for="type">Type de l'objet :</label>
-        <select id="type" name="objectTypeId">
-            <option value="" selected>-- Choisir un type --</option>
 
-            <!-- Boucle sur les types disponibles pour peupler dyanmiquement le menu -->
-            <option th:each="typeOpt : ${objectTypes}" th:value="${typeOpt.id}" th:selected="${typeOpt.id == objectTypeId}" th:text="${typeOpt.name}"></option>
-        </select>
 
-        <br>
-        <label for="brand">Marque :</label>
-        <input type="text" id="brand" name="brand" th:value="${brand}">
 
-        <br>
-        <label for="mode">Mode :</label>
-        <select id="mode" name="mode">
-            <option value="">-- Choisir un mode --</option>
-            <option th:each="modeOpt : ${T(com.example.cydomotix.Model.Objects.Mode).values()}" th:value="${modeOpt}" th:selected="${modeOpt == mode}" th:text="${modeOpt.displayName}"></option>
-        </select>
+    <!-- <h2>Rechercher un objet connecté</h2> -->
 
-        <br>
-        <label for="connectivity">Connectivité :</label>
-        <select th:value="${connectivity}" name="connectivity" id="connectivity">
-            <option value="">-- Choisir une connectivité --</option>
-            <option th:each="connOpt : ${T(com.example.cydomotix.Model.Objects.Connectivity).values()}" th:value="${connOpt}" th:selected="${connOpt == connectivity}" th:text="${connOpt.displayName}"></option>
-        </select>
-    </form>
+    <div id="mainContainer">
 
-    <div>
-        <table id="connected-obj-table">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Type</th>
-                    <th>Pièce</th>
-                    <th>Champs de base</th>
-                    <th>Champs spécifiques au type</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Affichage de chaque ligne. 1 ligne = 1 object connecté -->
-                <tr th:each="connectedObject : ${connectedObjects}" th:attr="onclick=|window.location.href='/object/${connectedObject.id}'|" style="cursor: pointer;">
-                    <td th:text="${connectedObject.name}"></td> <!-- Nom de l'objet -->
-                    <td th:text="${connectedObject.objectType.name}"></td> <!-- Type de l'objet -->
-                    <td th:text="${connectedObject.room.name}"></td> <!-- Pièce où se situe l'objet -->
-                    <!-- Champs de base de l'objet -->
-                    <td>
-                        <table>
-                            <tr>
-                                <!-- Noms des champs -->
-                                <td>
-                                    <p>Marque :</p>
-                                    <p>Mode :</p>
-                                    <p>Connectivité :</p>
-                                    <p>État de batterie :</p>
-                                    <p>Dernière interaction :</p>
-                                    <p>Status :</p>
-                                </td>
-                                <!-- Valeurs des champs -->
-                                <td>
-                                    <p th:text="${connectedObject.brand}"></p>
-                                    <p th:text="${connectedObject.mode.displayName}"></p>
-                                    <p th:text="${connectedObject.connectivity.displayName}"></p>
-                                    <p th:text="|${connectedObject.batteryStatus}%|"></p>
-                                    <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
-                                    <p th:if="${connectedObject.isActive == true}">Activé</p>
-                                    <p th:unless="${connectedObject.isActive}">Désactivé</p>
+        <div id="divLeft">
 
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                    <!-- Champs spécifiques au type de l'objet -->
-                    <td>
-                        <!-- Affichage de sa liste d'attributs et leur valeur -->
-                        <table>
-                            <tr th:each="attribute, iterStat : ${connectedObject.objectType.attributes}">
-                                <td>
-                                    <p th:text="|${attribute.name} :|"></p>
-                                </td>
-                                <td>
-                                    <!-- Affichage conditionnels selon le type de valeur -->
-                                    <p th:if="${attribute.valueType.name() == 'STRING'}" th:text="${connectedObject.attributeValueList[iterStat.index].string_value}"></p>
-                                    <p th:if="${attribute.valueType.name() == 'INTEGER'}" th:text="${connectedObject.attributeValueList[iterStat.index].int_value}"></p>
-                                    <p th:if="${attribute.valueType.name() == 'DOUBLE'}" th:text="${connectedObject.attributeValueList[iterStat.index].double_value}"></p>
-                                    <p th:if="${attribute.valueType.name() == 'TEMPERATURE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}&deg;C|"></p>
-                                    <p th:if="${attribute.valueType.name() == 'HOURS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}h|"></p>
-                                    <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
-                                    <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
-                                    <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Search Form -->
+            <form method="GET">
+
+                <!-- Barre de recherche -->
+                <div id="containerRecherche">
+                    <div id="PartieRecherche">
+                        <input type="text" name="keyword" th:value="${keyword}" id="InputRecherche" placeholder="Rechercher">
+                    </div>
+                    <div id="PartieLoupe">
+                        <button id="sendButton" type="submit">
+                            <img id="ImgLoupe" src="/img/logo/loupe.png" alt="Logo loupe pour la recherche">
+                        </button>
+                    </div>
+                </div>
+
+
+                <br>
+
+                <div id="filter">
+
+                    <h2>Filtres</h2>
+
+                        <!--<label for="room">Pièce :</label>-->
+                    <select class="selectFilter" id="room" name="roomId">
+                        <option value="" selected>-- Choisir une pièce --</option>
+
+                        <!-- Boucle sur les types disponibles pour peupler dyanmiquement le menu -->
+                        <option th:each="room : ${rooms}" th:value="${room.id}" th:selected="${room.id == roomId}" th:text="${room.name}"></option>
+                    </select>
+                    <br><br>
+
+                    <!--<label for="type">Type de l'objet :</label>-->
+                    <select class="selectFilter" id="type" name="objectTypeId">
+                        <option value="" selected>-- Choisir un type --</option>
+
+                        <!-- Boucle sur les types disponibles pour peupler dyanmiquement le menu -->
+                        <option th:each="typeOpt : ${objectTypes}" th:value="${typeOpt.id}" th:selected="${typeOpt.id == objectTypeId}" th:text="${typeOpt.name}"></option>
+                    </select>
+
+                    <br><br>
+                    <!--<label for="mode">Mode :</label>-->
+                    <select class="selectFilter" id="mode" name="mode">
+                        <option value="">-- Choisir un mode --</option>
+                        <option th:each="modeOpt : ${T(com.example.cydomotix.Model.Objects.Mode).values()}" th:value="${modeOpt}" th:selected="${modeOpt == mode}" th:text="${modeOpt.displayName}"></option>
+                    </select>
+
+                    <br><br>
+                    <!--<label for="connectivity">Connectivité :</label>-->
+                    <select class="selectFilter" th:value="${connectivity}" name="connectivity" id="connectivity">
+                        <option value="">-- Choisir une connectivité --</option>
+                        <option th:each="connOpt : ${T(com.example.cydomotix.Model.Objects.Connectivity).values()}" th:value="${connOpt}" th:selected="${connOpt == connectivity}" th:text="${connOpt.displayName}"></option>
+                    </select>
+
+                    <br><br>
+                    <label for="brand">Marque :</label>
+                    <input id="selectBrand" type="text" name="brand" th:value="${brand}">
+
+                </div>
+            </form>
+
+        </div>
+
+
+
+
+
+        <div id="divRight">
+
+            <div id="divTable">
+
+                <table id="connected-obj-table">
+                    <thead>
+                        <tr>
+                            <th class="col-small">Nom</th>
+                            <th class="col-small">Type</th>
+                            <th class="col-small">Pièce</th>
+                            <th class="col-large">Champs de base</th>
+                            <th class="col-large">Champs spécifiques au type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <!-- Affichage de chaque ligne. 1 ligne = 1 object connecté -->
+                        <tr th:each="connectedObject : ${connectedObjects}" th:attr="onclick=|window.location.href='/object/${connectedObject.id}'|" style="cursor: pointer;">
+                            <td th:text="${connectedObject.name}"></td> <!-- Nom de l'objet -->
+                            <td th:text="${connectedObject.objectType.name}"></td> <!-- Type de l'objet -->
+                            <td th:text="${connectedObject.room.name}"></td> <!-- Pièce où se situe l'objet -->
+                            <!-- Champs de base de l'objet -->
+                            <td>
+                                <table >
+                                    <tr>
+                                        <!-- Noms des champs -->
+                                        <td>
+                                            <p>Marque :</p>
+                                            <p>Mode :</p>
+                                            <p>Connectivité :</p>
+                                            <p>État de batterie :</p>
+                                            <p>Dernière interaction :</p>
+                                            <p>Status :</p>
+                                        </td>
+                                        <!-- Valeurs des champs -->
+                                        <td>
+                                            <p th:text="${connectedObject.brand}"></p>
+                                            <p th:text="${connectedObject.mode.displayName}"></p>
+                                            <p th:text="${connectedObject.connectivity.displayName}"></p>
+                                            <p th:text="|${connectedObject.batteryStatus}%|"></p>
+                                            <p class="lastInteractionText" th:text="${connectedObject.lastInteraction}"></p>
+                                            <p th:if="${connectedObject.isActive == true}">Activé</p>
+                                            <p th:unless="${connectedObject.isActive}">Désactivé</p>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <!-- Champs spécifiques au type de l'objet -->
+                            <td>
+                                <!-- Affichage de sa liste d'attributs et leur valeur -->
+                                <table>
+                                    <tr th:each="attribute, iterStat : ${connectedObject.objectType.attributes}">
+                                        <td>
+                                            <p th:text="|${attribute.name} :|"></p>
+                                        </td>
+                                        <td>
+                                            <!-- Affichage conditionnels selon le type de valeur -->
+                                            <p th:if="${attribute.valueType.name() == 'STRING'}" th:text="${connectedObject.attributeValueList[iterStat.index].string_value}"></p>
+                                            <p th:if="${attribute.valueType.name() == 'INTEGER'}" th:text="${connectedObject.attributeValueList[iterStat.index].int_value}"></p>
+                                            <p th:if="${attribute.valueType.name() == 'DOUBLE'}" th:text="${connectedObject.attributeValueList[iterStat.index].double_value}"></p>
+                                            <p th:if="${attribute.valueType.name() == 'TEMPERATURE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}&deg;C|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'HOURS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}h|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+
+
     </div>
 
 </body>
