@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Demandes de suppression d'objet</title>
+</head>
+<body>
+<h2>Demandes de suppression</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Objet</th>
+            <th>Utilisateur</th>
+            <th>Raison</th>
+            <th>Date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="request : ${requests}">
+                <td th:text="${request.connectedObject.name}"></td>
+                <td th:text="${request.requester.username}"></td>
+                <td th:text="${request.reason}"></td>
+                <td th:text="${#temporals.format(request.requestDate, 'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                    <form th:action="@{'/admin/deletion-requests/' + ${request.id} + '/approve'}" method="post">
+                        <button type="submit">Valider</button>
+                    </form>
+                    <form th:action="@{'/admin/deletion-requests/' + ${request.id} + '/reject'}" method="post">
+                        <button type="submit">Rejeter</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Affichage du message de succès -->
+    <div th:if="${successMessage}" style="color: green; font-weight: bold;">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+</body>
+</html>

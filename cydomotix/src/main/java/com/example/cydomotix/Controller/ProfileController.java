@@ -1,6 +1,8 @@
 package com.example.cydomotix.Controller;
 
+import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Service.UserActionService;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,9 @@ public class ProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserActionService userActionService;
 
     @GetMapping
     public String viewProfile(Model model) {
@@ -61,10 +66,17 @@ public class ProfileController {
             if (userOptional.isPresent()) {
                 User existingUser = userOptional.get();
 
-                // S'assurer que le pseudo (unique) renseigné dans le form n'est pas déjà pris si il est modifié, sauf si il reste inchangé
+                // S'assurer que le pseudo (unique) renseigné dans le form n'est pas déjà pris s'il est modifié, sauf si il reste inchangé
                 boolean nameExists = userService.usernameExists(updatedUser.getUsername());
                 if (nameExists && !existingUser.getUsername().equals(updatedUser.getUsername())) {
                     redirectAttributes.addFlashAttribute("errorMessage", "Ce pseudonyme est déjà utilisé.");
+                    return "redirect:/profile";
+                }
+
+                // S'assurer que l'email (unique) renseigné dans le form n'est pas déjà pris s'il est modifié, sauf si il reste inchangé
+                boolean emailExists = userService.emailExists(updatedUser.getEmail());
+                if (emailExists && !existingUser.getEmail().equals(updatedUser.getEmail())) {
+                    redirectAttributes.addFlashAttribute("errorMessage", "Cet email est déjà utilisé.");
                     return "redirect:/profile";
                 }
 
@@ -99,6 +111,8 @@ public class ProfileController {
                         userService.setUserProfilePicture(existingUser,imageName); // Stocker le nom du fichier dans la BDD
                     }
                 }
+
+                userActionService.logAction(username, ActionType.UPDATE_USER, null);
             }
         } else {
             return "redirect:/error";
@@ -106,5 +120,20 @@ public class ProfileController {
 
         redirectAttributes.addFlashAttribute("successMessage", "Informations modifiées avec succès.");
         return "redirect:/profile";
+    }
+
+    @GetMapping("/{username}")
+    public String viewPublicUserProfile(@PathVariable String username, Model model) {
+        // Récupérer l'entité complète User de la BDD
+        Optional<User> userOptional = userService.getByUsername(username);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            model.addAttribute("user", user);
+        }
+        else{
+            return "redirect:/error";
+        }
+
+        return "public-profile";
     }
 }

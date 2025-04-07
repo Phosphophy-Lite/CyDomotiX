@@ -76,17 +76,20 @@ public class UserService {
 
         // Chiffre le mot de passe
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccessType(AccessType.USER); // Default role for new users
+        user.setAccessType(AccessType.USER); // Rôle par défaut pour les nouveaux utilisateurs
+
+        // S'assurer que le compte n'est pas activé
+        user.setEnabled(false);
+        user.setApprovedByAdmin(false);
 
         // Utilise une méthode de CrudRepository pour sauvegarder l'utilisateur dans la BDD
-        User savedUser = userRepository.save(user);
-
-        // Envoie l'email de vérification du compte
-        sendVerificationToken(savedUser);
-
-        return savedUser;
+        return userRepository.save(user);
     }
 
+    /**
+     * Envoyer un lien de vérification du compte par mail à l'utilisateur s'inscrivant sur la plateforme
+     * @param user
+     */
     public void sendVerificationToken(User user){
         // Création du token de vérification
         String token = UUID.randomUUID().toString();
@@ -100,6 +103,28 @@ public class UserService {
 
         // Envoie l'email de vérification du compte
         emailService.sendVerificationEmail(user, token);
+    }
+
+    public List<User> getUnapprovedUsers(){
+        return userRepository.findByApprovedByAdminIsFalse();
+    }
+
+    public void approveNewUser(Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setApprovedByAdmin(true);
+        userRepository.save(user);
+
+        // Utilisateur approuvé par l'admin, envoyer un email de vérification de compte
+        sendVerificationToken(user);
+    }
+
+    public void rejectNewUser(Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userRepository.delete(user);
     }
 
     /**
@@ -142,6 +167,7 @@ public class UserService {
             existingUser.setBirthDate(updatedUser.getBirthDate());
             existingUser.setFirstName(getUpdatedValue(updatedUser.getFirstName(), existingUser.getFirstName()));
             existingUser.setLastName(getUpdatedValue(updatedUser.getLastName(), existingUser.getLastName()));
+            existingUser.setEmail(getUpdatedValue(updatedUser.getEmail(), existingUser.getEmail()));
 
             // Sauvegarde les modifications
             userRepository.save(existingUser);
@@ -206,14 +232,37 @@ public class UserService {
                     .outputQuality(0.7) // Réduction de la qualité à 70% de celle de l'originale
                     .toFile(outputFile);
 
-            return "img/profilePictures/" + uniqueFileName;
+            return "/img/profilePictures/" + uniqueFileName;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    /**
+     * Récupère la liste de tous les utilisateurs de la plateforme qui ont un compte validé et vérifié
+     * @return
+     */
+    public List<User> getAllVerifiedUsers() {
+        return userRepository.findByApprovedByAdminTrueAndEnabledTrue();
+    }
+
+    public void updatePoints(User updatedUser, int nbr){
+        updatedUser.addPoints(nbr);
+        userRepository.save(updatedUser);
+    }
+
+    //Achat d'un rôle
+    public boolean purchaseModule(User user, int moduleCost, AccessType role){
+        if (user.getPoints() >= moduleCost) {
+            //Retrait du nombre de points requis
+            user.setPoints(user.getPoints() - moduleCost);
+
+            //Déblocage du rôle
+            user.setAccessType(role);
+            userRepository.save(user);
+            return true;
+        }
+        return false; // Si l'utilisateur n'a pas assez de points
     }
 }

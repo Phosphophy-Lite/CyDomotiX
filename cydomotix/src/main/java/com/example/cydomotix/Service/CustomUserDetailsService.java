@@ -1,9 +1,12 @@
 package com.example.cydomotix.Service;
 
+import com.example.cydomotix.Exceptions.EmailNotVerifiedException;
+import com.example.cydomotix.Exceptions.NotApprovedByAdminException;
 import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Repository.UserRepository;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +22,6 @@ import java.util.List;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    // Needed for access to the database
     @Autowired
     private UserRepository userRepository;
 
@@ -41,8 +43,14 @@ public class CustomUserDetailsService implements UserDetailsService {
                     return new UsernameNotFoundException("User not found");
                 });
 
+        // Vérifier si le compte n'a pas été approuvé par un admin
+        if (!user.isApprovedByAdmin()) {
+            throw new NotApprovedByAdminException();
+        }
+
+        // Vérifier si le compte n'a pas été vérifié par mail
         if (!user.isEnabled()) {
-            throw new DisabledException("Account not verified.");
+            throw new EmailNotVerifiedException();
         }
 
         System.out.println("User found: " + user.getUsername() + " with role: " + user.getAccessType());

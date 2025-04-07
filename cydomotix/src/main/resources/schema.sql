@@ -13,14 +13,15 @@ CREATE TABLE Users (
                         gender ENUM('MALE', 'FEMALE', 'OTHER'),
                         access_type ENUM('USER', 'ADMIN', 'DEV') NOT NULL,
                         birth_date DATE,
-                        member_type ENUM('MOTHER', 'FATHER', 'CHILD'),
+                        member_type ENUM('FATHER', 'MOTHER', 'CHILD'),
                         photo VARCHAR(255),
                         first_name VARCHAR(255),
                         last_name VARCHAR(255),
                         experience_level VARCHAR(20),
                         points INT,
                         password VARCHAR(255) NOT NULL,
-                        enabled BOOLEAN NOT NULL
+                        enabled BOOLEAN NOT NULL,
+                        approved_by_admin BOOLEAN NOT NULL
 );
 
 CREATE TABLE Room (
@@ -85,4 +86,22 @@ CREATE TABLE VerificationToken (
                                     expiry_date DATE,
                                     user_id INT NOT NULL,
                                     FOREIGN KEY (user_id) REFERENCES Users(id_user)
-)
+);
+
+CREATE TABLE DeletionRequest (
+                                   id_del_request INT AUTO_INCREMENT PRIMARY KEY,
+                                   reason VARCHAR(255),
+                                   request_date TIMESTAMP,
+                                   connected_object_id INT NOT NULL,
+                                   requester_user_id INT NOT NULL,
+                                   FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE,
+                                   FOREIGN KEY (requester_user_id) REFERENCES Users(id_user) ON DELETE CASCADE
+);
+
+CREATE TABLE UserAction (
+                            id_user_action INT PRIMARY KEY AUTO_INCREMENT,
+                            timestamp TIMESTAMP,
+                            action_type ENUM('LOGIN', 'ADD_OBJECT', 'UPDATE_OBJECT', 'DELETE_OBJECT', 'ON_OBJECT', 'OFF_OBJECT', 'UPDATE_USER', 'DELETE_USER', 'ADD_TYPE', 'DELETE_TYPE'),
+                            author VARCHAR(255),
+                            related_entity VARCHAR(255)
+);

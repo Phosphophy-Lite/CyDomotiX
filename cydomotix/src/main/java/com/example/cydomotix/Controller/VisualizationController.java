@@ -8,6 +8,7 @@ import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import com.example.cydomotix.Service.RoomService;
+import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("/vizualisation")
-public class VizualisationController {
+@RequestMapping("/visualization")
+public class VisualizationController {
 
     @Autowired
     ConnectedObjectService connectedObjectService;
@@ -35,7 +36,7 @@ public class VizualisationController {
     RoomService roomService;
 
     @GetMapping
-    public String vizualisation(@RequestParam(required = false) String keyword,
+    public String visualization(@RequestParam(required = false) String keyword,
                                 @RequestParam(required = false) Integer objectTypeId,
                                 @RequestParam(required = false) Integer roomId,
                                 @RequestParam(required = false) String brand,
@@ -62,7 +63,7 @@ public class VizualisationController {
         model.addAttribute("objectTypeId", objectTypeId);
         model.addAttribute("roomId", roomId);
 
-        return "vizualisation";
+        return "visualization";
     }
 
     /**

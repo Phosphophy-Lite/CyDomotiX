@@ -88,9 +88,9 @@ public class AuthController {
             }
         }
 
-        System.out.println("Successfully added " + user.getUsername() + "to the database.");
+        System.out.println("Successfully added " + user.getUsername() + " to the database.");
 
-        return "redirect:/login?registerSuccess=true"; // Redirect to the login page after successful registration
+        return "redirect:/login?registerSuccess=true&show=register"; // Redirect to the login page after successful registration
     }
 
     /**
@@ -107,6 +107,7 @@ public class AuthController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()
                 && !authentication.getPrincipal().equals("anonymousUser")) { // anonymousUser : pas loggé
+
             return "redirect:/dashboard"; // Rediriger les utilisateurs connectés au dashboard
         }
 
@@ -117,26 +118,37 @@ public class AuthController {
             session.removeAttribute("errorMessage"); // Le consomme immédiatement et le supprime de la session pour ne pas le réafficher après un rafraichissement de la page
         }
 
-        model.addAttribute("user", new User()); // Nécessaire pour le formulaire d'inscription caché
+        // Ne pas écraser les données si elles existent déjà (erreur dans le formulaire d'inscription déjà rempli, venant du RedirectAttributes)
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new User()); // pour le formulaire d'inscription caché
+        }
 
         return "auth/login";
     }
 
+    /**
+     * Requête envoyée quand l'utilisateur clique sur le lien reçu par mail pour vérifier son compte
+     * @param token - Token généré et envoyé dans le lien
+     * @param redirectAttributes
+     * @return
+     */
     @GetMapping("/verify")
     public String verifyAccount(@RequestParam("token") String token, RedirectAttributes redirectAttributes) {
         Optional<VerificationToken> tokenOptional = verificationTokenRepository.findByToken(token);
 
+        // token trouvé en BDD
         if (tokenOptional.isPresent()) {
             VerificationToken verificationToken = tokenOptional.get();
 
+            // Date d'expiration du token est antérieure à la date actuelle (token a expiré après ses 24h de validité)
             if (verificationToken.getExpiryDate().isBefore(LocalDateTime.now())) {
                 redirectAttributes.addFlashAttribute("errorMessage", "Le lien de vérification a expiré.");
-                return "redirect:/register";
+                return "redirect:/login";
             }
 
             User user = verificationToken.getUser(); // Récupérer l'utilisateur associé à ce token unique
             user.setEnabled(true); // Activer son compte
-            userRepository.save(user); // Enregistrer cet activation dans la BDD
+            userRepository.save(user); // Enregistrer cette activation dans la BDD
             verificationTokenRepository.delete(verificationToken); // Supprimer le token après activation
 
             redirectAttributes.addFlashAttribute("successMessage", "Votre compte a été vérifié avec succès !");

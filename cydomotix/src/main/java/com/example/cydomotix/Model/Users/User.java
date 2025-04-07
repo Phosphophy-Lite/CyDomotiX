@@ -48,24 +48,29 @@ public class User implements UserDetails {
 
     private int points = 0;
 
-    private String photo = "img/profilePictures/defaultPfp.png";
+    private String photo = "/img/profilePictures/defaultPfp.png";
     private String first_name;
     private String last_name;
     private String experience_level;
 
     @Column(nullable = false)
-    private boolean enabled = false;
+    private boolean enabled;
+
+    @Column(name="approved_by_admin", nullable = false)
+    private boolean approvedByAdmin;
 
 
     public User(String username, String password, com.example.cydomotix.Model.Users.AccessType access_type) {
         this.username = username;
         this.password = password;
         this.access_type = access_type;
-        this.enabled = true; // pour l'initialisation des comptes de base qui ne nécessitent pas de vérification
+        this.enabled = false;
+        this.approvedByAdmin = false;
     }
 
     public User() {
-
+        this.enabled = false;
+        this.approvedByAdmin = false;
     }
 
     // Méthode de récupération des permissions pour Spring Security
@@ -85,33 +90,19 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
     public Integer getId(){
         return this.id_user;
     }
 
-    private int calculateAge(){
-        LocalDate current_date = LocalDate.now();
-        Period period = Period.between(birth_date, current_date);
-        return period.getYears();
+    public int calculateAge(){
+        if(birth_date == null){
+            return -1;
+        }
+        return Period.between(birth_date, LocalDate.now()).getYears();
     }
 
     public Gender getGender(){
@@ -141,7 +132,6 @@ public class User implements UserDetails {
     public int getPoints(){
         return this.points;
     }
-    public boolean getEnabled(){ return this.enabled; }
 
     public void setUsername(String newUsername){
         this.username = newUsername;
@@ -188,6 +178,16 @@ public class User implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void addPoints(int nbr){this.points += nbr;} // Ajoute nbr aux nombres de points de l'utilisateur
+
+    public boolean isApprovedByAdmin() {
+        return approvedByAdmin;
+    }
+
+    public void setApprovedByAdmin(boolean approvedByAdmin) {
+        this.approvedByAdmin = approvedByAdmin;
     }
 }
 
