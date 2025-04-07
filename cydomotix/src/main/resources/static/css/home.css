@@ -23,7 +23,7 @@ body {
     text-decoration: none; /* Enlever le soulignement des liens */
 }
 nav a {
-    font-size: 25px
+    font-size: 35px
     font-family: amongus, sans-serif
     color: #ffffff;
     text-decoration: none;
@@ -35,11 +35,6 @@ header {
         align-items: center;
         padding: 20px 40px;
 }
-footer {
-    text-align: center;
-    padding: 40px 0;
-    background-color: rgba(0, 0, 0, 0.4);
-}
 
 p {
     font-size: 70px; /* Taille de police du texte */
@@ -47,6 +42,50 @@ p {
     font-family: amongus, sans-serif
     margin-top: 100px;
 }
+
+.search-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .search-box {
+      position: relative;
+      width: 400px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      border: 2px solid #ccc;
+      border-radius: 30px;
+      font-size: 16px;
+      transition: 0.3s ease;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    }
+
+    .search-box button {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .search-box button i {
+      font-size: 18px;
+      color: #666;
+    }
+
+
 
 
 

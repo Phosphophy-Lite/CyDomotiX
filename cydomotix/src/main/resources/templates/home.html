@@ -7,21 +7,39 @@
 </head>
 
 <body>
+    <div class="search-container">
+        <form action="/recherche" method="GET" class="search-box">
+            <button type="submit"><i class="fas fa-search"></i></button>
+            <input type="text" name="q" placeholder="Rechercher...">
+        </form>
+    </div>
     <div>
         <header>
             <h1>SMARTHOME</h1>
             <nav>
-            <a href="/login?show=register" class="link">S'inscrire</a>
-            <a href="/login?show=login" class="link">Se connecter</a>
+                <a href="/login?show=register" class="link">S'inscrire</a>
+                <a href="/login?show=login" class="link">Se connecter</a>
             </nav>
         </header>
 
         <section>
             <div>
-                <p>Prenez le contrôle de votre maison où que vous soyez.</p>
+                <p style="text-align: center"> Simplifiez votre quotidien avec une maison <br>qui s’adapte à vous </p>
+            </div>
+        </section>
+
+        <section class="intro" id="about">
+            <div class="intro-content">
+                <h2 style="text-align: center">Qu’est-ce qu’une maison connectée ?<h2>
+                <h3 style="text-align: center" >Une maison connectée vous permet de contrôler et surveiller vos équipements à distance :
+                    éclairage, sécurité, température, et bien plus encore.<br>
+                    Gagnez en confort, sécurité et efficacité énergétique.
+                </h3>
+                    <img src="/images/smart-home-illustration.jpg" alt="Illustration maison connectée" class="intro-image">
             </div>
         </section>
     </div>
+
 </body>
 
 </html>
