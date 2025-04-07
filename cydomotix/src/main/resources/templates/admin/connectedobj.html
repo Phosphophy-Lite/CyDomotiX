@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Création Object Connecté</title>
     <script src="/js/connectedObjCreation.js" defer></script>
-    <script src="/js/interactionDate.js" defer></script>
 </head>
 
 <body>
@@ -44,7 +43,7 @@
                                 <p th:text="${connectedObject.mode.displayName}"></p>
                                 <p th:text="${connectedObject.connectivity.displayName}"></p>
                                 <p th:text="|${connectedObject.batteryStatus}%|"></p>
-                                <p class="lastInteractionText" th:text="${connectedObject.lastInteraction}"></p>
+                                <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
                                 <p th:if="${connectedObject.isActive == true}">Activé</p>
                                 <p th:unless="${connectedObject.isActive}">Désactivé</p>
 

@@ -4,6 +4,7 @@ import com.example.cydomotix.Model.Users.User;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -24,4 +25,7 @@ public interface UserRepository extends ListCrudRepository<User, Integer> {
     Optional<User> findByUsername(String username);
     Optional<User> findById(Integer id);
     Optional<User> findByEmail(String email);
+    List<User> findByApprovedByAdminIsFalse();
+    List<User> findByApprovedByAdminTrueAndEnabledTrue();
+
 }

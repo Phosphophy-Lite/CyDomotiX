@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
@@ -60,8 +59,8 @@ public class MainController {
                 User user = userOptional.get();
                 model.addAttribute("user", user);
 
-                // Récupérer la liste des autres utilisateurs
-                List<User> otherUsers = new ArrayList<>(userService.getAllUsers());
+                // Récupérer la liste des autres utilisateurs (valides sur la plateforme, pas ceux en cours d'inscription)
+                List<User> otherUsers = new ArrayList<>(userService.getAllVerifiedUsers());
                 otherUsers.remove(user); // Retirer l'utilisateur actuel de la liste
 
                 model.addAttribute("userList", otherUsers);
@@ -72,20 +71,4 @@ public class MainController {
 
         return "dashboard";
     }
-
-    @GetMapping("/{username}")
-    public String viewPublicUserProfile(@PathVariable String username, Model model) {
-        // Récupérer l'entité complète User de la BDD
-        Optional<User> userOptional = userService.getByUsername(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            model.addAttribute("user", user);
-        }
-        else{
-            return "redirect:/error";
-        }
-
-        return "public-profile";
-    }
-
 }

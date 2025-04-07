@@ -39,23 +39,24 @@
                     <input id="inputMDP" type="password" name="password" placeholder="Entrez votre mot de passe" required>
                 </div>
 
-                <!-- Montre message d'erreur de login si les informations sont incorrectes -->
-                <div th:if="${errorMessage}">
-                    <p class="center" style="color: red;" th:text="${errorMessage}"></p>
-                </div>
-
                 <div class="endPage">
                     <div id="SeConnecter">
                         <input type="submit" class="bouton" value="SE CONNECTER">
                     </div>
                 </div>
-                <br><br>
-                <div class="center">
-                    <p class="center">Ou inscrivez-vous ici</p>
-
-                    <p class="center" id="pChangeForm">Inscription</p>
-                </div>
             </form>
+            <!-- Montre message d'erreur de login si les informations sont incorrectes -->
+            <div th:if="${errorMessage}">
+                <p class="center" style="color: red;" th:text="${errorMessage}"></p>
+            </div>
+            <div th:if="${successMessage}">
+                <p class="center" style="color: green;" th:text="${successMessage}"></p>
+            </div>
+            <div class="center">
+                <p class="center">Ou inscrivez-vous ici</p>
+
+                <p class="center" id="pChangeForm">Inscription</p>
+            </div>
 
         </div>
 
@@ -149,7 +150,7 @@
 
                 <!-- Message de validation -->
                 <div th:if="${param.registerSuccess}">
-                    <p class="center" style="color:green">Inscription effectuée. Veuillez-vous connecter.</p>
+                    <p class="center" style="color:green">Votre demande d'inscription a bien été prise en compte. Attendez qu'un administrateur la valide pour vous connecter.</p>
                 </div>
 
                 <div class="endPage">

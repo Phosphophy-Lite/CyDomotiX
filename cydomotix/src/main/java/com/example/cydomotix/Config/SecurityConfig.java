@@ -1,5 +1,7 @@
 package com.example.cydomotix.Config;
 
+import com.example.cydomotix.Exceptions.EmailNotVerifiedException;
+import com.example.cydomotix.Exceptions.NotApprovedByAdminException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.Arrays;
 
@@ -28,7 +31,7 @@ public class SecurityConfig {
 
     /**
      * Vérifier si un profil d'execution de l'application est actif dans les propriétés de l'application
-     * @param profile - Le nom du profile
+     * @param profile - Le nom du profil
      */
     private boolean isProfileActive(String profile) {
         final String[] profiles = environment.getActiveProfiles();
@@ -47,7 +50,7 @@ public class SecurityConfig {
 
     /**
      * Définit :
-     * - Which pages are accessible to certain types of users
+     * - Which pages are accessible to certains types of users
      * - Quelles pages sont accessibles à quel type d'utilisateur
      * - Quelles pages nécessitent une authentification
      * - Comment les utilisateurs s'authentifient (login, logout, chiffrement...)
@@ -56,19 +59,21 @@ public class SecurityConfig {
      * @throws Exception
      */
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomLoginSuccessHandler loginSuccessHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomLoginSuccessHandler loginSuccessHandler,
+                                                   UserExistenceFilter userExistenceFilter) throws Exception {
 
         http
+                .addFilterBefore(userExistenceFilter, UsernamePasswordAuthenticationFilter.class) // filtrer la connexion de sessions gardées en mémoire de comptes qui n'existent plus
                 .authorizeHttpRequests(auth -> {
 
                     // A SUPPRIMER POUR PROD
                     if (isProfileActive("dev")) {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("ADMIN");
+                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
                     } else {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").denyAll();
+                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("DEV");
                     }
 
-                    auth.requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
+                    auth.requestMatchers("/", "/login", "/register", "/verify", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages dans /admin/ sont restreintes aux rôles ADMIN et supérieurs
                     auth.requestMatchers("/dev/**").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs
 
@@ -81,7 +86,14 @@ public class SecurityConfig {
                         .failureHandler((request, response, exception) -> { // Si username/password invalides, afficher les erreurs
                             if (exception instanceof BadCredentialsException) {
                                 request.getSession().setAttribute("errorMessage", "Pseudonyme ou mot de passe invalide.");
-                            } else {
+                            }
+                            else if (exception instanceof NotApprovedByAdminException){
+                                request.getSession().setAttribute("errorMessage", "Votre compte est en attente de validation par un administrateur.");
+                            }
+                            else if (exception instanceof EmailNotVerifiedException){
+                                request.getSession().setAttribute("errorMessage", "Veuillez vérifier votre compte via l'email envoyé.");
+                            }
+                            else {
                                 request.getSession().setAttribute("errorMessage", "Échec de connexion. Veuillez réessayer.");
                             }
                             response.sendRedirect("/login?error=true"); // Redirige les erreurs vers la page de connexion

@@ -1,8 +1,8 @@
 package com.example.cydomotix.Model.Users;
 
 public enum MemberType {
-    MOTHER("Mère"),
     FATHER("Père"),
+    MOTHER("Mère"),
     CHILD("Enfant");
 
     private final String displayName;
