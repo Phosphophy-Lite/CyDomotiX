@@ -58,7 +58,7 @@
         <div id="containerGestAdmin">
             <div id="gestion">
                 <!-- Pour un GESTION -->
-                <a class="lockedLink" sec:authorize="hasRole('ADMIN')">
+                <a class="unlockedLink" sec:authorize="hasRole('ADMIN')">
                     <button class="gestion-button">GESTION</button>
                 </a>
                 <!-- Pour un utilisateur sans les droits -->
@@ -74,7 +74,7 @@
 
             <div id="administration">
                 <!-- Pour un admin -->
-                <a class="lockedLink" sec:authorize="hasRole('ADMIN')">
+                <a class="unlockedLink" sec:authorize="hasRole('ADMIN')">
                     <button class="admin-button">ADMINISTRATION</button>
                 </a>
                 <!-- Pour un utilisateur sans les droits -->

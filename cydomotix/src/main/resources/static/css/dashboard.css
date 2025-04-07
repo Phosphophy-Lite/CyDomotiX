@@ -344,9 +344,11 @@ ul li {
     fill: rgba(4, 0, 0, 0.7);
 }
 
+
+/*#gestion::before, #gestion::after,
+#administration::before, #administration::after*/
 /* Chaînes */
-#gestion::before, #gestion::after, 
-#administration::before, #administration::after {
+a.lockedLink::before, a.lockedLink::after{
     content: '';
     position: absolute;
     width: 120%;
@@ -354,6 +356,8 @@ ul li {
     background-color: rgba(255, 255, 255, 0.3);
     z-index: 5;
 }
+
+
 
 #gestion::before, #administration::before {
     transform: rotate(45deg);
