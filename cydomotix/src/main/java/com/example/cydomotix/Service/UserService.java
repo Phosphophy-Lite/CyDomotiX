@@ -253,13 +253,13 @@ public class UserService {
     }
 
     //Achat d'un rôle
-    public boolean purchaseModule(User user, int moduleCost, String role){
+    public boolean purchaseModule(User user, int moduleCost, AccessType role){
         if (user.getPoints() >= moduleCost) {
             //Retrait du nombre de points requis
             user.setPoints(user.getPoints() - moduleCost);
 
             //Déblocage du rôle
-            user.setAccessType(AccessType.valueOf(role));
+            user.setAccessType(role);
             userRepository.save(user);
             return true;
         }
