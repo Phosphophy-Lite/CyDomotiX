@@ -12,6 +12,8 @@
     <img th:src="@{${user.photo}}" alt="Profile Picture" width="100px" height="100px"><br>
 
     <a th:href="@{/profile/{username}(username=${user.username})}">Voir mon profil public</a><br>
+    <p th:text="${user.accessType.displayName}"></p>
+    <p th:text="'Mes points : ' + ${user.points}"></p>
 
     <!-- Champs à modifier -->
     <form th:action="@{/profile/update}" method="post" enctype="multipart/form-data" th:object="${user}">
@@ -19,6 +21,14 @@
             <tr>
                 <td><label for="username">Pseudonyme :</label></td>
                 <td><input type="text" id="username" th:field="*{username}"></td>
+            </tr>
+            <tr>
+                <td><label for="memberType">Type de membre :</label></td>
+                <td>
+                    <select th:field="*{memberType}" id="memberType">
+                        <option th:each="memberType : ${T(com.example.cydomotix.Model.Users.MemberType).values()}" th:value="${memberType}" th:text="${memberType.displayName}"></option>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td><label for="gender">Genre :</label></td>

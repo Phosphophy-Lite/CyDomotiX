@@ -73,7 +73,8 @@ public class AdminController {
 
     @GetMapping("/history")
     public String viewHistory(Model model) {
-        model.addAttribute("userActions", userActionService.getAllUserActions());
+        // Afficher l'historique d'actions en commençant au dernier enregistrement (le plus récent)
+        model.addAttribute("userActions", userActionService.getAllUserActions().reversed());
         return "admin/history";
     }
 }
