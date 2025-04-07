@@ -200,6 +200,7 @@ public class UserService {
     public User updateUserFields(User existingUser, String newUsername, User updatedUser){
         existingUser.setUsername(newUsername);
         existingUser.setGender(updatedUser.getGender());
+        existingUser.setMemberType(updatedUser.getMemberType());
         existingUser.setBirthDate(updatedUser.getBirthDate());
         existingUser.setFirstName(getUpdatedValue(updatedUser.getFirstName(), existingUser.getFirstName()));
         existingUser.setLastName(getUpdatedValue(updatedUser.getLastName(), existingUser.getLastName()));
