@@ -1,6 +1,5 @@
 package com.example.cydomotix.Service;
 
-import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Users.AccessType;
 import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Model.Users.User;
