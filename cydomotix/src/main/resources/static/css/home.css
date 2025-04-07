@@ -11,79 +11,132 @@ body {
     color: white;
 }
 
-.links-container {
+.overlay {
     position: absolute;
-    top: 10px; /* Décalage depuis le haut de la page */
-    right: 10px; /* Décalage depuis la droite de la page */
-    font-size: 22px; /* Taille de police plus petite pour les liens */
-}
-.link {
-    margin-right: 15px; /* Espace entre les liens */
-    color: white; /* Couleur du texte des liens */
-    text-decoration: none; /* Enlever le soulignement des liens */
-}
-nav a {
-    font-size: 35px
-    font-family: amongus, sans-serif
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+        }
+
+header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+        }
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
     color: #ffffff;
     text-decoration: none;
-    letter-spacing: 1px;
+        }
+
+.logo-icon {
+    margin-right: 10px;
+    font-size: 32px;
+    color: #4caf50;
+        }
+
+/* Style de base pour les liens */
+.auth-buttons a {
+    color: white; /* Text en blanc */
+    text-decoration: none; /* Pas de soulignement */
+    font-weight: 600; /* Légèrement plus gras pour le lien */
+    font-size: 1.5rem; /* Taille de police augmentée */
 }
-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 40px;
+
+/* Optionnel : effet de survol pour les liens */
+.auth-buttons a:hover {
+    color: #4caf50; /* Changer la couleur au survol */
+    transition: all 0.3s ease; /* Effet de transition pour lisibilité */
 }
 
-p {
-    font-size: 70px; /* Taille de police du texte */
-    text-align: center; /* Centrer le texte */
-    font-family: amongus, sans-serif
-    margin-top: 100px;
-}
 
-.search-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 50px;
-    }
+.btn {
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    color: white;
+        }
 
-    .search-box {
-      position: relative;
-      width: 400px;
-    }
+.btn-login {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+        }
 
-    .search-box input {
-      width: 100%;
-      padding: 12px 20px 12px 45px;
-      border: 2px solid #ccc;
-      border-radius: 30px;
-      font-size: 16px;
-      transition: 0.3s ease;
-    }
+.btn-signup {
+    background-color: #4caf50;
+    border: 2px solid #4caf50;
+        }
 
-    .search-box input:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
-    }
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
 
-    .search-box button {
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
+.hero {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 70vh;
+    padding: 0 20px;
+        }
 
-    .search-box button i {
-      font-size: 18px;
-      color: #666;
-    }
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 700px;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+.search-bar {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+        }
+
+.search-bar input {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding-left: 50px;
+        }
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #555;
+        }
+
+
+
 
 
 

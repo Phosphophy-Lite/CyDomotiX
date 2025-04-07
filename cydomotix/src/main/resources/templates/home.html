@@ -1,45 +1,38 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Maison connectée</title>
-    <link rel="stylesheet" type="text/css" href="/css/home.css" th:href="@{/css/home.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DomotiQue - Votre Maison Intelligente</title>
+    <link rel="stylesheet" type="text/css" href="/css/home.css" th:href="@{/css/home.css}"
 </head>
-
 <body>
-    <div class="search-container">
-        <form action="/recherche" method="GET" class="search-box">
-            <button type="submit"><i class="fas fa-search"></i></button>
-            <input type="text" name="q" placeholder="Rechercher...">
-        </form>
+<div class="overlay"></div>
+
+<header>
+    <a href="/home.html" class="logo">
+        <span class="logo-icon">⌂</span>
+        <span>DomotiQue</span>
+    </a>
+
+    <div class="auth-buttons">
+        <a href="/login?show=login" class = "link">Se connecter</a>
+        <a href="/login?show=register" class = "link" >S'inscrire</a>
     </div>
-    <div>
-        <header>
-            <h1>SMARTHOME</h1>
-            <nav>
-                <a href="/login?show=register" class="link">S'inscrire</a>
-                <a href="/login?show=login" class="link">Se connecter</a>
-            </nav>
-        </header>
+</header>
 
-        <section>
-            <div>
-                <p style="text-align: center"> Simplifiez votre quotidien avec une maison <br>qui s’adapte à vous </p>
-            </div>
-        </section>
+<main>
+    <section class="hero">
+        <h1>Bienvenue dans votre maison du futur</h1>
+        <p>Contrôlez, surveillez et automatisez votre maison depuis n'importe où. Découvrez une nouvelle façon de vivre avec DomotiQue.</p>
 
-        <section class="intro" id="about">
-            <div class="intro-content">
-                <h2 style="text-align: center">Qu’est-ce qu’une maison connectée ?<h2>
-                <h3 style="text-align: center" >Une maison connectée vous permet de contrôler et surveiller vos équipements à distance :
-                    éclairage, sécurité, température, et bien plus encore.<br>
-                    Gagnez en confort, sécurité et efficacité énergétique.
-                </h3>
-                    <img src="/images/smart-home-illustration.jpg" alt="Illustration maison connectée" class="intro-image">
-            </div>
-        </section>
-    </div>
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Rechercher un produit, service ou information...">
+        </div>
+    </section>
 
+
+</main>
 </body>
-
 </html>
