@@ -77,7 +77,7 @@
             <div id="administration">
                 <!-- Pour un admin -->
                 <a class="unlockedLink" sec:authorize="hasRole('ADMIN')">
-                    <button class="admin-button">ADMINISTRATION</button>
+                    <button class="admin-button" th:href="@{/admin}">ADMINISTRATION</button>
                 </a>
                 <!-- Pour un utilisateur sans les droits -->
                 <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">

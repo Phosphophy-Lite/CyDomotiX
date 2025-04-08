@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/connected-object") // Toutes les méthodes de cette classe seront relative à une URL commençant par ceci (pas besoin d'être un vrai dossier)
+@RequestMapping("/gestion/connected-object") // Toutes les méthodes de cette classe seront relative à une URL commençant par ceci (pas besoin d'être un vrai dossier)
 public class ConnectedObjectController {
 
 
@@ -41,7 +41,7 @@ public class ConnectedObjectController {
      * Afficher la page avec le formulaire pour créer un nouvel objet connecté.
      * Initialise les objets java à récupérer via le formulaire.
      * @param model La vue html
-     * @return "admin/connectedobj" -- La page html à afficher
+     * @return "gestion/connectedobj" -- La page html à afficher
      */
     @GetMapping
     public String connectedObjectForm(Model model) {
@@ -60,7 +60,7 @@ public class ConnectedObjectController {
         // Liste des pièces
         model.addAttribute("rooms", roomService.getAllRooms());
 
-        return "admin/connectedobj";  // Retourne le vrai chemin de la vue pour le formulaire de création
+        return "gestion/connectedobj";  // Retourne le vrai chemin de la vue pour le formulaire de création
     }
 
     /**
@@ -82,7 +82,7 @@ public class ConnectedObjectController {
      * @param model Vue html
      * @param bindingResult Contient les résultats de validation de l'objet envoyé par le formulaire et vérifie les erreurs
      * @param redirectAttributes Pour ajouter des attributs dans un redirect (rediriger vers une nouvelle page avec information de succès)
-     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     * @return "redirect:/gestion/connected-object" -- La vue html mise à jour
      */
     @PostMapping("/add")
     public String createConnectedObject(@ModelAttribute("connectedObject") ConnectedObject connectedObject, Principal principal, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -115,7 +115,7 @@ public class ConnectedObjectController {
             // Liste des pièces
             model.addAttribute("rooms", roomService.getAllRooms());
 
-            return "admin/connectedobj";  // Retourne à la page du formulaire avec les erreurs
+            return "gestion/connectedobj";  // Retourne à la page du formulaire avec les erreurs
         }
 
         // Associe les valeurs d'attributs à l'objet connecté et à un ObjectAttribute
@@ -129,29 +129,29 @@ public class ConnectedObjectController {
 
         connectedObjectService.save(connectedObject, principal.getName());  // Sauvegarder ConnectedObject et ses attributs en BDD et logger l'action utilisateur
         redirectAttributes.addFlashAttribute("successMessage", "Objet connecté ajouté avec succès !");
-        return "redirect:/admin/connected-object";
+        return "redirect:/gestion/connected-object";
     }
 
     /**
      * Supprime un objet connecté de la BDD en récupérant la requête via le bouton Supprimer de la page
      * @param id Id de l'objet à supprimer passé dynamiquement par l'URL
-     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     * @return "redirect:/gestion/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/delete/{id}")
     public String deleteConnectedObject(@PathVariable("id") Integer id, Principal principal) {
         connectedObjectService.deleteConnectedObject(id, principal.getName()); // supprimer l'objet et logger l'action utilisateur
-        return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
+        return "redirect:/gestion/connected-object"; // Recharge la page avec la nouvelle liste
     }
 
     /**
      * Change le status (activé/désactivé) d'un objet connecté de la BDD en récupérant la requête via le bouton Activer/Désactiver de la page
      * @param id Id de l'objet passé dynamiquement par l'URL
-     * @return "redirect:/admin/connected-object" -- La vue html mise à jour
+     * @return "redirect:/gestion/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/status/{id}")
     public String switchObjectStatus(@PathVariable("id") Integer id, Principal principal) {
         connectedObjectService.switchStatus(id, principal.getName()); // changer le status et logger l'action utilisateur
-        return "redirect:/admin/connected-object"; // Recharge la page avec la nouvelle liste
+        return "redirect:/gestion/connected-object"; // Recharge la page avec la nouvelle liste
     }
 }
 

@@ -1,6 +1,8 @@
 package com.example.cydomotix.Controller;
 
+import com.example.cydomotix.Model.Users.AccessType;
 import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Repository.UserRepository;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -8,8 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,5 +71,23 @@ public class MainController {
         }
 
         return "dashboard";
+    }
+
+    @Autowired
+    private UserRepository userRepository;
+    @PostMapping("/purchase-module")
+    @ResponseBody
+    public String purchaseModule(@RequestParam Integer userId,
+                                 @RequestParam int moduleCost,
+                                 @RequestParam String role) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            return "User not found";
+        }
+
+        User user = optionalUser.get();
+        boolean success = userService.purchaseModule(user, moduleCost, AccessType.valueOf(role.toUpperCase()));
+
+        return success ? "success" : "not_enough_points";
     }
 }

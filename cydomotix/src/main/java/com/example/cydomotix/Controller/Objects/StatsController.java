@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping("/stats")
+@RequestMapping("/gestion/stats")
 public class StatsController {
 /*
     @Autowired

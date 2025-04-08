@@ -14,7 +14,7 @@ CREATE TABLE Users (
                         username VARCHAR(255) UNIQUE NOT NULL,
                         email VARCHAR(255) UNIQUE,
                         gender ENUM('MALE', 'FEMALE', 'OTHER'),
-                        access_type ENUM('USER', 'ADMIN', 'DEV') NOT NULL,
+                        access_type ENUM('USER', 'GESTION', 'ADMIN', 'DEV') NOT NULL,
                         birth_date DATE,
                         member_type ENUM('FATHER', 'MOTHER', 'CHILD'),
                         photo VARCHAR(255),
