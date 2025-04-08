@@ -1,6 +1,7 @@
 package com.example.cydomotix.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.sql.DataSource;
@@ -16,15 +17,18 @@ public class DatabaseBackupService {
     @Autowired
     private DataSource dataSource;
 
+    @Value("${app.storage.base-dir}")
+    private String baseDir;
+
 
     // Exécuté toutes les 4 heures
     @Scheduled(fixedRate = 4 * 60 * 60 * 1000) // 4h en millisecondes
     public void backupDatabase() {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        String backupFile = "data/backup/backup_" + timestamp + ".sql";
+        String backupFile = baseDir+"/data/backup/backup_" + timestamp + ".sql";
 
         try {
-            new File("data/backup").mkdirs(); // Crée le dossier s'il n'existe pas
+            new File(baseDir+"/data/backup").mkdirs(); // Crée le dossier s'il n'existe pas
 
             try (Connection connection = dataSource.getConnection();
                  Statement stmt = connection.createStatement()) {

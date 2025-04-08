@@ -7,6 +7,7 @@ import com.example.cydomotix.Model.Users.VerificationToken;
 import com.example.cydomotix.Repository.VerificationTokenRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,6 +47,10 @@ public class UserService {
 
     @Autowired
     private UserActionService userActionService;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
 
     /**
      * Vérifie si un pseudonyme donné n'est pas déjà utilisé dans la BDD
@@ -247,13 +252,6 @@ public class UserService {
                 System.out.println("Error : No file received.");
                 return null;
             }
-            // Créer un répertoire si inexistant
-            String uploadDir = "src/main/resources/static/img/profilePictures/";
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-                System.out.println("Created new directory: " + uploadDir);
-            }
 
             // Vérifier et récupérer l'extension du fichier
             String originalFilename = file.getOriginalFilename();
@@ -265,7 +263,7 @@ public class UserService {
             // Générer un nom de fichier unique
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String uniqueFileName = "profile_" + userId + fileExtension;
-            File outputFile = new File(uploadDir + uniqueFileName);
+            File outputFile = new File(uploadDir + "/" + uniqueFileName);
 
             // Compression de l'image avec Thumbnailator
             InputStream inputStream = file.getInputStream();

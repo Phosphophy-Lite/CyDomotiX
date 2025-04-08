@@ -29,6 +29,7 @@ public class ConnectedObject {
 
     private LocalDateTime last_interaction;
     private int battery_status;
+    private double power;
 
     // Plusieurs instances de ConnectedObject peuvent être associées à 1 instance de Room
     // Clé étrangère pointant vers entité mère (Room)
@@ -131,5 +132,13 @@ public class ConnectedObject {
 
     public void setObjectType(ObjectType objectType) {
         this.objectType = objectType;
+    }
+
+    public double getPower() {
+        return power;
+    }
+
+    public void setPower(double power) {
+        this.power = power;
     }
 }

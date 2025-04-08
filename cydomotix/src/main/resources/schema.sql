@@ -5,6 +5,9 @@ DROP TABLE IF EXISTS ConnectedObject;
 DROP TABLE IF EXISTS ObjectAttribute;
 DROP TABLE IF EXISTS AttributeValue;
 DROP TABLE IF EXISTS ObjectType;
+DROP TABLE IF EXISTS VerificationToken;
+DROP TABLE IF EXISTS DeletionRequest;
+DROP TABLE IF EXISTS UserAction;
 
 CREATE TABLE Users (
                         id_user INT AUTO_INCREMENT PRIMARY KEY,
@@ -61,6 +64,7 @@ CREATE TABLE ConnectedObject (
                                  brand VARCHAR(50),
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
+                                 power INT,
                                  is_active BOOLEAN,
                                  id_room INT NOT NULL, -- Relie l'objet à une pièce de la maison
                                  id_type INT NOT NULL, -- Relie l'objet à un type spécifique ("Thermostat", "TV" ..)
@@ -104,4 +108,8 @@ CREATE TABLE UserAction (
                             action_type ENUM('LOGIN', 'ADD_OBJECT', 'UPDATE_OBJECT', 'DELETE_OBJECT', 'ON_OBJECT', 'OFF_OBJECT', 'UPDATE_USER', 'DELETE_USER', 'ADD_TYPE', 'DELETE_TYPE'),
                             author VARCHAR(255),
                             related_entity VARCHAR(255)
+);
+
+CREATE TABLE UsageEvent (
+
 );
