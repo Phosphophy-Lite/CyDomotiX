@@ -66,5 +66,5 @@ body {
     padding: 0;
     background-image: url('../img/background/espace.jpg');
     color: white;
-    overflow: hidden; /* Enleve la barre de scroll principale*/
+    /*overflow: hidden; /* Enleve la barre de scroll principale*/
 }
