@@ -1,0 +1,210 @@
+/* Styles pour la page profil - en préservant la barre du haut */
+
+/* Container principal pour la page profil */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 5em); /* hauteur moins la barre de navigation */
+    padding-top: 2em;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 1em;
+    text-shadow: 0px 0px 10px rgba(227, 10, 243, 0.5);
+}
+
+/* Section profil - style similaire à object-details-section */
+.profile-content {
+    width: 80%;
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border-radius: 3em;
+    padding: 2em;
+    margin: 0 auto 2em;
+    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.5);
+}
+
+/* En-tête du profil avec photo et informations de base */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid rgba(66, 144, 253, 0.3);
+}
+
+/* Style pour la photo de profil */
+.profile-header img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 0 15px rgba(66, 144, 253, 0.7);
+    margin-bottom: 1.2em;
+    transition: all 0.3s ease;
+}
+
+.profile-header img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(227, 10, 243, 0.7);
+}
+
+/* Style pour le lien "Voir mon profil public" */
+.profile-header a {
+    color: #4290fd;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin: 0.5em 0;
+    font-size: 1.1em;
+}
+
+.profile-header a:hover {
+    color: #e30af3;
+    text-decoration: underline;
+}
+
+/* Informations utilisateur */
+.profile-header p {
+    font-size: 1.2em;
+    margin: 0.3em 0;
+}
+
+/* Style pour le formulaire */
+.profile-form {
+    width: 100%;
+}
+
+.profile-form table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5em;
+}
+
+.profile-form table tr:nth-child(odd) {
+    background-color: rgba(60, 60, 60, 0.05);
+}
+
+.profile-form table td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid rgba(66, 144, 253, 0.3);
+    line-height: 1.2;
+}
+
+.profile-form table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Style pour les labels */
+.profile-form label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+}
+
+/* Style pour les inputs - similaire à admin-edit-section */
+.profile-form input, 
+.profile-form select {
+    width: 100%;
+    padding: 0.5em 0.8em;
+    border-radius: 2em;
+    border: 1px solid #4290fd;
+    font-family: 'amongus';
+    box-sizing: border-box;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.profile-form input:focus, 
+.profile-form select:focus {
+    border-color: #e30af3;
+    outline: none;
+    box-shadow: 0 0 5px rgba(227, 10, 243, 0.3);
+}
+
+/* Style pour le bouton d'envoi - similaire à admin-edit-section button */
+.profile-form button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'amongus';
+    width: fit-content;
+    font-size: 0.9em;
+    margin: 1em auto;
+    display: block;
+}
+
+.profile-form button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+
+
+
+/* Messages d'erreur et de succès */
+.error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 0.8em;
+    line-height: 1.2;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-left: 4px solid red;
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0.5em;
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 0.8em;
+    line-height: 1.2;
+    background-color: rgba(0, 128, 0, 0.1);
+    border-left: 4px solid green;
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0.5em;
+}
+
+/* Style spécifique pour le champ de fichier */
+input[type="file"] {
+    padding: 0.4em;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive design pour les écrans plus petits */
+@media (max-width: 768px) {
+    .profile-content {
+        width: 90%;
+        padding: 1.5em;
+        border-radius: 2em;
+    }
+
+    .profile-form table, 
+    .profile-form tbody, 
+    .profile-form tr, 
+    .profile-form td {
+        display: block;
+        width: 100%;
+    }
+
+    .profile-form td {
+        padding: 0.5em 0;
+    }
+
+    .profile-form table tr:nth-child(odd) {
+        background-color: transparent;
+    }
+}
