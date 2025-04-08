@@ -22,7 +22,7 @@ public class DeletionRequestService {
     private ConnectedObjectService connectedObjectService;
 
 
-    public void submitRequest(Integer objectId, String reason, User requester) {
+    public void submitRequestObject(Integer objectId, String reason, User requester) {
         DeletionRequest request = new DeletionRequest();
         request.setReason(reason);
         ConnectedObject object = connectedObjectService.getConnectedObjectById(objectId);
@@ -31,6 +31,17 @@ public class DeletionRequestService {
         request.setRequestDate(LocalDateTime.now());
         deletionRequestRepo.save(request);
     }
+
+    /*
+    public void submitRequestObjectType(Integer objectTypeId, String reason, User requester) {
+        DeletionRequest request = new DeletionRequest();
+        request.setReason(reason);
+        ConnectedObject object = connectedObjectService.getConnectedObjectById(objectId);
+        request.setConnectedObject(object);
+        request.setRequester(requester);
+        request.setRequestDate(LocalDateTime.now());
+        deletionRequestRepo.save(request);
+    }*/
 
     public List<DeletionRequest> getAllDeletionRequests() {
         return deletionRequestRepo.findAll();

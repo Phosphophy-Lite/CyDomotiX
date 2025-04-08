@@ -112,6 +112,7 @@ public class ObjectViewController {
         return "redirect:/object/"+id; // Recharge la page avec les informations mises à jour
     }
 
+    /*
     @PostMapping("/{id}/request-deletion")
     @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle GESTION
     public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
@@ -123,6 +124,6 @@ public class ObjectViewController {
             return "redirect:/object/"+id;
         }
         return "redirect:/error";
-    }
+    }*/
 
 }

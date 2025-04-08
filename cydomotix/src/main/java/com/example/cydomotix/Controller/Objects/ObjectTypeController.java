@@ -139,6 +139,7 @@ public class ObjectTypeController {
                 .collect(Collectors.toList());
     }
 
+    /*
     @PostMapping("/{id}/request-deletion")
     public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
         // Récupérer l'utilisateur de la session actuelle
@@ -149,6 +150,6 @@ public class ObjectTypeController {
             return "redirect:/object/"+id;
         }
         return "redirect:/error";
-    }
+    }*/
 }
 
