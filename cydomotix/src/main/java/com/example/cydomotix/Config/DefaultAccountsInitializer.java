@@ -61,5 +61,6 @@ public class DefaultAccountsInitializer implements ApplicationRunner {
         createDefaultUser("admin", "adminpassword", AccessType.ADMIN);
         createDefaultUser("engineer", "devpassword", AccessType.DEV);
         createDefaultUser("crewmate", "userpassword", AccessType.USER);
+        createDefaultUser("gestion","gestionpassword", AccessType.GESTION);
     }
 }
