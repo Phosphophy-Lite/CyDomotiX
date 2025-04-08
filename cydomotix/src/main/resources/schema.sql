@@ -96,9 +96,12 @@ CREATE TABLE DeletionRequest (
                                    id_del_request INT AUTO_INCREMENT PRIMARY KEY,
                                    reason VARCHAR(255),
                                    request_date TIMESTAMP,
-                                   connected_object_id INT NOT NULL,
+                                   connected_object_id INT,
+                                   object_type_id INT,
+                                   target_type ENUM('CONNECTED_OBJECT', 'OBJECT_TYPE'),
                                    requester_user_id INT NOT NULL,
                                    FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE,
+                                   FOREIGN KEY (object_type_id) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE,
                                    FOREIGN KEY (requester_user_id) REFERENCES Users(id_user) ON DELETE CASCADE
 );
 
@@ -108,8 +111,4 @@ CREATE TABLE UserAction (
                             action_type ENUM('LOGIN', 'ADD_OBJECT', 'UPDATE_OBJECT', 'DELETE_OBJECT', 'ON_OBJECT', 'OFF_OBJECT', 'UPDATE_USER', 'DELETE_USER', 'ADD_TYPE', 'DELETE_TYPE'),
                             author VARCHAR(255),
                             related_entity VARCHAR(255)
-);
-
-CREATE TABLE UsageEvent (
-
 );

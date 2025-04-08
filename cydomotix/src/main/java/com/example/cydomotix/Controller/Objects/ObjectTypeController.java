@@ -1,5 +1,6 @@
 package com.example.cydomotix.Controller.Objects;
 
+import com.example.cydomotix.Model.Administration.DeletionTargetType;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
@@ -139,17 +140,16 @@ public class ObjectTypeController {
                 .collect(Collectors.toList());
     }
 
-    /*
+
     @PostMapping("/{id}/request-deletion")
-    public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
+    public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal) {
         // Récupérer l'utilisateur de la session actuelle
         Optional<User> user = userService.getByUsername(principal.getName());
         if (user.isPresent()) {
-            deletionRequestService.submitRequest(id, reason, user.get());
-            redirectAttributes.addFlashAttribute("requestSuccess", "La demande de suppression a bien été transmise aux administrateurs.");
-            return "redirect:/object/"+id;
+            deletionRequestService.submitRequest(id, DeletionTargetType.OBJECT_TYPE, reason, user.get());
+            return "redirect:/gestion/object-type";
         }
         return "redirect:/error";
-    }*/
+    }
 }
 

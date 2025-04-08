@@ -1,5 +1,6 @@
 package com.example.cydomotix.Controller.Objects;
 
+import com.example.cydomotix.Model.Administration.DeletionTargetType;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Service.DeletionRequestService;
@@ -69,7 +70,7 @@ public class ObjectViewController {
     }
 
     @PostMapping("/{id}/update")
-    @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle ADMIN
+    @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle GESTION
     public String updateConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, Principal principal, RedirectAttributes redirectAttributes) {
 
         ConnectedObject existingObject = connectedObjectService.getConnectedObjectById(id);
@@ -107,23 +108,24 @@ public class ObjectViewController {
      * @return "redirect:/admin/connected-object" -- La vue html mise à jour
      */
     @GetMapping("/{id}/status")
+    @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle GESTION
     public String switchObjectStatus(@PathVariable("id") Integer id, Principal principal) {
         connectedObjectService.switchStatus(id, principal.getName()); // changer le status et logger l'action utilisateur
         return "redirect:/object/"+id; // Recharge la page avec les informations mises à jour
     }
 
-    /*
+
     @PostMapping("/{id}/request-deletion")
     @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle GESTION
     public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
         // Récupérer l'utilisateur de la session actuelle
         Optional<User> user = userService.getByUsername(principal.getName());
         if (user.isPresent()) {
-            deletionRequestService.submitRequest(id, reason, user.get());
+            deletionRequestService.submitRequest(id, DeletionTargetType.CONNECTED_OBJECT, reason, user.get());
             redirectAttributes.addFlashAttribute("requestSuccess", "La demande de suppression a bien été transmise aux administrateurs.");
             return "redirect:/object/"+id;
         }
         return "redirect:/error";
-    }*/
+    }
 
 }

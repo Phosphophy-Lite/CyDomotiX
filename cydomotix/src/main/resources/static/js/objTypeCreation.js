@@ -1,7 +1,7 @@
 // Charger les types de valeurs au chargement de la page
 let valueTypes = [];
 
-fetch('/admin/object-type/valueTypes')
+fetch('/gestion/object-type/valueTypes')
     .then(response => response.json())
     .then(data => {
         valueTypes = data;
@@ -61,21 +61,47 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+
+// Pour tous les boutons "Demander la suppression"
 document.addEventListener("DOMContentLoaded", function () {
-    // Sélectionner tous les boutons "Supprimer"
     const requestDeleteButtons = document.querySelectorAll('.request-delete-btn');
+
+    // Récupération du token CSRF
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
     requestDeleteButtons.forEach(button => {
         button.addEventListener('click', function (event) {
-            event.preventDefault(); // Empêche le comportement par défaut (le lien qui se déclenche)
+            event.preventDefault();
 
-            const objTypeId = this.getAttribute('data-id'); // Récupère l'ID du Type d'objet
+            const objTypeId = this.getAttribute('data-id');
+            const reason = prompt("Veuillez indiquer la raison de la demande de suppression :");
 
-            // Confirmation avant de supprimer
-            const confirmation = confirm("Demander la suppression de ce Type d'objet ?");
-            if (confirmation) {
-                // Si confirmé, redirige vers l'URL de suppression
-                window.location.href = `object-type/${objTypeId}/request-deletion`;
+            if (reason !== null && reason.trim() !== "") {
+                fetch(`/gestion/object-type/${objTypeId}/request-deletion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken // Utilisation dynamique du nom de l'en-tête CSRF
+                    },
+                    body: new URLSearchParams({
+                        reason: reason
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Demande de suppression envoyée !");
+                            location.reload();
+                        } else {
+                            alert("Erreur lors de l'envoi de la demande.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur réseau :", error);
+                        alert("Erreur réseau !");
+                    });
+            } else {
+                alert("La raison est obligatoire pour envoyer une demande.");
             }
         });
     });

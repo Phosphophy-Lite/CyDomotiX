@@ -9,7 +9,7 @@
     <table>
         <thead>
         <tr>
-            <th>Objet</th>
+            <th>Objet/Type</th>
             <th>Utilisateur</th>
             <th>Raison</th>
             <th>Date</th>
@@ -18,7 +18,8 @@
         </thead>
         <tbody>
             <tr th:each="request : ${requests}">
-                <td th:text="${request.connectedObject.name}"></td>
+                <td th:if="${request.targetType.name() == 'CONNECTED_OBJECT'}" th:text="${request.connectedObject.name}"></td>
+                <td th:if="${request.targetType.name() == 'OBJECT_TYPE'}" th:text="${request.objectType.name}"></td>
                 <td th:text="${request.requester.username}"></td>
                 <td th:text="${request.reason}"></td>
                 <td th:text="${#temporals.format(request.requestDate, 'dd/MM/yyyy HH:mm')}"></td>

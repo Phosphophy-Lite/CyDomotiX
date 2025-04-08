@@ -12,8 +12,9 @@ public class PowerChangeEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /*
     @ManyToOne
-    private ConnectedObject connectedObject;
+    private ConnectedObject connectedObject;*/
 
     private double power; // en W
 
@@ -36,6 +37,7 @@ public class PowerChangeEvent {
         this.power = power;
     }
 
+    /*
     public ConnectedObject getConnectedObject() {
         return connectedObject;
     }
@@ -43,7 +45,7 @@ public class PowerChangeEvent {
     public void setConnectedObject(ConnectedObject connectedObject) {
         this.connectedObject = connectedObject;
     }
-
+*/
     public Integer getId() {
         return id;
     }

@@ -2,6 +2,8 @@
 <html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Création Object Connecté</title>
     <script src="/js/connectedObjCreation.js" defer></script>
 </head>
@@ -76,8 +78,8 @@
                 <td>
                     <a class="delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('ADMIN')">
                         <button>Supprimer</button>
-                    </a>
-                    <a class="request-delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION')">
+                    </a><br>
+                    <a class="request-delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
                         <button>Demander suppression</button>
                     </a>
                     <br>
@@ -93,7 +95,7 @@
 
     <h1>Ajouter un nouvel object connecté</h1>
 
-    <form th:action="@{/admin/connected-object/add}" method="POST" th:object="${connectedObject}">
+    <form th:action="@{/gestion/connected-object/add}" method="POST" th:object="${connectedObject}">
         <!-- Input cachée pour stockée l'ID -->
         <input type="hidden" th:field="*{id}">
 

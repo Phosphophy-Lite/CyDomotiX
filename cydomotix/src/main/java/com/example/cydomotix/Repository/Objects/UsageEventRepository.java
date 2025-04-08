@@ -6,9 +6,10 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+/*
 @Repository
 public interface UsageEventRepository extends CrudRepository<UsageEvent, Integer> {
     List<UsageEvent> findByConnectedObjectOrderByTimestamp(ConnectedObject connectedObject);
 }
 
+*/

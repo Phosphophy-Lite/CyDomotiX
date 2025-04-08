@@ -1,6 +1,7 @@
 package com.example.cydomotix.Model.Administration;
 
 import com.example.cydomotix.Model.Objects.ConnectedObject;
+import com.example.cydomotix.Model.Objects.ObjectType;
 import com.example.cydomotix.Model.Users.User;
 import jakarta.persistence.*;
 
@@ -20,6 +21,14 @@ public class DeletionRequest {
     @ManyToOne
     @JoinColumn(name = "connected_object_id")
     private ConnectedObject connectedObject;
+
+    @ManyToOne
+    @JoinColumn(name = "object_type_id")
+    private ObjectType objectType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "target_type", nullable = false)
+    private DeletionTargetType targetType;
 
     @ManyToOne
     @JoinColumn(name = "requester_user_id", nullable = false)
@@ -62,5 +71,29 @@ public class DeletionRequest {
 
     public void setRequestDate(LocalDateTime requestDate) {
         this.requestDate = requestDate;
+    }
+
+    public DeletionTargetType getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(DeletionTargetType targetType) {
+        this.targetType = targetType;
+    }
+
+    public ObjectType getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(ObjectType objectType) {
+        this.objectType = objectType;
+    }
+
+    public boolean isForConnectedObject() {
+        return targetType == DeletionTargetType.CONNECTED_OBJECT;
+    }
+
+    public boolean isForObjectType() {
+        return targetType == DeletionTargetType.OBJECT_TYPE;
     }
 }

@@ -17,7 +17,16 @@
 
         <a class="link" th:href="@{/dashboard}">Accueil</a>
         <a class="link" th:href="@{/visualization}">Visualisation</a>
-        <a class="link">Gestion</a>
+        <!-- Pour un utilisateur avec droits gestion -->
+        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+
+        <!-- Pour un utilisateur sans droits d'accès gestion -->
+        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+            </svg>
+            Gestion
+        </a>
 
         <!-- Pour un admin -->
         <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
@@ -159,7 +168,7 @@
                                             <p th:text="${connectedObject.mode.displayName}"></p>
                                             <p th:text="${connectedObject.connectivity.displayName}"></p>
                                             <p th:text="|${connectedObject.batteryStatus}%|"></p>
-                                            <p class="lastInteractionText" th:text="${connectedObject.lastInteraction}"></p>
+                                            <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
                                             <p th:if="${connectedObject.isActive == true}">Activé</p>
                                             <p th:unless="${connectedObject.isActive}">Désactivé</p>
 

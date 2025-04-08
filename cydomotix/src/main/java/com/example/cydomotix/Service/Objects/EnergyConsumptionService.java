@@ -4,8 +4,8 @@ import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ConsumptionInterval;
 import com.example.cydomotix.Model.Objects.PowerChangeEvent;
 import com.example.cydomotix.Model.Objects.UsageEvent;
-import com.example.cydomotix.Repository.Objects.PowerChangeEventRepository;
-import com.example.cydomotix.Repository.Objects.UsageEventRepository;
+//import com.example.cydomotix.Repository.Objects.PowerChangeEventRepository;
+//import com.example.cydomotix.Repository.Objects.UsageEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 public class EnergyConsumptionService {
-
+/*
     @Autowired
     private UsageEventRepository usageEventRepo;
 
@@ -62,6 +62,7 @@ public class EnergyConsumptionService {
      * @param time
      * @return
      */
+    /*
     private double getCurrentPowerAt(List<PowerChangeEvent> powerEvents, LocalDateTime time) {
         double lastPower = 0;
         for (PowerChangeEvent e : powerEvents) {
@@ -78,8 +79,8 @@ public class EnergyConsumptionService {
      * Calculer l'énergie consommée sur un intervalle de consommation
      * @param intervals
      * @return
-     */
+     *//*
     public double calculateTotalEnergy(List<ConsumptionInterval> intervals) {
         return intervals.stream().mapToDouble(ConsumptionInterval::getEnergyWh).sum();
-    }
+    }*/
 }

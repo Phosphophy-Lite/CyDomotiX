@@ -4,7 +4,7 @@ import com.example.cydomotix.Model.Objects.*;
 import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Repository.Objects.AttributeValueRepository;
 import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
-import com.example.cydomotix.Repository.Objects.UsageEventRepository;
+//import com.example.cydomotix.Repository.Objects.UsageEventRepository;
 import com.example.cydomotix.Service.UserActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +23,8 @@ public class ConnectedObjectService {
     private AttributeValueRepository attributeValueRepository;
     @Autowired
     private UserActionService userActionService;
-    @Autowired
-    private UsageEventRepository usageEventRepository;
+    /*@Autowired
+    private UsageEventRepository usageEventRepository;*/
 
     /**
      * Vérifie si un objet connecté au nom donné n'est pas déjà existant dans la BDD
@@ -171,15 +171,16 @@ public class ConnectedObjectService {
         // Met à jour le champ status par son inverse
         connectedObject.setIsActive(!currentStatus);
 
+        /*
         UsageEvent usageEvent = new UsageEvent();
         usageEvent.setConnectedObject(connectedObject);
-        usageEvent.setStatus(!currentStatus);
+        usageEvent.setStatus(!currentStatus);*/
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         connectedObject.setLastInteraction(currentDateTime);
 
-        usageEvent.setTimestamp(currentDateTime);
-        usageEventRepository.save(usageEvent);
+        /*usageEvent.setTimestamp(currentDateTime);
+        usageEventRepository.save(usageEvent);*/
 
         // Sauvegarde l'objet mis à jour dans la BDD
         connectedObjectRepository.save(connectedObject);

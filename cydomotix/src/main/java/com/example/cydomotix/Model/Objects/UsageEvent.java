@@ -12,8 +12,9 @@ public class UsageEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /*
     @ManyToOne
-    private ConnectedObject connectedObject;
+    private ConnectedObject connectedObject;*/
 
     private boolean status; // true = ON, false = OFF
 
@@ -35,13 +36,14 @@ public class UsageEvent {
         this.status = status;
     }
 
+    /*
     public ConnectedObject getConnectedObject() {
         return connectedObject;
     }
 
     public void setConnectedObject(ConnectedObject connectedObject) {
         this.connectedObject = connectedObject;
-    }
+    }*/
 
     public Integer getId() {
         return id;

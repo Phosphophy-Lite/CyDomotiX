@@ -1,14 +1,18 @@
 package com.example.cydomotix.Controller.Objects;
 
+import com.example.cydomotix.Model.Administration.DeletionTargetType;
 import com.example.cydomotix.Model.Objects.AttributeValue;
 import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
 import com.example.cydomotix.Model.Room;
+import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Service.DeletionRequestService;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
 import com.example.cydomotix.Service.RoomService;
+import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/gestion/connected-object") // Toutes les méthodes de cette classe seront relative à une URL commençant par ceci (pas besoin d'être un vrai dossier)
@@ -36,6 +41,12 @@ public class ConnectedObjectController {
 
     @Autowired
     private RoomService roomService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private DeletionRequestService deletionRequestService;
 
     /**
      * Afficher la page avec le formulaire pour créer un nouvel objet connecté.
@@ -152,6 +163,17 @@ public class ConnectedObjectController {
     public String switchObjectStatus(@PathVariable("id") Integer id, Principal principal) {
         connectedObjectService.switchStatus(id, principal.getName()); // changer le status et logger l'action utilisateur
         return "redirect:/gestion/connected-object"; // Recharge la page avec la nouvelle liste
+    }
+
+    @PostMapping("/{id}/request-deletion")
+    public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal) {
+        // Récupérer l'utilisateur de la session actuelle
+        Optional<User> user = userService.getByUsername(principal.getName());
+        if (user.isPresent()) {
+            deletionRequestService.submitRequest(id, DeletionTargetType.CONNECTED_OBJECT, reason, user.get());
+            return "redirect:/gestion/connected-object";
+        }
+        return "redirect:/error";
     }
 }
 
