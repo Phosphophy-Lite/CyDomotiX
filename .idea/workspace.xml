@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="03a1309f-25e4-49a0-b332-52b9efd12594" name="Changes" comment="home, error">
-      <change beforePath="$PROJECT_DIR$/cydomotix/src/main/resources/static/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/cydomotix/src/main/resources/static/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cydomotix/src/main/resources/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/cydomotix/src/main/resources/templates/home.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -18,6 +18,12 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/cydomotix/src/main/resources/static/css/home.css" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -83,7 +89,31 @@
       <option name="project" value="LOCAL" />
       <updated>1744029300932</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="home, error">
+      <option name="closed" value="true" />
+      <created>1744098141639</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1744098141639</updated>
+    </task>
+    <task id="LOCAL-00005" summary="home, error">
+      <option name="closed" value="true" />
+      <created>1744099157191</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1744099157191</updated>
+    </task>
+    <task id="LOCAL-00006" summary="home, error">
+      <option name="closed" value="true" />
+      <created>1744140652205</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1744140652205</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
