@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Création Type d'Objet</title>
     <script src="/js/objTypeCreation.js" defer></script>
 </head>
@@ -29,8 +31,11 @@
                     </ul>
                 </td>
                 <td>
-                    <a class="delete-btn" href="#" th:data-id="${objectType.id}">
+                    <a class="delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('ADMIN')">
                         <button>Supprimer</button>
+                    </a><br>
+                    <a class="request-delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
+                        <button>Demander suppression</button>
                     </a>
                 </td>
             </tr>
@@ -41,7 +46,7 @@
 
     <h1>Créer un nouveau Type d'Objet</h1>
 
-    <form th:action="@{/admin/object-type/create}" method="POST" th:object="${objectType}">
+    <form th:action="@{/gestion/object-type/create}" method="POST" th:object="${objectType}">
         <label for="name">Nom du type d'objet:</label>
         <input type="text" id="name" th:field="*{name}" required>
         <br>

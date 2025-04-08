@@ -5,13 +5,16 @@ DROP TABLE IF EXISTS ConnectedObject;
 DROP TABLE IF EXISTS ObjectAttribute;
 DROP TABLE IF EXISTS AttributeValue;
 DROP TABLE IF EXISTS ObjectType;
+DROP TABLE IF EXISTS VerificationToken;
+DROP TABLE IF EXISTS DeletionRequest;
+DROP TABLE IF EXISTS UserAction;
 
 CREATE TABLE Users (
                         id_user INT AUTO_INCREMENT PRIMARY KEY,
                         username VARCHAR(255) UNIQUE NOT NULL,
                         email VARCHAR(255) UNIQUE,
                         gender ENUM('MALE', 'FEMALE', 'OTHER'),
-                        access_type ENUM('USER', 'ADMIN', 'DEV') NOT NULL,
+                        access_type ENUM('USER', 'GESTION', 'ADMIN', 'DEV') NOT NULL,
                         birth_date DATE,
                         member_type ENUM('FATHER', 'MOTHER', 'CHILD'),
                         photo VARCHAR(255),
@@ -20,7 +23,8 @@ CREATE TABLE Users (
                         experience_level VARCHAR(20),
                         points INT,
                         password VARCHAR(255) NOT NULL,
-                        enabled BOOLEAN NOT NULL
+                        enabled BOOLEAN NOT NULL,
+                        approved_by_admin BOOLEAN NOT NULL
 );
 
 CREATE TABLE Room (
@@ -60,6 +64,7 @@ CREATE TABLE ConnectedObject (
                                  brand VARCHAR(50),
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
+                                 power INT,
                                  is_active BOOLEAN,
                                  id_room INT NOT NULL, -- Relie l'objet à une pièce de la maison
                                  id_type INT NOT NULL, -- Relie l'objet à un type spécifique ("Thermostat", "TV" ..)
@@ -85,4 +90,25 @@ CREATE TABLE VerificationToken (
                                     expiry_date DATE,
                                     user_id INT NOT NULL,
                                     FOREIGN KEY (user_id) REFERENCES Users(id_user)
-)
+);
+
+CREATE TABLE DeletionRequest (
+                                   id_del_request INT AUTO_INCREMENT PRIMARY KEY,
+                                   reason VARCHAR(255),
+                                   request_date TIMESTAMP,
+                                   connected_object_id INT,
+                                   object_type_id INT,
+                                   target_type ENUM('CONNECTED_OBJECT', 'OBJECT_TYPE'),
+                                   requester_user_id INT NOT NULL,
+                                   FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE,
+                                   FOREIGN KEY (object_type_id) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE,
+                                   FOREIGN KEY (requester_user_id) REFERENCES Users(id_user) ON DELETE CASCADE
+);
+
+CREATE TABLE UserAction (
+                            id_user_action INT PRIMARY KEY AUTO_INCREMENT,
+                            timestamp TIMESTAMP,
+                            action_type ENUM('LOGIN', 'ADD_OBJECT', 'UPDATE_OBJECT', 'DELETE_OBJECT', 'ON_OBJECT', 'OFF_OBJECT', 'UPDATE_USER', 'DELETE_USER', 'ADD_TYPE', 'DELETE_TYPE'),
+                            author VARCHAR(255),
+                            related_entity VARCHAR(255)
+);

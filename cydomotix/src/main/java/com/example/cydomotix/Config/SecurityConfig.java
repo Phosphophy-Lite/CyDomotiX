@@ -1,5 +1,7 @@
 package com.example.cydomotix.Config;
 
+import com.example.cydomotix.Exceptions.EmailNotVerifiedException;
+import com.example.cydomotix.Exceptions.NotApprovedByAdminException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,9 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,7 +45,7 @@ public class SecurityConfig {
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("ROLE_DEV > ROLE_ADMIN > ROLE_USER");
+        return RoleHierarchyImpl.fromHierarchy("ROLE_DEV > ROLE_ADMIN > ROLE_GESTION > ROLE_USER");
     }
 
     /**
@@ -69,12 +68,13 @@ public class SecurityConfig {
 
                     // A SUPPRIMER POUR PROD
                     if (isProfileActive("dev")) {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("ADMIN");
+                        auth.requestMatchers("/h2-console/**", "/h2-console").permitAll();
                     } else {
-                        auth.requestMatchers("/h2-console/**", "/h2-console").denyAll();
+                        auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("DEV");
                     }
 
                     auth.requestMatchers("/", "/login", "/register", "/verify", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
+                    auth.requestMatchers("/gestion/**").hasRole("GESTION"); // Pages dans /gestion/ sont restreintes aux rôles GESTION et supérieurs
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages dans /admin/ sont restreintes aux rôles ADMIN et supérieurs
                     auth.requestMatchers("/dev/**").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs
 
@@ -87,8 +87,12 @@ public class SecurityConfig {
                         .failureHandler((request, response, exception) -> { // Si username/password invalides, afficher les erreurs
                             if (exception instanceof BadCredentialsException) {
                                 request.getSession().setAttribute("errorMessage", "Pseudonyme ou mot de passe invalide.");
-                            } else if (exception instanceof InternalAuthenticationServiceException){
-                                request.getSession().setAttribute("errorMessage", "Veuillez vérifier votre compte via le mail envoyé.");
+                            }
+                            else if (exception instanceof NotApprovedByAdminException){
+                                request.getSession().setAttribute("errorMessage", "Votre compte est en attente de validation par un administrateur.");
+                            }
+                            else if (exception instanceof EmailNotVerifiedException){
+                                request.getSession().setAttribute("errorMessage", "Veuillez vérifier votre compte via l'email envoyé.");
                             }
                             else {
                                 request.getSession().setAttribute("errorMessage", "Échec de connexion. Veuillez réessayer.");

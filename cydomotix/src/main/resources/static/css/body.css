@@ -1,0 +1,70 @@
+/**************************************** Dynamic Stars ****************************************/
+
+/* Ajout d'étoiles filantes occasionnelles */
+@keyframes shootingStar {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100vw) translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.shooting-star {
+    position: fixed;
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    animation: shootingStar 3s linear forwards;
+    z-index: -1;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 1px white;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Étoiles scintillantes */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.twinkle-star {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: -1;
+    animation: twinkle 5s infinite;
+    pointer-events: none;
+}
+
+
+/**************************************** Titres globaux ****************************************/
+@font-face {
+    font-family: amongus;
+    src: url('../img/font/AmaticBold.ttf');
+}
+
+/*@font-face {
+    font-family: 'VCR_OSD_MONO';
+    font-style: normal;
+    font-weight: normal;
+    src: url('/img/font/VCR_OSD_MONO.woff');
+}*/
+
+
+body {
+    font-family: arial;
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/background/espace.jpg');
+    color: white;
+    /*overflow: hidden; /* Enleve la barre de scroll principale*/
+}

@@ -1,72 +1,4 @@
-/**************************************** Dynamic Stars ****************************************/
 
-/* Ajout d'étoiles filantes occasionnelles */
-@keyframes shootingStar {
-    0% {
-        transform: translateX(0) translateY(0);
-        opacity: 0;
-    }
-    10% {
-        opacity: 1;
-    }
-    100% {
-        transform: translateX(100vw) translateY(100vh);
-        opacity: 0;
-    }
-}
-
-.shooting-star {
-    position: fixed;
-    width: 2px;
-    height: 40px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-    animation: shootingStar 3s linear forwards;
-    z-index: -1;
-    border-radius: 50%;
-    box-shadow: 0 0 8px 1px white;
-    opacity: 0;
-    pointer-events: none;
-}
-
-/* Étoiles scintillantes */
-@keyframes twinkle {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 1; }
-}
-
-.twinkle-star {
-    position: fixed;
-    width: 2px;
-    height: 2px;
-    background-color: white;
-    border-radius: 50%;
-    z-index: -1;
-    animation: twinkle 5s infinite;
-    pointer-events: none;
-}
-
-
-/**************************************** Titres globaux ****************************************/
-@font-face {
-    font-family: amongus;
-    src: url('../img/font/AmaticBold.ttf');
-}
-
-/*@font-face {
-    font-family: 'VCR_OSD_MONO';
-    font-style: normal;
-    font-weight: normal;
-    src: url('/img/font/VCR_OSD_MONO.woff');
-}*/
-  
-
-body {
-    font-family: amongus;
-    margin: 0;
-    padding: 0;
-    background-image: url('../img/background/espace.jpg');
-    color: white;
-}
 
 h5{
     margin:1em;
@@ -85,83 +17,6 @@ ul {
 ul li {
     margin: 0;
     padding: 0;
-}
-
-/**************************************** BARRE CENTRALE ****************************************/
-
-#upRod{
-    display: flex;
-    height: 5em;
-    border-radius: 0 0 2em 2em;
-    justify-content: center;
-    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.5);
-    background-color: white;
-    color: black;
-}
-
-.link{
-    margin: auto;
-    transition: all 0.3s ease;
-    position: relative;
-    color: black;
-    text-decoration: none; /* pas souligné */
-}
-
-.link:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-}
-
-.link::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: -5px;
-    left: 0;
-    background: linear-gradient(0.25turn, #4290fd, #e30af3);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.link:hover::after {
-    transform: scaleX(1);
-}
-
-.button
-{
-    width:13em;
-    height: 3em;
-    border-radius: 3em;
-    background: linear-gradient(0.25turn, #4290fd, #e30af3);
-    color: white;
-    font-family: sans-serif;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-
-.button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(66, 144, 253, 0.59);
-}
-
-.button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: all 0.3s ease;
-}
-
-.button:hover::before {
-    left: 100%;
 }
 
 
@@ -337,9 +192,11 @@ ul li {
     fill: rgba(4, 0, 0, 0.7);
 }
 
+
+/*#gestion::before, #gestion::after,
+#administration::before, #administration::after*/
 /* Chaînes */
-#gestion::before, #gestion::after, 
-#administration::before, #administration::after {
+a.lockedLink::before, a.lockedLink::after{
     content: '';
     position: absolute;
     width: 120%;
@@ -347,6 +204,8 @@ ul li {
     background-color: rgba(255, 255, 255, 0.3);
     z-index: 5;
 }
+
+
 
 #gestion::before, #administration::before {
     transform: rotate(45deg);
@@ -487,7 +346,95 @@ ul li {
     justify-content: center;
 }
 
+.module-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
 
+.popup-content {
+    background: linear-gradient(135deg, #1e1e2f, #2d2d44);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 0 30px rgba(66, 144, 253, 0.6), 0 0 30px rgba(227, 10, 243, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-family: amongus, sans-serif;
+}
+
+.popup-content h2 {
+    margin-top: 0;
+    font-size: 2.5em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+}
+
+.popup-content p {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+.popup-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.popup-button {
+    padding: 10px 30px;
+    border-radius: 50px;
+    border: none;
+    font-family: amongus, sans-serif;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.popup-button.buy {
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    color: white;
+}
+
+.popup-button.cancel {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.popup-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Style pour les modules débloqués */
+.unlocked::before, .unlocked::after {
+    display: none !important;
+}
+/*
+.popup {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+*/
 
 
 

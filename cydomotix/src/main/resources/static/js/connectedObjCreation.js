@@ -2,7 +2,7 @@ function loadAttributes(objectTypeId) {
     let attributeTableBody = document.querySelector("#attributesTable tbody");
     attributeTableBody.innerHTML = ""; // Vider les lignes actuelles pour reload
 
-    fetch(`/admin/connected-object/attributes?typeId=` + objectTypeId) // envoie une requête HTTP GET à cette url
+    fetch(`/gestion/connected-object/attributes?typeId=` + objectTypeId) // envoie une requête HTTP GET à cette url
         .then(response => response.json()) // récupère la réponse de la requête en JSON
         .then(data => {
             data.forEach((attribute, index) => {
@@ -87,3 +87,49 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+// Pour tous les boutons "Demander la suppression"
+document.addEventListener("DOMContentLoaded", function () {
+    const requestDeleteButtons = document.querySelectorAll('.request-delete-btn');
+
+    // Récupération du token CSRF
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    requestDeleteButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const objId = this.getAttribute('data-id');
+            const reason = prompt("Veuillez indiquer la raison de la demande de suppression :");
+
+            if (reason !== null && reason.trim() !== "") {
+                fetch(`/gestion/connected-object/${objId}/request-deletion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken // Utilisation dynamique du nom de l'en-tête CSRF
+                    },
+                    body: new URLSearchParams({
+                        reason: reason
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Demande de suppression envoyée !");
+                            location.reload();
+                        } else {
+                            alert("Erreur lors de l'envoi de la demande.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur réseau :", error);
+                        alert("Erreur réseau !");
+                    });
+            } else {
+                alert("La raison est obligatoire pour envoyer une demande.");
+            }
+        });
+    });
+});
+

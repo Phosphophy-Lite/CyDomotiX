@@ -1,74 +1,153 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Mon profil</title>
+    <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/profil.css" th:href="@{/css/profil.css}" />
+
+    <script src="/js/dynamicStars.js" defer></script>
 </head>
 
 <body>
-    <h2>Mon Profil</h2>
-
-    <!-- Afficher la photo de profil. -->
-    <img th:src="@{${user.photo}}" alt="Profile Picture" width="100px" height="100px"><br>
-
-    <a th:href="@{/profile/{username}(username=${user.username})}">Voir mon profil public</a><br>
-
-    <!-- Champs à modifier -->
-    <form th:action="@{/profile/update}" method="post" enctype="multipart/form-data" th:object="${user}">
-        <table>
-            <tr>
-                <td><label for="username">Pseudonyme :</label></td>
-                <td><input type="text" id="username" th:field="*{username}"></td>
-            </tr>
-            <tr>
-                <td><label for="gender">Genre :</label></td>
-                <td>
-                    <select th:field="*{gender}" id="gender">
-                        <option th:each="gender : ${T(com.example.cydomotix.Model.Users.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="password">Nouveau mot de passe :</label></td>
-                <td><input type="password" minlength="6" id="password" name="password"></td>
-            </tr>
-            <tr>
-                <td><label for="oldPswd">Confirmez l'ancien mot de passe :</label></td>
-                <td><input type="password" id="oldPswd" name="oldPswd"></td>
-            </tr>
-            <tr>
-                <td><label for="birthDate">Date de naissance :</label></td>
-                <td><input type="date" id="birthDate" name="birthDate" th:value="*{birthDate}"></td>
-            </tr>
-            <tr>
-                <td><label for="firstName">Prénom :</label></td>
-                <td><input type="text" id="firstName" th:field="*{firstName}"></td>
-            </tr>
-            <tr>
-                <td><label for="lastName">Nom :</label></td>
-                <td><input type="text" id="lastName" th:field="*{lastName}"></td>
-            </tr>
-            <tr>
-                <td><label for="pfp">Image de profil :</label></td>
-                <td><input type="file" name="pfp" id="pfp" accept="image/*"></td>
-            </tr>
-        </table>
-
-        <button type="submit">Enregistrer</button>
-        <br>
 
 
-        <!-- Affichage de l'erreur -->
-        <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
-            <p th:text="${errorMessage}"></p>
+
+    <!------------------------------BARRE CENTRALE ------------------------------>
+
+    <div id="upRod">
+
+        <a class="link" th:href="@{/dashboard}">Accueil</a>
+        <a class="link" th:href="@{/visualization}">Visualisation</a>
+        <!-- Pour un utilisateur avec droits gestion -->
+        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+
+        <!-- Pour un utilisateur sans droits d'accès gestion -->
+        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+            </svg>
+            Gestion
+        </a>
+        <!-- Pour un admin -->
+        <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+
+        <!-- Pour un utilisateur sans droits d'accès admin -->
+        <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+            </svg>
+            Administration
+        </a>
+
+        <a class="link" th:href="@{/profile}">Profil</a>
+        <div class="link">
+            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
+          car une requête GET (lien clickable) ne transmet pas de token CSRF
+          donc Spring Security la bloquerait pour un logout
+          (potentiellement dangereux sans protection CSRF) -->
+            <form th:action="@{/logout}" method="post">
+                <button class="button" type="submit">Déconnexion</button>
+            </form>
         </div>
+    </div>
 
-        <!-- Affichage du message de succès -->
-        <div th:if="${successMessage}" style="color: green; font-weight: bold;">
-            <p th:text="${successMessage}"></p>
+    <!------------------------------FIN BARRE CENTRALE ------------------------------>
+
+
+
+
+
+
+
+
+
+    <div class="profile-container">
+        <h2>Mon Profil</h2>
+
+        <div class="profile-content">
+            <div class="profile-header">
+                <!-- Afficher la photo de profil. -->
+                <img th:src="@{${user.photo}}" alt="Profile Picture" width="100px" height="100px"><br>
+
+                <a th:href="@{/profile/{username}(username=${user.username})}">Voir mon profil public</a><br>
+                <p th:text="${user.accessType.displayName}"></p>
+                <p th:text="'Mes points : ' + ${user.points}"></p>
+            </div>
+
+            <!-- Champs à modifier -->
+            <div class="profile-form">
+                <form th:action="@{/profile/update}" method="post" enctype="multipart/form-data" th:object="${user}">
+                    <table>
+                        <tr>
+                            <td><label for="username">Pseudonyme :</label></td>
+                            <td><input type="text" id="username" th:field="*{username}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="memberType">Type de membre :</label></td>
+                            <td>
+                                <select th:field="*{memberType}" id="memberType">
+                                    <option th:each="memberType : ${T(com.example.cydomotix.Model.Users.MemberType).values()}" th:value="${memberType}" th:text="${memberType.displayName}"></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="gender">Genre :</label></td>
+                            <td>
+                                <select th:field="*{gender}" id="gender">
+                                    <option th:each="gender : ${T(com.example.cydomotix.Model.Users.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="password">Nouveau mot de passe :</label></td>
+                            <td><input type="password" minlength="6" id="password" name="password"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="oldPswd">Confirmez l'ancien mot de passe :</label></td>
+                            <td><input type="password" id="oldPswd" name="oldPswd"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="birthDate">Date de naissance :</label></td>
+                            <td><input type="date" id="birthDate" name="birthDate" th:value="*{birthDate}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="firstName">Prénom :</label></td>
+                            <td><input type="text" id="firstName" th:field="*{firstName}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="lastName">Nom :</label></td>
+                            <td><input type="text" id="lastName" th:field="*{lastName}"></td>
+                        </tr>
+                        <tr>
+                            <td><label for="email">Adresse Email :</label></td>
+                            <td><input type="email" id="email" th:field="*{email}"></td>
+                        </tr>
+                        <tr>
+                            <td><label class="custom-file-upload" for="pfp">Image de profil :</label></td>
+                            <td><input type="file" name="pfp" id="pfp" accept="image/*"></td>
+                        </tr>
+                    </table>
+
+                    <button type="submit">Enregistrer</button>
+                    <br>
+
+
+                    <!-- Affichage de l'erreur -->
+                    <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
+
+                    <!-- Affichage du message de succès -->
+                    <div th:if="${successMessage}" style="color: green; font-weight: bold;">
+                        <p th:text="${successMessage}"></p>
+                    </div>
+
+                </form>
+            </div>
         </div>
-
-    </form>
+    </div>
 
 </body>
 </html>

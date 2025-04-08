@@ -1,7 +1,7 @@
 // Charger les types de valeurs au chargement de la page
 let valueTypes = [];
 
-fetch('/admin/object-type/valueTypes')
+fetch('/gestion/object-type/valueTypes')
     .then(response => response.json())
     .then(data => {
         valueTypes = data;
@@ -56,6 +56,52 @@ document.addEventListener("DOMContentLoaded", function () {
             if (confirmation) {
                 // Si confirmé, redirige vers l'URL de suppression
                 window.location.href = `object-type/delete/${objTypeId}`;
+            }
+        });
+    });
+});
+
+
+// Pour tous les boutons "Demander la suppression"
+document.addEventListener("DOMContentLoaded", function () {
+    const requestDeleteButtons = document.querySelectorAll('.request-delete-btn');
+
+    // Récupération du token CSRF
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    requestDeleteButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            const objTypeId = this.getAttribute('data-id');
+            const reason = prompt("Veuillez indiquer la raison de la demande de suppression :");
+
+            if (reason !== null && reason.trim() !== "") {
+                fetch(`/gestion/object-type/${objTypeId}/request-deletion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [csrfHeader]: csrfToken // Utilisation dynamique du nom de l'en-tête CSRF
+                    },
+                    body: new URLSearchParams({
+                        reason: reason
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Demande de suppression envoyée !");
+                            location.reload();
+                        } else {
+                            alert("Erreur lors de l'envoi de la demande.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur réseau :", error);
+                        alert("Erreur réseau !");
+                    });
+            } else {
+                alert("La raison est obligatoire pour envoyer une demande.");
             }
         });
     });

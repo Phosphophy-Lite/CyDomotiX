@@ -56,16 +56,21 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
 
+    @Column(name="approved_by_admin", nullable = false)
+    private boolean approvedByAdmin;
+
 
     public User(String username, String password, com.example.cydomotix.Model.Users.AccessType access_type) {
         this.username = username;
         this.password = password;
         this.access_type = access_type;
         this.enabled = false;
+        this.approvedByAdmin = false;
     }
 
     public User() {
         this.enabled = false;
+        this.approvedByAdmin = false;
     }
 
     // Méthode de récupération des permissions pour Spring Security
@@ -93,10 +98,11 @@ public class User implements UserDetails {
         return this.id_user;
     }
 
-    private int calculateAge(){
-        LocalDate current_date = LocalDate.now();
-        Period period = Period.between(birth_date, current_date);
-        return period.getYears();
+    public int calculateAge(){
+        if(birth_date == null){
+            return -1;
+        }
+        return Period.between(birth_date, LocalDate.now()).getYears();
     }
 
     public Gender getGender(){
@@ -175,5 +181,13 @@ public class User implements UserDetails {
     }
 
     public void addPoints(int nbr){this.points += nbr;} // Ajoute nbr aux nombres de points de l'utilisateur
+
+    public boolean isApprovedByAdmin() {
+        return approvedByAdmin;
+    }
+
+    public void setApprovedByAdmin(boolean approvedByAdmin) {
+        this.approvedByAdmin = approvedByAdmin;
+    }
 }
 

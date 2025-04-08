@@ -1,11 +1,13 @@
 package com.example.cydomotix.Service;
 
 import com.example.cydomotix.Model.Users.AccessType;
+import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Model.Users.VerificationToken;
 import com.example.cydomotix.Repository.VerificationTokenRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,10 +38,19 @@ public class UserService {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
     @Autowired
     private VerificationTokenRepository verificationTokenRepository;
+
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private UserActionService userActionService;
+
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
 
     /**
      * Vérifie si un pseudonyme donné n'est pas déjà utilisé dans la BDD
@@ -76,18 +87,20 @@ public class UserService {
 
         // Chiffre le mot de passe
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccessType(AccessType.USER); // Default role for new users
+        user.setAccessType(AccessType.USER); // Rôle par défaut pour les nouveaux utilisateurs
+
+        // S'assurer que le compte n'est pas activé
         user.setEnabled(false);
+        user.setApprovedByAdmin(false);
 
         // Utilise une méthode de CrudRepository pour sauvegarder l'utilisateur dans la BDD
-        User savedUser = userRepository.save(user);
-
-        // Envoie l'email de vérification du compte
-        sendVerificationToken(savedUser);
-
-        return savedUser;
+        return userRepository.save(user);
     }
 
+    /**
+     * Envoyer un lien de vérification du compte par mail à l'utilisateur s'inscrivant sur la plateforme
+     * @param user
+     */
     public void sendVerificationToken(User user){
         // Création du token de vérification
         String token = UUID.randomUUID().toString();
@@ -103,8 +116,30 @@ public class UserService {
         emailService.sendVerificationEmail(user, token);
     }
 
+    public List<User> getUnapprovedUsers(){
+        return userRepository.findByApprovedByAdminIsFalse();
+    }
+
+    public void approveNewUser(Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        user.setApprovedByAdmin(true);
+        userRepository.save(user);
+
+        // Utilisateur approuvé par l'admin, envoyer un email de vérification de compte
+        sendVerificationToken(user);
+    }
+
+    public void rejectNewUser(Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        userRepository.delete(user);
+    }
+
     /**
-     * Attribue le lien d'une photo de profile stockée sur le serveur à un utilisateur :
+     * Attribue le lien d'une photo de profil stockée sur le serveur à un utilisateur :
      * Récupère l'utilisateur de la BDD par son ID
      * Met à jour le lien de la photo de profil pour cet utilisateur
      * @param user l'utilisateur dont on veut changer la photo de profil
@@ -128,7 +163,7 @@ public class UserService {
     }
 
     /**
-     * Mettre à jour un utilisateur existant
+     * Mettre à jour un utilisateur existant (si il se modifie lui-même avec une session active)
      * @param id Identifiant de l'utilisateur
      * @param updatedUser Données du formulaire de l'utilisateur mis à jour avec les nouvelles valeurs
      */
@@ -138,11 +173,7 @@ public class UserService {
             String newUsername = getUpdatedValue(updatedUser.getUsername(), existingUser.getUsername());
             boolean usernameChanged = !newUsername.equals(existingUser.getUsername());
 
-            existingUser.setUsername(newUsername);
-            existingUser.setGender(updatedUser.getGender());
-            existingUser.setBirthDate(updatedUser.getBirthDate());
-            existingUser.setFirstName(getUpdatedValue(updatedUser.getFirstName(), existingUser.getFirstName()));
-            existingUser.setLastName(getUpdatedValue(updatedUser.getLastName(), existingUser.getLastName()));
+            existingUser = updateUserFields(existingUser, newUsername, updatedUser);
 
             // Sauvegarde les modifications
             userRepository.save(existingUser);
@@ -165,6 +196,49 @@ public class UserService {
     }
 
     /**
+     * Mettre à jour les champs d'un utilisateur
+     * @param existingUser - Utilisateur existant
+     * @param newUsername - le nouveau pseudonyme (si il a changé)
+     * @param updatedUser - l'objet user récupéré du formulaire dont il faut récupérer les nouveaux champs (si ils ont changé)
+     * @return
+     */
+    public User updateUserFields(User existingUser, String newUsername, User updatedUser){
+        existingUser.setUsername(newUsername);
+        existingUser.setGender(updatedUser.getGender());
+        existingUser.setMemberType(updatedUser.getMemberType());
+        existingUser.setBirthDate(updatedUser.getBirthDate());
+        existingUser.setFirstName(getUpdatedValue(updatedUser.getFirstName(), existingUser.getFirstName()));
+        existingUser.setLastName(getUpdatedValue(updatedUser.getLastName(), existingUser.getLastName()));
+        existingUser.setEmail(getUpdatedValue(updatedUser.getEmail(), existingUser.getEmail()));
+        return existingUser;
+    }
+
+    /**
+     * Mettre à jour le profil d'un autre utilisateur par un admin
+     * @param id - Id de l'utilisateur à modifier
+     * @param updatedUser - Objet utilisateur de mise à jour récupéré du formulaire
+     * @param adminUsername - Pseudonyme de l'admin effectuant les modifications (pour les logs)
+     * @return newUsername - le nom d'utilisateur mis à jour de l'utilisateur modifié
+     */
+    public String adminUpdateUser(Integer id, User updatedUser, String adminUsername){
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + id + " does not exist."));
+
+        // Changer les champs du user
+        String newUsername = getUpdatedValue(updatedUser.getUsername(), existingUser.getUsername());
+        existingUser = updateUserFields(existingUser, newUsername, updatedUser);
+        existingUser.setPoints(updatedUser.getPoints());
+        existingUser.setAccessType(updatedUser.getAccessType());
+
+        // Sauvegarde les modifications
+        userRepository.save(existingUser);
+
+        // Logger l'action de l'admin
+        userActionService.logAction(adminUsername, ActionType.UPDATE_USER, adminUsername);
+        return newUsername;
+    }
+
+    /**
      * Retourne une valeur mise à jour, ou conserve l'ancienne si la nouvelle est vide
      */
     private String getUpdatedValue(String newValue, String oldValue) {
@@ -178,13 +252,6 @@ public class UserService {
                 System.out.println("Error : No file received.");
                 return null;
             }
-            // Créer un répertoire si inexistant
-            String uploadDir = "src/main/resources/static/img/profilePictures/";
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-                System.out.println("Created new directory: " + uploadDir);
-            }
 
             // Vérifier et récupérer l'extension du fichier
             String originalFilename = file.getOriginalFilename();
@@ -196,7 +263,7 @@ public class UserService {
             // Générer un nom de fichier unique
             String fileExtension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
             String uniqueFileName = "profile_" + userId + fileExtension;
-            File outputFile = new File(uploadDir + uniqueFileName);
+            File outputFile = new File(uploadDir + "/" + uniqueFileName);
 
             // Compression de l'image avec Thumbnailator
             InputStream inputStream = file.getInputStream();
@@ -214,13 +281,55 @@ public class UserService {
         }
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    /**
+     * Récupère la liste de tous les utilisateurs de la plateforme qui ont un compte validé et vérifié
+     * @return
+     */
+    public List<User> getAllVerifiedUsers() {
+        return userRepository.findByApprovedByAdminTrueAndEnabledTrue();
     }
 
     public void updatePoints(User updatedUser, int nbr){
-        // Call la fonction add et save dans la bdd
         updatedUser.addPoints(nbr);
         userRepository.save(updatedUser);
+    }
+
+    //Achat d'un rôle
+    public boolean purchaseModule(Authentication authentication, User user, int moduleCost, AccessType role){
+        if (user.getPoints() >= moduleCost) {
+            //Retrait du nombre de points requis
+            user.setPoints(user.getPoints());
+
+            //Déblocage du rôle
+            user.setAccessType(role);
+            userRepository.save(user);
+
+            UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
+
+            // Créer un nouveau token d'authentification dans le contexte de Spring Security avec les autorités mises à jour
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    updatedUserDetails,
+                    authentication.getCredentials(),
+                    updatedUserDetails.getAuthorities()
+            );
+
+            // Mettre à jour le contexte Spring Security
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+            return true;
+        }
+        return false; // Si l'utilisateur n'a pas assez de points
+    }
+
+    /**
+     * Supprimer un utilisateur de la BDD
+     * @param id - Id de l'utilisateur à supprimer
+     * @param adminUsername - pseudonyme de l'utilisateur ayant effectué la suppression (admin)
+     */
+    public void deleteUser(final Integer id, String adminUsername) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + id + " does not exist."));
+        userActionService.logAction(adminUsername, ActionType.DELETE_USER, user.getUsername());
+        userRepository.deleteById(id);
     }
 }

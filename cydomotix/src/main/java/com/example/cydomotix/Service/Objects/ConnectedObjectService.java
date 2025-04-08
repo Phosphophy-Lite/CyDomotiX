@@ -1,11 +1,11 @@
 package com.example.cydomotix.Service.Objects;
 
-import com.example.cydomotix.Model.Objects.AttributeValue;
-import com.example.cydomotix.Model.Objects.ConnectedObject;
-import com.example.cydomotix.Model.Objects.Connectivity;
-import com.example.cydomotix.Model.Objects.Mode;
+import com.example.cydomotix.Model.Objects.*;
+import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Repository.Objects.AttributeValueRepository;
 import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
+//import com.example.cydomotix.Repository.Objects.UsageEventRepository;
+import com.example.cydomotix.Service.UserActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +21,10 @@ public class ConnectedObjectService {
     private ConnectedObjectRepository connectedObjectRepository;
     @Autowired
     private AttributeValueRepository attributeValueRepository;
+    @Autowired
+    private UserActionService userActionService;
+    /*@Autowired
+    private UsageEventRepository usageEventRepository;*/
 
     /**
      * Vérifie si un objet connecté au nom donné n'est pas déjà existant dans la BDD
@@ -35,7 +39,7 @@ public class ConnectedObjectService {
      * Sauvegarde un nouvel objet connecté dans la BDD
      * @param connectedObject L'objet à sauvegarder
      */
-    public void save(ConnectedObject connectedObject) {
+    public void save(ConnectedObject connectedObject, String username) {
 
         // Vérifie si un objet utilisant ce nom existe déjà
         if (objectExists(connectedObject.getName())) {
@@ -43,6 +47,7 @@ public class ConnectedObjectService {
         }
 
         connectedObjectRepository.save(connectedObject);
+        userActionService.logAction(username, ActionType.ADD_OBJECT, connectedObject.getName());
     }
 
     /**
@@ -50,7 +55,7 @@ public class ConnectedObjectService {
      * @param id Identifiant de l'objet connecté
      * @param updatedObject Objet mis à jour avec les nouvelles valeurs
      */
-    public void update(Integer id, ConnectedObject updatedObject) {
+    public void update(Integer id, ConnectedObject updatedObject, String username) {
         connectedObjectRepository.findById(id).ifPresent(existingObject -> {
             // Met à jour les champs basiques en évitant les valeurs vides
             updateBasicFields(existingObject, updatedObject);
@@ -60,6 +65,7 @@ public class ConnectedObjectService {
 
             // Sauvegarde les modifications
             connectedObjectRepository.save(existingObject);
+            userActionService.logAction(username, ActionType.UPDATE_OBJECT, existingObject.getName());
         });
     }
 
@@ -73,6 +79,7 @@ public class ConnectedObjectService {
         existingObject.setMode(updatedObject.getMode());
         existingObject.setConnectivity(updatedObject.getConnectivity());
         existingObject.setBatteryStatus(updatedObject.getBatteryStatus());
+        existingObject.setPower( updatedObject.getPower());
         existingObject.setLastInteraction(LocalDateTime.now());
     }
 
@@ -125,7 +132,10 @@ public class ConnectedObjectService {
      * Supprime un object connecté donné de la BDD
      * @param id : clé primaire id
      */
-    public void deleteConnectedObject(final Integer id) {
+    public void deleteConnectedObject(final Integer id, String username) {
+        ConnectedObject object = connectedObjectRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Connected object with id " + id + " does not exist."));
+        userActionService.logAction(username, ActionType.DELETE_OBJECT, object.getName());
         connectedObjectRepository.deleteById(id);
     }
 
@@ -151,7 +161,7 @@ public class ConnectedObjectService {
         return connectedObject;
     }
 
-    public void switchStatus(Integer id) {
+    public void switchStatus(Integer id, String username) {
         // Vérifie si l'objet connecté existe dans la base de données
         ConnectedObject connectedObject = connectedObjectRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Connected object with id " + id + " does not exist."));
@@ -161,12 +171,25 @@ public class ConnectedObjectService {
         // Met à jour le champ status par son inverse
         connectedObject.setIsActive(!currentStatus);
 
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        /*
+        UsageEvent usageEvent = new UsageEvent();
+        usageEvent.setConnectedObject(connectedObject);
+        usageEvent.setStatus(!currentStatus);*/
 
+        LocalDateTime currentDateTime = LocalDateTime.now();
         connectedObject.setLastInteraction(currentDateTime);
+
+        /*usageEvent.setTimestamp(currentDateTime);
+        usageEventRepository.save(usageEvent);*/
 
         // Sauvegarde l'objet mis à jour dans la BDD
         connectedObjectRepository.save(connectedObject);
+
+        if(!currentStatus){
+            userActionService.logAction(username, ActionType.ON_OBJECT, connectedObject.getName());
+        } else{
+            userActionService.logAction(username, ActionType.OFF_OBJECT, connectedObject.getName());
+        }
     }
 
     public List<ConnectedObject> searchObjects(String keyword, Integer objectTypeId, Integer roomId, String brand, Mode mode, Connectivity connectivity) {
