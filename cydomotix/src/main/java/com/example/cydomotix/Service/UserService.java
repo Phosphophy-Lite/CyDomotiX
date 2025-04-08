@@ -295,14 +295,27 @@ public class UserService {
     }
 
     //Achat d'un rôle
-    public boolean purchaseModule(User user, int moduleCost, AccessType role){
+    public boolean purchaseModule(Authentication authentication, User user, int moduleCost, AccessType role){
         if (user.getPoints() >= moduleCost) {
             //Retrait du nombre de points requis
-            user.setPoints(user.getPoints() - moduleCost);
+            user.setPoints(user.getPoints());
 
             //Déblocage du rôle
             user.setAccessType(role);
             userRepository.save(user);
+
+            UserDetails updatedUserDetails = customUserDetailsService.loadUserByUsername(user.getUsername());
+
+            // Créer un nouveau token d'authentification dans le contexte de Spring Security avec les autorités mises à jour
+            Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                    updatedUserDetails,
+                    authentication.getCredentials(),
+                    updatedUserDetails.getAuthorities()
+            );
+
+            // Mettre à jour le contexte Spring Security
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
             return true;
         }
         return false; // Si l'utilisateur n'a pas assez de points

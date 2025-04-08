@@ -1,5 +1,6 @@
 package com.example.cydomotix.Controller;
 
+import com.example.cydomotix.Model.Users.AccessType;
 import com.example.cydomotix.Model.Users.User;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -71,4 +76,35 @@ public class MainController {
 
         return "dashboard";
     }
+
+    @PostMapping("/purchaseModule")
+    public String purchaseModule(@RequestParam("accessType") String accessType,
+                                 RedirectAttributes redirectAttributes) {
+
+        // Récupère la session authentifiée en cours
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+            // Récupérer le pseudo de l'utilisateur authentifié, dans le contexte du User de Spring Security (qui ne stocke que mdp + login)
+            String username = authentication.getName();
+
+            // Récupérer l'entité complète User de la BDD
+            Optional<User> userOptional = userService.getByUsername(username);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                AccessType type = AccessType.valueOf(accessType); // example: ADMIN
+                int cost = type.getCost();
+
+                boolean success = userService.purchaseModule(authentication, user, cost, type);
+                if (success) {
+                    redirectAttributes.addFlashAttribute("message", "Module purchased!");
+                } else {
+                    redirectAttributes.addFlashAttribute("error", "Not enough points.");
+                }
+            }
+        }
+
+        return "redirect:/dashboard";
+    }
+
 }
