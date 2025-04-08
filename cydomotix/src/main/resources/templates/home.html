@@ -28,11 +28,43 @@
 
         <div class="search-bar">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Rechercher un produit, service ou information...">
+            <input type="text" id="main-search" placeholder="Rechercher un produit, service ou information...">
+
+            <div class="filters" id="filters">
+                <select aria-label="Type de contenu">
+                    <option value="">Type</option>
+                    <option value="appareil">Appareil</option>
+                    <option value="service">Service</option>
+                    <option value="conseil">Conseil</option>
+                </select>
+
+                <select aria-label="Pièce de la maison">
+                    <option value="">Pièce</option>
+                    <option value="salon">Salon</option>
+                    <option value="cuisine">Cuisine</option>
+                    <option value="exterieur">Extérieur</option>
+                </select>
+            </div>
         </div>
     </section>
 
 
 </main>
+<script>
+    const searchInput = document.getElementById('main-search');
+    const filters = document.getElementById('filters');
+
+
+    searchInput.addEventListener('focus', () => {
+        filters.classList.add('show');
+    });
+
+    // Cache les filtres si on clique en dehors
+    document.addEventListener('click', function(e) {
+        if (!document.querySelector('.search-bar').contains(e.target)) {
+            filters.classList.remove('show');
+        }
+    });
+</script>
 </body>
 </html>
