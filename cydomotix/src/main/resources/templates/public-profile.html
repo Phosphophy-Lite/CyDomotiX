@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title th:text="${user.username}"></title>
+    <script src="/js/publicProfile.js" defer></script>
 </head>
 <body>
     <div>
@@ -22,6 +23,10 @@
                 <td colspan="2" style="text-align: center" th:text="${user.memberType?.displayName} ?: '???'"></td>
             </tr>
             <tr>
+                <td>Points :</td>
+                <td th:text="${user.points}"></td>
+            </tr>
+            <tr>
                 <td>Genre :</td>
                 <td th:text="${user.gender?.displayName} ?: '???'"></td>
             </tr>
@@ -33,8 +38,94 @@
                 <td>Âge :</td>
                 <td th:text="${user.calculateAge() != -1} ? ${user.calculateAge()} + ' ans' : '???'"></td>
             </tr>
+            <tr sec:authorize="hasRole('ADMIN')">
+                <td colspan="2">
+                    <a class="delete-btn" href="#" th:data-id="${user.username}">
+                        <button>Supprimer</button>
+                    </a>
+                </td>
+            </tr>
         </table>
     </div>
 
+    <!-- Edit Form: Only Visible to Admins -->
+    <div sec:authorize="hasRole('ADMIN')">
+        <!-- Champs à modifier -->
+        <form th:action="@{/profile/{username}/update(username=${user.username})}" method="post" enctype="multipart/form-data" th:object="${user}">
+            <table>
+                <tr>
+                    <td><label for="username">Pseudonyme :</label></td>
+                    <td><input type="text" id="username" th:field="*{username}"></td>
+                </tr>
+                <tr>
+                    <td><label for="gender">Genre :</label></td>
+                    <td>
+                        <select th:field="*{gender}" id="gender">
+                            <option th:each="gender : ${T(com.example.cydomotix.Model.Users.Gender).values()}" th:value="${gender}" th:text="${gender.displayName}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="memberType">Type de membre :</label></td>
+                    <td>
+                        <select th:field="*{memberType}" id="memberType">
+                            <option th:each="memberType : ${T(com.example.cydomotix.Model.Users.MemberType).values()}" th:value="${memberType}" th:text="${memberType.displayName}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="accessType">Accès :</label></td>
+                    <td>
+                        <select th:field="*{accessType}" id="accessType">
+                            <option th:each="accessType : ${T(com.example.cydomotix.Model.Users.AccessType).values()}" th:value="${accessType}" th:text="${accessType.displayName}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="points">Points :</label></td>
+                    <td><input type="number" min="0" step="1" id="points" th:field="*{points}"></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Nouveau mot de passe :</label></td>
+                    <td><input type="password" minlength="6" id="password" name="password"></td>
+                </tr>
+                <tr>
+                    <td><label for="birthDate">Date de naissance :</label></td>
+                    <td><input type="date" id="birthDate" name="birthDate" th:value="*{birthDate}"></td>
+                </tr>
+                <tr>
+                    <td><label for="firstName">Prénom :</label></td>
+                    <td><input type="text" id="firstName" th:field="*{firstName}"></td>
+                </tr>
+                <tr>
+                    <td><label for="lastName">Nom :</label></td>
+                    <td><input type="text" id="lastName" th:field="*{lastName}"></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Adresse Email :</label></td>
+                    <td><input type="email" id="email" th:field="*{email}"></td>
+                </tr>
+                <tr>
+                    <td><label for="pfp">Image de profil :</label></td>
+                    <td><input type="file" name="pfp" id="pfp" accept="image/*"></td>
+                </tr>
+            </table>
+
+            <button type="submit">Enregistrer</button>
+            <br>
+
+
+            <!-- Affichage de l'erreur -->
+            <div th:if="${errorMessage}" style="color: red; font-weight: bold;">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <!-- Affichage du message de succès -->
+            <div th:if="${successMessage}" style="color: green; font-weight: bold;">
+                <p th:text="${successMessage}"></p>
+            </div>
+
+        </form>
+    </div>
 </body>
 </html>

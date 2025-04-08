@@ -1,6 +1,5 @@
 package com.example.cydomotix.Service;
 
-import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Room;
 import com.example.cydomotix.Repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
