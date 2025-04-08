@@ -64,7 +64,7 @@ CREATE TABLE ConnectedObject (
                                  brand VARCHAR(50),
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
-                                 power INT,
+                                 power DOUBLE,
                                  is_active BOOLEAN,
                                  id_room INT NOT NULL, -- Relie l'objet à une pièce de la maison
                                  id_type INT NOT NULL, -- Relie l'objet à un type spécifique ("Thermostat", "TV" ..)

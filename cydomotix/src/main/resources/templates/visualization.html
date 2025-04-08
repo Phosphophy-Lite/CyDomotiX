@@ -161,6 +161,7 @@
                                             <p>État de batterie :</p>
                                             <p>Dernière interaction :</p>
                                             <p>Status :</p>
+                                            <p>Power :</p>
                                         </td>
                                         <!-- Valeurs des champs -->
                                         <td>
@@ -171,6 +172,7 @@
                                             <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
                                             <p th:if="${connectedObject.isActive == true}">Activé</p>
                                             <p th:unless="${connectedObject.isActive}">Désactivé</p>
+                                            <p th:text="|${connectedObject.power} W|"></p>
 
                                         </td>
                                     </tr>
