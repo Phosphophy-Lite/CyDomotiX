@@ -10,3 +10,13 @@
 
 </body>
 </html>
+
+
+
+
+<a class="delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('ADMIN')">
+    <button>Supprimer</button>
+</a>
+<a class="request-delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('GESTION')">
+    <button>Demander suppression</button>
+</a>

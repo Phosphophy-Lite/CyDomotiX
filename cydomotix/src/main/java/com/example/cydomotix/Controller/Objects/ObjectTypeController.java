@@ -4,11 +4,15 @@ import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ObjectAttribute;
 import com.example.cydomotix.Model.Objects.ObjectType;
 import com.example.cydomotix.Model.Objects.ValueType;
+import com.example.cydomotix.Model.Users.User;
+import com.example.cydomotix.Service.DeletionRequestService;
 import com.example.cydomotix.Service.Objects.AttributeValueService;
 import com.example.cydomotix.Service.Objects.ConnectedObjectService;
 import com.example.cydomotix.Service.Objects.ObjectAttributeService;
 import com.example.cydomotix.Service.Objects.ObjectTypeService;
+import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,10 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequestMapping("/gestion/object-type") // Toutes les méthodes de cette classe seront relative à une URL commençant par ceci (pas besoin d'être un vrai dossier)
@@ -35,6 +36,10 @@ public class ObjectTypeController {
     private AttributeValueService attributeValueService;
     @Autowired
     private ObjectAttributeService objectAttributeService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private DeletionRequestService deletionRequestService;
 
     /**
      * Afficher la page avec le formulaire pour créer un nouveau type objet (ObjectType).
@@ -134,5 +139,16 @@ public class ObjectTypeController {
                 .collect(Collectors.toList());
     }
 
+    @PostMapping("/{id}/request-deletion")
+    public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
+        // Récupérer l'utilisateur de la session actuelle
+        Optional<User> user = userService.getByUsername(principal.getName());
+        if (user.isPresent()) {
+            deletionRequestService.submitRequest(id, reason, user.get());
+            redirectAttributes.addFlashAttribute("requestSuccess", "La demande de suppression a bien été transmise aux administrateurs.");
+            return "redirect:/object/"+id;
+        }
+        return "redirect:/error";
+    }
 }
 
