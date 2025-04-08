@@ -45,7 +45,7 @@ public class SecurityConfig {
      */
     @Bean
     public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.fromHierarchy("ROLE_DEV > ROLE_ADMIN > ROLE_USER");
+        return RoleHierarchyImpl.fromHierarchy("ROLE_DEV > ROLE_ADMIN > ROLE_GESTION > ROLE_USER");
     }
 
     /**
@@ -74,6 +74,7 @@ public class SecurityConfig {
                     }
 
                     auth.requestMatchers("/", "/login", "/register", "/verify", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
+                    auth.requestMatchers("/gestion/**").hasRole("GESTION"); // Pages dans /gestion/ sont restreintes aux rôles GESTION et supérieurs
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages dans /admin/ sont restreintes aux rôles ADMIN et supérieurs
                     auth.requestMatchers("/dev/**").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs
 

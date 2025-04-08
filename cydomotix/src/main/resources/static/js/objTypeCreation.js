@@ -60,3 +60,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Sélectionner tous les boutons "Supprimer"
+    const requestDeleteButtons = document.querySelectorAll('.request-delete-btn');
+
+    requestDeleteButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault(); // Empêche le comportement par défaut (le lien qui se déclenche)
+
+            const objTypeId = this.getAttribute('data-id'); // Récupère l'ID du Type d'objet
+
+            // Confirmation avant de supprimer
+            const confirmation = confirm("Demander la suppression de ce Type d'objet ?");
+            if (confirmation) {
+                // Si confirmé, redirige vers l'URL de suppression
+                window.location.href = `object-type/${objTypeId}/request-deletion`;
+            }
+        });
+    });
+});

@@ -69,7 +69,7 @@ public class ObjectViewController {
     }
 
     @PostMapping("/{id}/update")
-    @PreAuthorize("hasRole('ADMIN')") // Restreindre cette requête au rôle ADMIN
+    @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle ADMIN
     public String updateConnectedObject(@PathVariable Integer id, @ModelAttribute("connectedObject") ConnectedObject updatedObject, Principal principal, RedirectAttributes redirectAttributes) {
 
         ConnectedObject existingObject = connectedObjectService.getConnectedObjectById(id);
@@ -113,6 +113,7 @@ public class ObjectViewController {
     }
 
     @PostMapping("/{id}/request-deletion")
+    @PreAuthorize("hasRole('GESTION')") // Restreindre cette requête au rôle GESTION
     public String requestDeletion(@PathVariable Integer id, @RequestParam String reason, Principal principal, RedirectAttributes redirectAttributes) {
         // Récupérer l'utilisateur de la session actuelle
         Optional<User> user = userService.getByUsername(principal.getName());

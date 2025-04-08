@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Création Object Connecté</title>
@@ -74,8 +74,11 @@
                     </table>
                 </td>
                 <td>
-                    <a class="delete-btn" href="#" th:data-id="${connectedObject.id}">
+                    <a class="delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('ADMIN')">
                         <button>Supprimer</button>
+                    </a>
+                    <a class="request-delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION')">
+                        <button>Demander suppression</button>
                     </a>
                     <br>
                     <a class="power-btn" href="#" th:data-id="${connectedObject.id}">

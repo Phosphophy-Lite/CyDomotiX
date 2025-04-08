@@ -14,6 +14,8 @@
     margin: auto;
     transition: all 0.3s ease;
     position: relative;
+    text-decoration: none;
+    color: black;
 }
 
 .link:hover {
