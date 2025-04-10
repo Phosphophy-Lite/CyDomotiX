@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Room;
-DROP TABLE IF EXISTS Tool;
 DROP TABLE IF EXISTS ConnectedObject;
 DROP TABLE IF EXISTS ObjectAttribute;
 DROP TABLE IF EXISTS AttributeValue;
@@ -30,13 +29,6 @@ CREATE TABLE Users (
 CREATE TABLE Room (
                       id_room INT AUTO_INCREMENT PRIMARY KEY,
                       name VARCHAR(255) UNIQUE NOT NULL
-);
-
-CREATE TABLE Tool (
-                      id_tool INT AUTO_INCREMENT PRIMARY KEY,
-                      name VARCHAR(50),
-                      id_room INT,
-                      FOREIGN KEY(id_room) REFERENCES Room(id_room)
 );
 
 -- Table des types d'objets connectés
