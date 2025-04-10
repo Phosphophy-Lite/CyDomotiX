@@ -4,7 +4,8 @@ import com.example.cydomotix.Model.Objects.*;
 import com.example.cydomotix.Model.Users.ActionType;
 import com.example.cydomotix.Repository.Objects.AttributeValueRepository;
 import com.example.cydomotix.Repository.Objects.ConnectedObjectRepository;
-//import com.example.cydomotix.Repository.Objects.UsageEventRepository;
+import com.example.cydomotix.Repository.Objects.PowerChangeEventRepository;
+import com.example.cydomotix.Repository.Objects.UsageEventRepository;
 import com.example.cydomotix.Service.UserActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,10 @@ public class ConnectedObjectService {
     private AttributeValueRepository attributeValueRepository;
     @Autowired
     private UserActionService userActionService;
-    /*@Autowired
-    private UsageEventRepository usageEventRepository;*/
+    @Autowired
+    private UsageEventRepository usageEventRepository;
+    @Autowired
+    private PowerChangeEventRepository powerChangeEventRepository;
 
     /**
      * Vérifie si un objet connecté au nom donné n'est pas déjà existant dans la BDD
@@ -79,8 +82,21 @@ public class ConnectedObjectService {
         existingObject.setMode(updatedObject.getMode());
         existingObject.setConnectivity(updatedObject.getConnectivity());
         existingObject.setBatteryStatus(updatedObject.getBatteryStatus());
-        existingObject.setPower( updatedObject.getPower());
+
+        createPowerChangeEvent(updatedObject, existingObject);
+        existingObject.setPower(updatedObject.getPower());
+
         existingObject.setLastInteraction(LocalDateTime.now());
+    }
+
+    private void createPowerChangeEvent(ConnectedObject updatedObject, ConnectedObject existingObject){
+        if(Math.abs(updatedObject.getPower() - existingObject.getPower()) > 0.0001){ // != pas fiable car problèmes de précision donc il faut mieux cette comparaison
+            PowerChangeEvent powerEvt = new PowerChangeEvent();
+            powerEvt.setConnectedObject(existingObject);
+            powerEvt.setPower(updatedObject.getPower());
+            powerEvt.setTimestamp(LocalDateTime.now());
+            powerChangeEventRepository.save(powerEvt);
+        }
     }
 
     /**
@@ -171,16 +187,17 @@ public class ConnectedObjectService {
         // Met à jour le champ status par son inverse
         connectedObject.setIsActive(!currentStatus);
 
-        /*
+        // Créer une entrée dans l'historique des status de l'objet (allumé/éteint)
         UsageEvent usageEvent = new UsageEvent();
         usageEvent.setConnectedObject(connectedObject);
-        usageEvent.setStatus(!currentStatus);*/
+        usageEvent.setStatus(!currentStatus);
 
         LocalDateTime currentDateTime = LocalDateTime.now();
         connectedObject.setLastInteraction(currentDateTime);
 
-        /*usageEvent.setTimestamp(currentDateTime);
-        usageEventRepository.save(usageEvent);*/
+        // Date de début de ce nouveau status + sauvegarde dans BDD
+        usageEvent.setTimestamp(currentDateTime);
+        usageEventRepository.save(usageEvent);
 
         // Sauvegarde l'objet mis à jour dans la BDD
         connectedObjectRepository.save(connectedObject);

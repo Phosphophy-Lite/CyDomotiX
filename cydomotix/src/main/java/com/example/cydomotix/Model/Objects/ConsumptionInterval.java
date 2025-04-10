@@ -8,12 +8,14 @@ public class ConsumptionInterval {
     private LocalDateTime end;
     private long durationMinutes;
     private double energyWh;
+    private boolean status;
 
-    public ConsumptionInterval(LocalDateTime start, LocalDateTime end, long durationMinutes, double energyWh) {
+    public ConsumptionInterval(LocalDateTime start, LocalDateTime end, long durationMinutes, double energyWh, boolean status) {
         this.start = start;
         this.end = end;
         this.durationMinutes = durationMinutes;
         this.energyWh = energyWh;
+        this.status = status;
     }
 
     public LocalDateTime getStart() {
@@ -46,5 +48,13 @@ public class ConsumptionInterval {
 
     public void setEnergyWh(double energyWh) {
         this.energyWh = energyWh;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

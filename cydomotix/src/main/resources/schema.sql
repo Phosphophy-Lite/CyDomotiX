@@ -112,3 +112,19 @@ CREATE TABLE UserAction (
                             author VARCHAR(255),
                             related_entity VARCHAR(255)
 );
+
+CREATE TABLE PowerChangeEvent (
+                                  id INT AUTO_INCREMENT PRIMARY KEY,
+                                  connected_object_id INT NOT NULL,
+                                  power DOUBLE NOT NULL,
+                                  timestamp TIMESTAMP NOT NULL,
+                                  FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE
+);
+
+CREATE TABLE UsageEvent (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            connected_object_id INT NOT NULL,
+                            status BOOLEAN NOT NULL,
+                            timestamp TIMESTAMP NOT NULL,
+                            FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE
+);

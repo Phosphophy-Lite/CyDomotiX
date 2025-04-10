@@ -4,8 +4,8 @@ import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Model.Objects.ConsumptionInterval;
 import com.example.cydomotix.Model.Objects.PowerChangeEvent;
 import com.example.cydomotix.Model.Objects.UsageEvent;
-//import com.example.cydomotix.Repository.Objects.PowerChangeEventRepository;
-//import com.example.cydomotix.Repository.Objects.UsageEventRepository;
+import com.example.cydomotix.Repository.Objects.PowerChangeEventRepository;
+import com.example.cydomotix.Repository.Objects.UsageEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,71 +16,80 @@ import java.util.List;
 
 @Service
 public class EnergyConsumptionService {
-/*
     @Autowired
-    private UsageEventRepository usageEventRepo;
+    private UsageEventRepository usageEventRepository;
 
     @Autowired
-    private PowerChangeEventRepository powerChangeRepo;
-
-    public List<ConsumptionInterval> calculateEnergyConsumption(ConnectedObject object) {
-        List<UsageEvent> usageEvents = usageEventRepo.findByConnectedObjectOrderByTimestamp(object);
-        List<PowerChangeEvent> powerEvents = powerChangeRepo.findByConnectedObjectOrderByTimestamp(object);
-
-        List<ConsumptionInterval> result = new ArrayList<>();
-
-        LocalDateTime onTime = null;
-        double currentPower = 0;
-
-        for (int i = 0; i < usageEvents.size(); i++) {
-            UsageEvent event = usageEvents.get(i);
-
-            if (event.isStatus()) { // objet allumé
-                onTime = event.getTimestamp(); // récupérer la date
-                // Trouver la puissance au moment où l’objet a été allumé
-                currentPower = getCurrentPowerAt(powerEvents, onTime);
-            } else if (onTime != null) { // il y a eu un début de période de consommation (objet ON)
-                LocalDateTime offTime = event.getTimestamp(); // date actuelle qui marque la fin de la période de consommation (objet devenu OFF)
-                Duration duration = Duration.between(onTime, offTime); // récupérer l'intervalle de temps
-                long minutes = duration.toMinutes();
-                double hours = minutes / 60.0;
-
-                double energyWh = currentPower * hours; // calcul de consommation
-
-                result.add(new ConsumptionInterval(onTime, offTime, minutes, energyWh)); // ajouter un intervalle de consommation à l'historique
-
-                onTime = null;
-            }
-        }
-
-        return result;
-    }
+    private PowerChangeEventRepository powerChangeEventRepository;
 
     /**
-     * Récupérer la puissance à une date donnée
-     * @param powerEvents
-     * @param time
+     * Calculer l'intervalle de consommation sur toute une période où l'objet est resté dans un même status (ON/OFF)
+     * @param startEvent
+     * @param endEvent
      * @return
      */
-    /*
-    private double getCurrentPowerAt(List<PowerChangeEvent> powerEvents, LocalDateTime time) {
-        double lastPower = 0;
-        for (PowerChangeEvent e : powerEvents) {
-            if (!e.getTimestamp().isAfter(time)) {
-                lastPower = e.getPower();
-            } else {
-                break;
-            }
+    public ConsumptionInterval calculateConsumptionInterval(UsageEvent startEvent, UsageEvent endEvent) {
+        LocalDateTime start = startEvent.getTimestamp(); // Début de l'intervalle de consommation = début du changement de status
+        // Si pas de changement de status par la suite pour marquer la fin de la période, considérer la date actuelle
+        LocalDateTime end = (endEvent != null) ? endEvent.getTimestamp() : LocalDateTime.now();
+        long durationMinutes = Duration.between(start, end).toMinutes(); // durée de l'intervalle
+
+        // Si l'objet était éteint, pas de consommation
+        if (!startEvent.isStatus()) {
+            return new ConsumptionInterval(start, end, durationMinutes, 0.0, false);
         }
-        return lastPower;
+
+        // L'objet était allumé, on récupère les changements de puissance dans l'intervalle
+        List<PowerChangeEvent> powerEvents = powerChangeEventRepository.findByConnectedObjectAndTimestampBetweenOrderByTimestampAsc(
+                startEvent.getConnectedObject(), start, end
+        );
+
+        // Si aucun changement de puissance, on prend la puissance actuelle
+        if (powerEvents.isEmpty()) {
+            double currentPower = startEvent.getConnectedObject().getPower(); // en W
+            double energyWh = (currentPower * durationMinutes) / 60.0;
+            return new ConsumptionInterval(start, end, durationMinutes, energyWh, true);
+        }
+
+        // Sinon, on découpe l'intervalle en sous-intervalles selon les changements de puissance
+        double totalEnergyWh = 0.0;
+        LocalDateTime intervalStart = start;
+        double lastPower = powerEvents.getFirst().getPower();
+
+        for (PowerChangeEvent evt : powerEvents) {
+            LocalDateTime intervalEnd = evt.getTimestamp();
+            long minutes = Duration.between(intervalStart, intervalEnd).toMinutes();
+            totalEnergyWh += (lastPower * minutes) / 60.0;
+            intervalStart = evt.getTimestamp();
+            lastPower = evt.getPower();
+        }
+
+        // Calculer pour l'intervalle final jusqu'à 'end'
+        long remainingMinutes = Duration.between(intervalStart, end).toMinutes();
+        totalEnergyWh += (lastPower * remainingMinutes) / 60.0;
+
+        return new ConsumptionInterval(start, end, durationMinutes, totalEnergyWh, true);
     }
 
     /**
-     * Calculer l'énergie consommée sur un intervalle de consommation
-     * @param intervals
+     * Calculer tous les intervalles de consommation d'un objet jusqu'à la date actuelle
+     * @param connectedObject
      * @return
-     *//*
-    public double calculateTotalEnergy(List<ConsumptionInterval> intervals) {
-        return intervals.stream().mapToDouble(ConsumptionInterval::getEnergyWh).sum();
-    }*/
+     */
+    public List<ConsumptionInterval> calculateAllConsumptionIntervals(ConnectedObject connectedObject) {
+        // Récupérer tous les événements d'utilisation (ON/OFF) triés par date
+        List<UsageEvent> usageEvents = usageEventRepository.findByConnectedObjectOrderByTimestampAsc(connectedObject);
+        List<ConsumptionInterval> intervals = new ArrayList<>();
+
+        for (int i = 0; i < usageEvents.size(); i++) {
+            UsageEvent startEvent = usageEvents.get(i);
+            UsageEvent endEvent = (i + 1 < usageEvents.size()) ? usageEvents.get(i + 1) : null;
+
+            ConsumptionInterval interval = calculateConsumptionInterval(startEvent, endEvent);
+            intervals.add(interval);
+        }
+        return intervals;
+    }
+
 }
+

@@ -26,3 +26,22 @@ VALUES (null, null, 'Blanc', 1, 4),
        (23, null, null, 2, 2),
        (160, null, null, 3, 3);
 
+INSERT INTO PowerChangeEvent (connected_object_id, power, timestamp)
+VALUES (1, 7.5, '2025-03-20 08:00:00'),
+       (1, 9, '2025-03-22 09:30:00'),
+       (1, 6.5, '2025-03-24 10:15:00'),
+       (2, 3600, '2025-03-19 06:00:00'),
+       (2, 1800, '2025-03-21 07:45:00'),
+       (2, 2000, '2025-03-23 12:30:00');
+
+INSERT INTO UsageEvent (connected_object_id, status, timestamp)
+VALUES (1, true, '2025-03-20 08:00:00'),
+       (1, false, '2025-03-22 23:00:00'),
+       (1, true, '2025-03-24 18:45:00'),
+       (2, true, '2025-03-19 06:00:00'),
+       (2, false, '2025-03-21 23:30:00'),
+       (2, true, '2025-03-24 07:00:00');
+
+
+
+
