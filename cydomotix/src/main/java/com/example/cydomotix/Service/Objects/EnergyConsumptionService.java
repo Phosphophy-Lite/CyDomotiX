@@ -91,5 +91,55 @@ public class EnergyConsumptionService {
         return intervals;
     }
 
+    public List<ConsumptionInterval> calculateConsumptionIntervalsBetween(
+            ConnectedObject connectedObject, LocalDateTime start, LocalDateTime end) {
+
+        // Récupérer tous les UsageEvent jusqu'à maintenant
+        List<UsageEvent> usageEvents = usageEventRepository
+                .findByConnectedObjectAndTimestampBeforeOrderByTimestampAsc(connectedObject, LocalDateTime.now());
+
+        List<ConsumptionInterval> intervals = new ArrayList<>();
+
+        for (int i = 0; i < usageEvents.size(); i++) {
+            UsageEvent startEvent = usageEvents.get(i);
+            UsageEvent endEvent = (i + 1 < usageEvents.size()) ? usageEvents.get(i + 1) : null;
+
+            // Si la fin dépasse l’intervalle demandé, on la coupe
+            if (endEvent != null && endEvent.getTimestamp().isAfter(end)) {
+                endEvent = null; // coupe à la date max
+            }
+
+            // On garde uniquement les intervalles qui touchent l’intervalle demandé
+            ConsumptionInterval interval = calculateConsumptionInterval(startEvent, endEvent);
+            if (interval.getStart().isBefore(end) && interval.getEnd().isAfter(start)) {
+                intervals.add(interval);
+            }
+        }
+
+        return intervals;
+    }
+
+    public double calculateTotalConsumptionBetween(
+            ConnectedObject connectedObject, LocalDateTime start, LocalDateTime end) {
+
+        List<ConsumptionInterval> intervals = calculateConsumptionIntervalsBetween(connectedObject, start, end);
+
+        return intervals.stream()
+                .filter(interval -> interval.getEnergyWh() > 0) // Ignore les OFF
+                .mapToDouble(ConsumptionInterval::getEnergyWh)
+                .sum();
+    }
+
+    public double calculateTotalConsumption(ConnectedObject connectedObject) {
+
+        List<ConsumptionInterval> intervals = calculateAllConsumptionIntervals(connectedObject);
+
+        return intervals.stream()
+                .filter(interval -> interval.getEnergyWh() > 0) // Ignore les OFF
+                .mapToDouble(ConsumptionInterval::getEnergyWh)
+                .sum();
+    }
+
+
 }
 

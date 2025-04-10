@@ -9,6 +9,10 @@
 </head>
 
 <body>
+    <!-- onglets -->
+    <a th:href="@{/gestion/stats}">Statistiques</a>
+    <a>Historique</a>
+
     <h1>Historique de consommation énergétique</h1>
 
     <select id="objectSelect" onchange="loadConsumptionIntervals()">
@@ -18,6 +22,14 @@
                 th:text="${obj.name}">
         </option>
     </select>
+
+    <select id="period" onchange="handlePeriodChange()">
+        <option value="all" selected>Tout</option>
+        <option value="day">Aujourd'hui</option>
+        <option value="week">7 derniers jours</option>
+        <option value="month">Ce mois-ci</option>
+    </select>
+
 
     <div id="consumpt-list">
 

@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    padding: 2rem;
+}
+
+.chart-container {
+    width: 60%;  /* ou une valeur fixe comme 600px */
+    max-width: 800px;
+    margin: 5% auto; /* centré */
+}
