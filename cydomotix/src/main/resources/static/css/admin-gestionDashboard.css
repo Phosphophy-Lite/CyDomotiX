@@ -1,0 +1,93 @@
+.containerPage {
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+    font-family: amongus;
+    text-align: center;
+}
+
+#page1, #page2, #page3{
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+#page1{
+    box-shadow: 0px 0px 30px rgba(66, 144, 253, 0.6);
+    background: linear-gradient(to bottom right, #4290fd, #4290fd9b);
+}
+
+
+#page1:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 0px 40px rgba(66, 144, 253, 0.8);
+}
+
+#page2{
+    box-shadow: 0px 0px 30px rgba(227, 10, 243, 0.6);
+    background: linear-gradient(to bottom right, #e30af3, #e30af39f);
+}
+
+#page2:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 0px 40px rgba(227, 10, 243, 0.8);
+}
+
+#page3{
+    box-shadow: 0px 0px 30px rgba(66, 144, 253, 0.6);
+    background: linear-gradient(to bottom right, #4290fd, #4290fd9b);
+}
+
+
+#page3:hover {
+    transform: scale(1.02);
+    box-shadow: 0px 0px 40px rgba(66, 144, 253, 0.8);
+}
+
+#page1, #page2, #page3 {
+
+    display: flex;
+    opacity: 0.9;
+    width: 25%;
+    height: 15em;
+    border-radius: 3em;
+    margin: 2em;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.title-link {
+    /*width: 80%;*/
+
+    margin: 0 auto;
+
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 10px 25px;
+    border-radius: 15px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+    /* Styles de texte pour qu'il ressemble à un h1 */
+    font-size: 2em;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+
+}
+
+.title-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.4);
+}
