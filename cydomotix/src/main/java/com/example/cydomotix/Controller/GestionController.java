@@ -34,7 +34,7 @@ public class GestionController {
     @ResponseBody
     public List<ConsumptionInterval> getConnectedObjectConsumptionHistory(@PathVariable("id") Integer id) {
         ConnectedObject connectedObject = connectedObjectService.getConnectedObjectById(id);
-        return energyConsumptionService.calculateAllConsumptionIntervals(connectedObject);
+        return energyConsumptionService.calculateAllConsumptionIntervals(connectedObject).reversed();
     }
 
     @GetMapping("/history")
