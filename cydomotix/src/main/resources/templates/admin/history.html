@@ -5,32 +5,35 @@
     <title>Historique</title>
 </head>
 <body>
+    <!-- onglets -->
+    <a th:href="@{/admin/stats}">Statistiques</a>
+    <a>Historique des actions</a>
 
-<h1>Historique d'action sur la plateforme</h1>
+    <h1>Historique d'action sur la plateforme</h1>
 
-<div th:each="userAction : ${userActions}">
-    <p>Catégorie : <span th:text="${userAction.actionType.displayName}"></span></p>
-    <p th:if="${userAction.actionType.name() == 'LOGIN'}" th:text="${userAction.author} + ' s\'est connecté.'"></p>
+    <div th:each="userAction : ${userActions}">
+        <p>Catégorie : <span th:text="${userAction.actionType.displayName}"></span></p>
+        <p th:if="${userAction.actionType.name() == 'LOGIN'}" th:text="${userAction.author} + ' s\'est connecté.'"></p>
 
-    <p th:if="${userAction.actionType.name() == 'UPDATE_OBJECT'
-                or (userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity != null)}"
-       th:text="${userAction.author} + ' a modifié ' + ${userAction.relatedEntity}"></p>
+        <p th:if="${userAction.actionType.name() == 'UPDATE_OBJECT'
+                    or (userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity != null)}"
+           th:text="${userAction.author} + ' a modifié ' + ${userAction.relatedEntity}"></p>
 
-    <p th:if="${userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity == null}" th:text="${userAction.author} + ' a modifié son profil.'"></p>
+        <p th:if="${userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity == null}" th:text="${userAction.author} + ' a modifié son profil.'"></p>
 
-    <p th:if="${userAction.actionType.name() == 'DELETE_OBJECT'
-                or userAction.actionType.name() == 'DELETE_TYPE'
-                or userAction.actionType.name() == 'DELETE_USER'}" th:text="${userAction.author} + ' a supprimé ' + ${userAction.relatedEntity}"></p>
+        <p th:if="${userAction.actionType.name() == 'DELETE_OBJECT'
+                    or userAction.actionType.name() == 'DELETE_TYPE'
+                    or userAction.actionType.name() == 'DELETE_USER'}" th:text="${userAction.author} + ' a supprimé ' + ${userAction.relatedEntity}"></p>
 
-    <p th:if="${userAction.actionType.name() == 'ADD_OBJECT'
-                or userAction.actionType.name() == 'ADD_TYPE'}" th:text="${userAction.author} + ' a ajouté ' + ${userAction.relatedEntity}"></p>
+        <p th:if="${userAction.actionType.name() == 'ADD_OBJECT'
+                    or userAction.actionType.name() == 'ADD_TYPE'}" th:text="${userAction.author} + ' a ajouté ' + ${userAction.relatedEntity}"></p>
 
-    <p th:if="${userAction.actionType.name() == 'ON_OBJECT'}" th:text="${userAction.author} + ' a allumé l\'objet ' + ${userAction.relatedEntity}"></p>
-    <p th:if="${userAction.actionType.name() == 'OFF_OBJECT'}" th:text="${userAction.author} + ' a éteint l\'objet ' + ${userAction.relatedEntity}"></p>
+        <p th:if="${userAction.actionType.name() == 'ON_OBJECT'}" th:text="${userAction.author} + ' a allumé l\'objet ' + ${userAction.relatedEntity}"></p>
+        <p th:if="${userAction.actionType.name() == 'OFF_OBJECT'}" th:text="${userAction.author} + ' a éteint l\'objet ' + ${userAction.relatedEntity}"></p>
 
-    <p th:text="${#temporals.format(userAction.timestamp, 'dd/MM/yyyy HH:mm')}"></p>
-    <br>
-</div>
+        <p th:text="${#temporals.format(userAction.timestamp, 'dd/MM/yyyy HH:mm')}"></p>
+        <br>
+    </div>
 
 </body>
 </html>

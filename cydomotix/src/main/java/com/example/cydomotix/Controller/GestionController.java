@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 @Controller
@@ -47,8 +47,8 @@ public class GestionController {
     @ResponseBody
     public List<ConsumptionInterval> getConsumptionIntervalsForPeriod(
             @PathVariable("id") Integer id,
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime end) {
 
         ConnectedObject connectedObject = connectedObjectService.getConnectedObjectById(id);
         System.out.println(energyConsumptionService.calculateTotalConsumptionBetween(connectedObject, start, end));
@@ -56,19 +56,7 @@ public class GestionController {
     }
 
     @GetMapping("/stats")
-    public String getAllTotalConsumptions(Model model) {
-
-        Map<Integer, Double> totalConsumptions = new HashMap<>();
-        List<ConnectedObject> connectedObjects = connectedObjectService.getAllConnectedObjects();
-
-        for (ConnectedObject object : connectedObjects) {
-            double totalWh = energyConsumptionService.calculateTotalConsumption(object);
-            totalConsumptions.put(object.getId(), totalWh);
-        }
-
-        model.addAttribute("totalConsumptions", totalConsumptions);
-        model.addAttribute("connectedObjects", connectedObjects); // pour afficher noms, etc.
-
+    public String getAllTotalConsumptions() {
         return "gestion/stats";
     }
 
@@ -77,8 +65,8 @@ public class GestionController {
     @GetMapping("/stats/range")
     @ResponseBody
     public List<ConsumptionStatDTO> getAllTotalConsumptionsForPeriod(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime end) {
 
         List<ConnectedObject> connectedObjects = connectedObjectService.getAllConnectedObjects();
         List<ConsumptionStatDTO> stats = new ArrayList<>();

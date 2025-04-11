@@ -2,7 +2,7 @@ package com.example.cydomotix.Model.Objects;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="UsageEvent")
@@ -18,13 +18,13 @@ public class UsageEvent {
 
     private boolean status; // true = ON, false = OFF
 
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

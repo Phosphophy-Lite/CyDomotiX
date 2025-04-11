@@ -97,14 +97,14 @@ function fetchConsumptionWithPeriod(objectId, period) {
     let start = new Date();
 
     switch (period) {
-        case 'day':
-            start.setDate(now.getDate() - 1);
+        case 'today':
+            start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             break;
         case 'week':
             start.setDate(now.getDate() - 7);
             break;
         case 'month':
-            start.setMonth(now.getMonth() - 1);
+            start = new Date(now.getFullYear(), now.getMonth(), 1);
             break;
     }
 
@@ -118,8 +118,8 @@ function fetchConsumptionWithPeriod(objectId, period) {
         });
 }
 
-// Changer l'affichage dynamiquement sur la page selon la période choisie
-function handlePeriodChange() {
+// Changer l'affichage dynamiquement sur la page selon la période choisie et l'objet choisi
+function handleSelectChange() {
     const selectedId = document.getElementById("objectSelect").value;
     const selectedPeriod = document.getElementById("period").value;
 

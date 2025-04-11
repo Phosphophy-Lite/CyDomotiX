@@ -5,9 +5,11 @@ function getPeriodRange(period) {
     const now = new Date();
     let start;
 
+    console.log(period);
     switch (period) {
         case 'today':
             start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            console.log(start);
             break;
         case 'week':
             start = new Date();
@@ -35,8 +37,8 @@ function loadStats(period) {
     fetch(`/gestion/stats/range?start=${start}&end=${end}`)
         .then(res => res.json())
         .then(data => {
-            data.sort((a, b) => b.totalWh - a.totalWh);
-
+            data.sort((a, b) => b.totalWh - a.totalWh); // tri du plus grand en premier
+            console.log(data);
             const labels = data.map(stat => stat.name);
             const values = data.map(stat => (stat.totalWh / 1000).toFixed(2)); // en kWh
 

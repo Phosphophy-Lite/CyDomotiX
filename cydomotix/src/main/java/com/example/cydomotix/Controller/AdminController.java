@@ -1,18 +1,24 @@
 package com.example.cydomotix.Controller;
 
+import com.example.cydomotix.Model.Objects.ConnectedObject;
 import com.example.cydomotix.Service.DeletionRequestService;
+import com.example.cydomotix.Service.Objects.ConnectedObjectService;
+import com.example.cydomotix.Service.Objects.EnergyConsumptionService;
 import com.example.cydomotix.Service.UserActionService;
 import com.example.cydomotix.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -25,6 +31,10 @@ public class AdminController {
     private UserService userService;
     @Autowired
     private UserActionService userActionService;
+    @Autowired
+    private EnergyConsumptionService energyConsumptionService;
+    @Autowired
+    private ConnectedObjectService connectedObjectService;
 
     @GetMapping
     public String viewAdministrationDashboard() {
@@ -77,4 +87,39 @@ public class AdminController {
         model.addAttribute("userActions", userActionService.getAllUserActions().reversed());
         return "admin/history";
     }
+
+    @GetMapping("/stats")
+    public String getGlobalStats() {
+        return "admin/stats";
+    }
+
+    public record DurationStatDTO(Integer objectId, String name, long durationMinutes) {}
+
+    @GetMapping("/stats/range")
+    @ResponseBody
+    public Map<String, Object> getStatsForPeriod(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime start,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime end) {
+
+        double totalHouseConsumption = energyConsumptionService
+                .calculateTotalHouseConsumptionBetween(connectedObjectService.getAllConnectedObjects(), start, end);
+
+        double loginRate = userActionService.calculateLoginRateBetween(userService.getAllVerifiedUsers(),start, end);
+
+        List<ConnectedObject> connectedObjects = connectedObjectService.getAllConnectedObjects();
+        List<DurationStatDTO> durationStats = new ArrayList<>();
+
+        for (ConnectedObject object : connectedObjects) {
+            long durationMinutesTotal = energyConsumptionService.calculateTotalDurationBetween(object, start, end);
+            durationStats.add(new DurationStatDTO(object.getId(), object.getName(), durationMinutesTotal));
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalHouseConsumption", totalHouseConsumption);
+        result.put("loginRate", loginRate);
+        result.put("durationStats", durationStats);
+
+        return result;
+    }
+
 }

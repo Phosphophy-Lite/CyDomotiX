@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Statistiques</title>
+    <title>Statistiques globales</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-    <script src="/js/consumptionStats.js" defer></script>
+    <script src="/js/adminStats.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/css/consumptionStats.css" th:href="@{/css/consumptionStats.css}" />
 </head>
 <body>
     <!-- onglets -->
     <a>Statistiques</a>
-    <a th:href="@{/gestion/history}">Historique</a>
+    <a th:href="@{/admin/history}">Historique des actions</a>
 
-    <h1>Statistiques par objet</h1>
+    <h1>Statistiques globales</h1>
 
     <select id="period">
         <option value="all" selected>Tout le temps</option>
@@ -21,9 +21,15 @@
         <option value="month">Ce mois-ci</option>
     </select>
 
-    <div class="chart-container">
-        <canvas id="consumptionChart"></canvas>
+    <div id="stats-list">
     </div>
+
+    <div id="duration-stat">
+        <div class="chart-container">
+            <canvas id="durationChart"></canvas>
+        </div>
+    </div>
+
 
 </body>
 </html>

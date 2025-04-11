@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +29,9 @@ public class EnergyConsumptionService {
      * @return
      */
     public ConsumptionInterval calculateConsumptionInterval(UsageEvent startEvent, UsageEvent endEvent) {
-        LocalDateTime start = startEvent.getTimestamp(); // Début de l'intervalle de consommation = début du changement de status
+        ZonedDateTime start = startEvent.getTimestamp(); // Début de l'intervalle de consommation = début du changement de status
         // Si pas de changement de status par la suite pour marquer la fin de la période, considérer la date actuelle
-        LocalDateTime end = (endEvent != null) ? endEvent.getTimestamp() : LocalDateTime.now();
+        ZonedDateTime end = (endEvent != null) ? endEvent.getTimestamp() : ZonedDateTime.now();
         long durationMinutes = Duration.between(start, end).toMinutes(); // durée de l'intervalle
 
         // Si l'objet était éteint, pas de consommation
@@ -53,11 +53,11 @@ public class EnergyConsumptionService {
 
         // Sinon, on découpe l'intervalle en sous-intervalles selon les changements de puissance
         double totalEnergyWh = 0.0;
-        LocalDateTime intervalStart = start;
+        ZonedDateTime intervalStart = start;
         double lastPower = powerEvents.getFirst().getPower();
 
         for (PowerChangeEvent evt : powerEvents) {
-            LocalDateTime intervalEnd = evt.getTimestamp();
+            ZonedDateTime intervalEnd = evt.getTimestamp();
             long minutes = Duration.between(intervalStart, intervalEnd).toMinutes();
             totalEnergyWh += (lastPower * minutes) / 60.0;
             intervalStart = evt.getTimestamp();
@@ -92,11 +92,11 @@ public class EnergyConsumptionService {
     }
 
     public List<ConsumptionInterval> calculateConsumptionIntervalsBetween(
-            ConnectedObject connectedObject, LocalDateTime start, LocalDateTime end) {
+            ConnectedObject connectedObject, ZonedDateTime start, ZonedDateTime end) {
 
         // Récupérer tous les UsageEvent jusqu'à maintenant
         List<UsageEvent> usageEvents = usageEventRepository
-                .findByConnectedObjectAndTimestampBeforeOrderByTimestampAsc(connectedObject, LocalDateTime.now());
+                .findByConnectedObjectAndTimestampBeforeOrderByTimestampAsc(connectedObject, ZonedDateTime.now());
 
         List<ConsumptionInterval> intervals = new ArrayList<>();
 
@@ -120,7 +120,7 @@ public class EnergyConsumptionService {
     }
 
     public double calculateTotalConsumptionBetween(
-            ConnectedObject connectedObject, LocalDateTime start, LocalDateTime end) {
+            ConnectedObject connectedObject, ZonedDateTime start, ZonedDateTime end) {
 
         List<ConsumptionInterval> intervals = calculateConsumptionIntervalsBetween(connectedObject, start, end);
 
@@ -130,16 +130,26 @@ public class EnergyConsumptionService {
                 .sum();
     }
 
-    public double calculateTotalConsumption(ConnectedObject connectedObject) {
+    public double calculateTotalHouseConsumptionBetween(
+            List<ConnectedObject> connectedObjects,
+            ZonedDateTime start,
+            ZonedDateTime end) {
 
-        List<ConsumptionInterval> intervals = calculateAllConsumptionIntervals(connectedObject);
-
-        return intervals.stream()
-                .filter(interval -> interval.getEnergyWh() > 0) // Ignore les OFF
-                .mapToDouble(ConsumptionInterval::getEnergyWh)
+        return connectedObjects.stream()
+                .mapToDouble(obj -> calculateTotalConsumptionBetween(obj, start, end))
                 .sum();
     }
 
+    public long calculateTotalDurationBetween(
+            ConnectedObject connectedObject, ZonedDateTime start, ZonedDateTime end) {
+
+        List<ConsumptionInterval> intervals = calculateConsumptionIntervalsBetween(connectedObject, start, end);
+
+        return intervals.stream()
+                .filter(interval -> interval.getEnergyWh() > 0) // Ignore les OFF
+                .mapToLong(ConsumptionInterval::getDurationMinutes)
+                .sum();
+    }
 
 }
 

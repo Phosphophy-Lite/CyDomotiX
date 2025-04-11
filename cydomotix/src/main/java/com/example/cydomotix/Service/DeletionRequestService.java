@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 
@@ -43,7 +43,7 @@ public class DeletionRequestService {
         }
 
         request.setRequester(requester);
-        request.setRequestDate(LocalDateTime.now());
+        request.setRequestDate(ZonedDateTime.now());
         deletionRequestRepo.save(request);
     }
 

@@ -10,7 +10,7 @@ import com.example.cydomotix.Service.UserActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -86,7 +86,7 @@ public class ConnectedObjectService {
         createPowerChangeEvent(updatedObject, existingObject);
         existingObject.setPower(updatedObject.getPower());
 
-        existingObject.setLastInteraction(LocalDateTime.now());
+        existingObject.setLastInteraction(ZonedDateTime.now());
     }
 
     private void createPowerChangeEvent(ConnectedObject updatedObject, ConnectedObject existingObject){
@@ -94,7 +94,7 @@ public class ConnectedObjectService {
             PowerChangeEvent powerEvt = new PowerChangeEvent();
             powerEvt.setConnectedObject(existingObject);
             powerEvt.setPower(updatedObject.getPower());
-            powerEvt.setTimestamp(LocalDateTime.now());
+            powerEvt.setTimestamp(ZonedDateTime.now());
             powerChangeEventRepository.save(powerEvt);
         }
     }
@@ -192,7 +192,7 @@ public class ConnectedObjectService {
         usageEvent.setConnectedObject(connectedObject);
         usageEvent.setStatus(!currentStatus);
 
-        LocalDateTime currentDateTime = LocalDateTime.now();
+        ZonedDateTime currentDateTime = ZonedDateTime.now();
         connectedObject.setLastInteraction(currentDateTime);
 
         // Date de début de ce nouveau status + sauvegarde dans BDD
