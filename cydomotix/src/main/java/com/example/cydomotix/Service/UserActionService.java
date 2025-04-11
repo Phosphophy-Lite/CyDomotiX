@@ -49,12 +49,9 @@ public class UserActionService {
         // Utilisateurs distincts qui se sont connectés (LOGIN) sur la période (pour ne pas compter quand ils se connectent plusieurs fois dans la période)
         List<String> usernamesLoggedIn = userActionRepository.findDistinctUsernamesByActionTypeAndDateBetween(
                 ActionType.LOGIN, startDate, endDate);
-        System.out.println(usernamesLoggedIn);
-        System.out.println("start : " + startDate + " end : " + endDate);
 
         // Total d’utilisateurs inscrits (vérifiés) dans la plateforme
         long nbTotalUsers = totalUsers.size();
-        System.out.println(nbTotalUsers);
 
         if (nbTotalUsers == 0) return 0.0;
 
