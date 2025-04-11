@@ -151,15 +151,5 @@ public class EnergyConsumptionService {
                 .sum();
     }
 
-
-    public double calculateTotalConsumption(ConnectedObject connectedObject) {
-        List<ConsumptionInterval> intervals = calculateAllConsumptionIntervals(connectedObject);
-
-        return intervals.stream()
-                .filter(interval -> interval.getEnergyWh() > 0) // Ignore les OFF
-                .mapToDouble(ConsumptionInterval::getEnergyWh)
-                .sum();
-    }
-
 }
 
