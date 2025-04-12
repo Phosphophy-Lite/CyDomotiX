@@ -1,0 +1,243 @@
+/* Styles pour la page profil public - en préservant la barre du haut */
+
+/* Reset pour la structure générale de la page */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: arial;
+    color: white;
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Container principal pour le contenu sous la barre de navigation */
+body > div:nth-of-type(2) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 800px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border-radius: 3em;
+    padding: 2em;
+    margin: 2em;
+    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.5);
+    align-self: center;
+}
+
+/* Style pour la photo de profil */
+body > div:nth-of-type(2) > img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 0 15px rgba(66, 144, 253, 0.7);
+    margin-bottom: 1.2em;
+    transition: all 0.3s ease;
+}
+
+body > div:nth-of-type(2) > img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(227, 10, 243, 0.7);
+}
+
+/* Style pour le tableau d'information utilisateur */
+body > div:nth-of-type(2) > table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 1.5em;
+    margin-top: 1em;
+    overflow: hidden;
+}
+
+body > div:nth-of-type(2) > table th {
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    color: white;
+    padding: 1em;
+    font-size: 1.5em;
+    text-align: center;
+    border-radius: 1.5em 1.5em 0 0;
+}
+
+body > div:nth-of-type(2) > table td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid rgba(66, 144, 253, 0.3);
+    line-height: 1.2;
+}
+
+body > div:nth-of-type(2) > table tr:last-child td {
+    border-bottom: none;
+}
+
+body > div:nth-of-type(2) > table tr:nth-child(odd) {
+    background-color: rgba(60, 60, 60, 0.05);
+}
+
+/* Style pour les boutons */
+body > div:nth-of-type(2) button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: arial;
+    width: fit-content;
+    font-size: 0.9em;
+    margin: 1em auto;
+    display: block;
+}
+
+body > div:nth-of-type(2) button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+.delete-btn {
+    text-decoration: none;
+}
+
+/* Formulaire d'édition pour l'admin */
+body > div:nth-of-type(3) {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto 2em;
+    align-self: center;
+}
+
+body > div:nth-of-type(3) form {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 2em;
+    padding: 1.5em;
+    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.5);
+}
+
+body > div:nth-of-type(3) form table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: none;
+    margin-top: 0;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+body > div:nth-of-type(3) form table td {
+    padding: 0.8em 1em;
+    border-bottom: 1px solid rgba(66, 144, 253, 0.3);
+    line-height: 1.2;
+}
+
+body > div:nth-of-type(3) form table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Style pour les inputs - similaire à profile-form */
+body > div:nth-of-type(3) form input, 
+body > div:nth-of-type(3) form select {
+    width: 100%;
+    padding: 0.5em 0.8em;
+    border-radius: 2em;
+    border: 1px solid #4290fd;
+    font-family: arial;
+    box-sizing: border-box;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+body > div:nth-of-type(3) form input:focus, 
+body > div:nth-of-type(3) form select:focus {
+    border-color: #e30af3;
+    outline: none;
+    box-shadow: 0 0 5px rgba(227, 10, 243, 0.3);
+}
+
+/* Style pour les labels */
+body > div:nth-of-type(3) form label {
+    font-weight: bold;
+    color: #333;
+    display: block;
+}
+
+/* Messages d'erreur et de succès */
+body > div:nth-of-type(3) form div[style*="color: red"] {
+    color: red;
+    font-weight: bold;
+    background-color: rgba(255, 0, 0, 0.1);
+    border-left: 4px solid red;
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0.5em;
+    width: 100%;
+}
+
+body > div:nth-of-type(3) form div[style*="color: green"] {
+    color: green;
+    font-weight: bold;
+    background-color: rgba(0, 128, 0, 0.1);
+    border-left: 4px solid green;
+    padding: 1em;
+    margin: 1em 0;
+    border-radius: 0.5em;
+    width: 100%;
+}
+
+/* Style spécifique pour le champ de fichier */
+body > div:nth-of-type(3) form input[type="file"] {
+    padding: 0.4em;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Style pour le bouton du formulaire */
+body > div:nth-of-type(3) form button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: arial;
+    width: fit-content;
+    font-size: 0.9em;
+    margin: 1em auto;
+    display: block;
+}
+
+body > div:nth-of-type(3) form button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+/* Responsive design pour les écrans plus petits */
+@media (max-width: 768px) {
+    body > div:nth-of-type(2),
+    body > div:nth-of-type(3) {
+        width: 95%;
+        padding: 1.5em;
+        border-radius: 2em;
+    }
+    
+    body > div:nth-of-type(3) form table, 
+    body > div:nth-of-type(3) form tbody, 
+    body > div:nth-of-type(3) form tr, 
+    body > div:nth-of-type(3) form td {
+        display: block;
+        width: 100%;
+    }
+
+    body > div:nth-of-type(3) form td {
+        padding: 0.5em 0;
+    }
+
+    body > div:nth-of-type(3) form table tr:nth-child(odd) {
+        background-color: transparent;
+    }
+}

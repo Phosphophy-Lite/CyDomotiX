@@ -1,6 +1,6 @@
 body {
-    background: linear-gradient(0.25turn, #4290fd, #e30af3);
-    font-family: sans-serif;
+    font-family: arial;
+    color: black;
 }
 
 #mainContainer {

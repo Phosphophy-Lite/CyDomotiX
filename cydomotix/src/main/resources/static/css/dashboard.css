@@ -52,6 +52,7 @@ ul li {
     border-radius: 3em;
     position: relative;
     overflow: hidden; /* Pour masquer les débordements d'image */
+    font-family: amongus;
 }
 
 #visualisation:hover {
@@ -134,7 +135,6 @@ ul li {
     box-shadow: 0px 0px 30px rgba(66, 144, 253, 0.6);
     background: linear-gradient(to bottom right, #4290fd, #4290fd9b);
 }
-
 
 #gestion:hover {
     transform: scale(1.02);
@@ -341,10 +341,12 @@ a.lockedLink::before, a.lockedLink::after{
 }
 
 
-#containerDifferentPts{
-    display: flex;
-    justify-content: center;
+#numberPts{
+    font-size: 1.5em;
 }
+
+
+
 
 .module-popup {
     position: fixed;
