@@ -193,26 +193,42 @@ ul li {
 }
 
 
-/*#gestion::before, #gestion::after,
-#administration::before, #administration::after*/
-/* Chaînes */
-a.lockedLink::before, a.lockedLink::after{
-    content: '';
+/* Style pour les chaînes croisées sur les modules verrouillés */
+#gestion a.lockedLink::before, #gestion a.lockedLink::after,
+#administration a.lockedLink::before, #administration a.lockedLink::after {
+    content: ''; /* Rajoute les div avec le text suivant (ici rien)*/
     position: absolute;
-    width: 120%;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 8px;
     background-color: rgba(255, 255, 255, 0.3);
     z-index: 5;
+    transform-origin: center;
+    /* Positionnement au centre */
+    top: 50%;
+    left: 50%;
+}
+
+#gestion a.lockedLink::before, #administration a.lockedLink::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#gestion a.lockedLink::after, #administration a.lockedLink::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 
-
-#gestion::before, #administration::before {
-    transform: rotate(45deg);
-}
-
-#gestion::after, #administration::after {
-    transform: rotate(-45deg);
+/* Étendre les liens pour qu'ils occupent tout l'espace des divs */
+#gestion a.lockedLink, #administration a.lockedLink {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
