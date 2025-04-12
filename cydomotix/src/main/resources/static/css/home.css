@@ -383,15 +383,15 @@ features h2 {
 
         /* Entrée */
 .entrance-scene {
-            background-image: url('/img/placeholder/image_entrée_v1.png');
+            background-image: url('/img/placeholder/image_entree.png');
         }
 
 .camera-active .entrance-scene {
-            background-image: url('/img/placeholder/image_entrée_v1.png');
+            background-image: url('/img/placeholder/image_entree_camera.png');
         }
 
 .face-recognized .entrance-scene {
-            background-image: url('/img/placeholder/image_entrée_v1.png');
+            background-image: url('/img/placeholder/image_entree.png');
         }
 
 .door-open .entrance-scene:after {
@@ -501,8 +501,6 @@ interaction-button {
                 height: 150px;
             }
         }
-
-
 
 
 
