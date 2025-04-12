@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistiques globales</title>
+    <script src="/dependencies/chart.js" defer></script>
+    <script src="/js/adminStats.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/css/consumptionStats.css" th:href="@{/css/consumptionStats.css}" />
+</head>
+<body>
+    <!-- onglets -->
+    <a>Statistiques</a>
+    <a th:href="@{/admin/history}">Historique des actions</a>
+
+    <h1>Statistiques globales</h1>
+
+    <select id="period">
+        <option value="all" selected>Tout le temps</option>
+        <option value="today">Aujourd'hui</option>
+        <option value="week">7 derniers jours</option>
+        <option value="month">Ce mois-ci</option>
+    </select>
+
+    <a th:href="@{/admin/export/csv}" class="export-btn">
+        Exporter en CSV
+    </a>
+
+
+    <div id="stats-list">
+    </div>
+
+    <div id="duration-stat">
+        <div class="chart-container">
+            <canvas id="durationChart"></canvas>
+        </div>
+    </div>
+
+
+</body>
+</html>

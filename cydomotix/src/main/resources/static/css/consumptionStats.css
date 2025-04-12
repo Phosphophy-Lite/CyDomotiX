@@ -1,0 +1,37 @@
+body {
+    margin: 0;
+    padding: 2rem;
+}
+
+.chart-container {
+    width: 60%;  /* ou une valeur fixe comme 600px */
+    max-width: 800px;
+    margin: 5% auto; /* centré */
+}
+
+.export-btn {
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 7px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s, transform 0.1s;
+    border: none;
+    user-select: none;
+    background-color: #007bff; /* bleu primaire */
+    color: #ffffff;
+}
+
+.export-btn:hover {
+    background-color: #0056b3; /* bleu foncé */
+    transform: scale(1.03);
+}
+
+.export-btn:active {
+    background-color: #004080;
+    transform: scale(0.98);
+}
+

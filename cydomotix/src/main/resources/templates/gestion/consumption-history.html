@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Historique de consommation</title>
+    <script src="/js/consumptionHistory.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="/css/consumptionHistory.css" th:href="@{/css/consumptionHistory.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+    <!-- onglets -->
+    <a th:href="@{/gestion/stats}">Statistiques</a>
+    <a>Historique</a>
+
+    <h1>Historique de consommation énergétique</h1>
+
+    <select id="objectSelect" onchange="handleSelectChange()">
+        <option value="" selected disabled>-- Choisir un objet --</option>
+        <option th:each="obj : ${connectedObjects}"
+                th:value="${obj.id}"
+                th:text="${obj.name}">
+        </option>
+    </select>
+
+    <select id="period" onchange="handleSelectChange()">
+        <option value="all" selected>Tout</option>
+        <option value="today">Aujourd'hui</option>
+        <option value="week">7 derniers jours</option>
+        <option value="month">Ce mois-ci</option>
+    </select>
+
+
+    <div id="consumpt-list">
+
+    </div>
+
+</body>
+</html>

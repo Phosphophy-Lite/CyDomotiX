@@ -2,7 +2,7 @@ package com.example.cydomotix.Model.Objects;
 
 import com.example.cydomotix.Model.Room;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class ConnectedObject {
     @Enumerated(EnumType.STRING)
     private Connectivity connectivity;
 
-    private LocalDateTime last_interaction;
+    private ZonedDateTime last_interaction;
     private int battery_status;
     private double power;
 
@@ -78,11 +78,11 @@ public class ConnectedObject {
         this.brand = brand;
     }
 
-    public LocalDateTime getLastInteraction() {
+    public ZonedDateTime getLastInteraction() {
         return last_interaction;
     }
 
-    public void setLastInteraction(LocalDateTime last_interaction) {
+    public void setLastInteraction(ZonedDateTime last_interaction) {
         this.last_interaction = last_interaction;
     }
 

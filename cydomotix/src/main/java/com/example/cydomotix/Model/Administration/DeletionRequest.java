@@ -6,6 +6,7 @@ import com.example.cydomotix.Model.Users.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="DeletionRequest")
@@ -35,7 +36,7 @@ public class DeletionRequest {
     private User requester;
 
     @Column(name="request_date")
-    private LocalDateTime requestDate;
+    private ZonedDateTime requestDate;
 
     public Integer getId() {
         return id;
@@ -65,11 +66,11 @@ public class DeletionRequest {
         this.requester = requester;
     }
 
-    public LocalDateTime getRequestDate() {
+    public ZonedDateTime getRequestDate() {
         return requestDate;
     }
 
-    public void setRequestDate(LocalDateTime requestDate) {
+    public void setRequestDate(ZonedDateTime requestDate) {
         this.requestDate = requestDate;
     }
 

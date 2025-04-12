@@ -123,6 +123,10 @@
                             </a>
                         </td>
                     </tr>
+                    <tr>
+                        <td>Puissance :</td>
+                        <td th:text="|${connectedObject.power} W|"></td>
+                    </tr>
                     <tr sec:authorize="hasRole('ADMIN')">
                         <td colspan="2">
                             <a class="delete-btn" href="#" th:data-id="${connectedObject.id}">
@@ -186,6 +190,10 @@
 
                     <label for="batteryStatus">État de batterie :</label>
                     <input type="number" min="0" max="100" id="batteryStatus" th:field="*{batteryStatus}"><span> %</span>
+                    <br>
+
+                    <label for="power">Power :</label>
+                    <input type="number" min="0" step="0.1" id="power" th:field="*{power}"><span> W</span>
                     <br>
 
                     <h3>Champs :</h3>

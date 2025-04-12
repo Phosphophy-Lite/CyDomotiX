@@ -2,7 +2,7 @@ package com.example.cydomotix.Model.Objects;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="PowerChangeEvent")
@@ -12,20 +12,20 @@ public class PowerChangeEvent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /*
     @ManyToOne
-    private ConnectedObject connectedObject;*/
+    @JoinColumn(name = "connected_object_id", nullable = false)
+    private ConnectedObject connectedObject;
 
     private double power; // en W
 
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -37,7 +37,7 @@ public class PowerChangeEvent {
         this.power = power;
     }
 
-    /*
+
     public ConnectedObject getConnectedObject() {
         return connectedObject;
     }
@@ -45,7 +45,7 @@ public class PowerChangeEvent {
     public void setConnectedObject(ConnectedObject connectedObject) {
         this.connectedObject = connectedObject;
     }
-*/
+
     public Integer getId() {
         return id;
     }

@@ -2,7 +2,7 @@ package com.example.cydomotix.Model.Users;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name="UserAction")
@@ -13,7 +13,7 @@ public class UserAction {
     @Column(name="id_user_action")
     private Integer id;
 
-    private LocalDateTime timestamp;
+    private ZonedDateTime timestamp;
 
     @Enumerated(EnumType.STRING)
     @Column(name="action_type")
@@ -31,7 +31,7 @@ public class UserAction {
     public UserAction(String author, ActionType actionType) {
         this.author = author;
         this.actionType = actionType;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = ZonedDateTime.now();
     }
 
     public UserAction(){
@@ -46,11 +46,11 @@ public class UserAction {
         this.actionType = actionType;
     }
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(ZonedDateTime timestamp) {
         this.timestamp = timestamp;
     }
 

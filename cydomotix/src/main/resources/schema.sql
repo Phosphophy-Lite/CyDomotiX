@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Room;
-DROP TABLE IF EXISTS Tool;
 DROP TABLE IF EXISTS ConnectedObject;
 DROP TABLE IF EXISTS ObjectAttribute;
 DROP TABLE IF EXISTS AttributeValue;
@@ -32,13 +31,6 @@ CREATE TABLE Room (
                       name VARCHAR(255) UNIQUE NOT NULL
 );
 
-CREATE TABLE Tool (
-                      id_tool INT AUTO_INCREMENT PRIMARY KEY,
-                      name VARCHAR(50),
-                      id_room INT,
-                      FOREIGN KEY(id_room) REFERENCES Room(id_room)
-);
-
 -- Table des types d'objets connectés
 CREATE TABLE ObjectType (
                             id_object_type INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,7 +56,7 @@ CREATE TABLE ConnectedObject (
                                  brand VARCHAR(50),
                                  last_interaction TIMESTAMP,
                                  battery_status INT,
-                                 power INT,
+                                 power DOUBLE,
                                  is_active BOOLEAN,
                                  id_room INT NOT NULL, -- Relie l'objet à une pièce de la maison
                                  id_type INT NOT NULL, -- Relie l'objet à un type spécifique ("Thermostat", "TV" ..)
@@ -111,4 +103,20 @@ CREATE TABLE UserAction (
                             action_type ENUM('LOGIN', 'ADD_OBJECT', 'UPDATE_OBJECT', 'DELETE_OBJECT', 'ON_OBJECT', 'OFF_OBJECT', 'UPDATE_USER', 'DELETE_USER', 'ADD_TYPE', 'DELETE_TYPE'),
                             author VARCHAR(255),
                             related_entity VARCHAR(255)
+);
+
+CREATE TABLE PowerChangeEvent (
+                                  id INT AUTO_INCREMENT PRIMARY KEY,
+                                  connected_object_id INT NOT NULL,
+                                  power DOUBLE NOT NULL,
+                                  timestamp TIMESTAMP NOT NULL,
+                                  FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE
+);
+
+CREATE TABLE UsageEvent (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            connected_object_id INT NOT NULL,
+                            status BOOLEAN NOT NULL,
+                            timestamp TIMESTAMP NOT NULL,
+                            FOREIGN KEY (connected_object_id) REFERENCES ConnectedObject(id_object) ON DELETE CASCADE
 );
