@@ -1,10 +1,10 @@
 package com.example.cydomotix.Model.Users;
 
 public enum AccessType {
-    USER("Crewmate", 0),
-    GESTION("Detective", 20),
-    ADMIN("Engineer", 30),
-    DEV("Impostor", 45);
+    USER("Coéquipier", 0),
+    GESTION("Détective", 20),
+    ADMIN("Ingénieur", 30),
+    DEV("Imposteur", 45);
 
     private final String displayName;
     private final int cost;

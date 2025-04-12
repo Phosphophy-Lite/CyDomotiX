@@ -290,7 +290,6 @@ a.lockedLink::before, a.lockedLink::after{
 
 #user, #ptsScore {
     transition: all 0.3s ease-in-out;
-    cursor: pointer;
 }
 
 #user:hover, #ptsScore:hover {
@@ -330,20 +329,40 @@ a.lockedLink::before, a.lockedLink::after{
 /******************** Div score ********************/
 
 #ptsScore{
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4);
     width: 80%;
-    height: 30%;
     border-radius: 3em;
     text-align: center;
     background-color: white;
     color: black;
+    padding: 20px 0 20px 0;
 }
 
+#ptsScore h3{
+    margin: 0;
+    color: #333333;
+}
 
-#containerDifferentPts{
+#ptsScore h2{
+    margin: 0;
+    text-transform: uppercase;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    color: transparent;
+    background-clip: text;
+    font-weight: bold;
+}
+
+#ptsScore > * {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#roleScoreContainer h2 {
+    letter-spacing: 2px;
 }
 
 .module-popup {
