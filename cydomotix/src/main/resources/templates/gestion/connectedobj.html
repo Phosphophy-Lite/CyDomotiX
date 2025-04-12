@@ -6,237 +6,215 @@
     <meta charset="UTF-8">
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <title>Création Object Connecté</title>
     <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
     <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/gestion-create.css" th:href="@{/css/gestion-create.css}" />
     <script src="/js/dynamicStars.js" defer></script>
+    <script src="/js/connectedObjCreation.js" defer></script>
 </head>
 
 <body>
+<!------------------------------BARRE CENTRALE ------------------------------>
+<div id="upRod">
+    <a class="link" th:href="@{/dashboard}">Accueil</a>
+    <a class="link" th:href="@{/visualization}">Visualisation</a>
+
+    <!-- Pour un gestion -->
+    <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+
+    <!-- Pour un utilisateur sans droits d'accès gestion -->
+    <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Gestion
+    </a>
+
+    <!-- Pour un admin -->
+    <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+
+    <!-- Pour un utilisateur sans droits d'accès admin -->
+    <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Administration
+    </a>
+
+    <a class="link" th:href="@{/profile}">Profil</a>
+    <div class="link">
+        <form th:action="@{/logout}" method="post">
+            <button class="button" type="submit">Déconnexion</button>
+        </form>
+    </div>
+</div>
+<!------------------------------FIN BARRE CENTRALE ------------------------------>
 
 
-    <!------------------------------BARRE CENTRALE ------------------------------>
 
-    <div id="upRod">
+<div class="mainContainer">
 
-        <a class="link" th:href="@{/dashboard}">Accueil</a>
-        <a class="link" th:href="@{/visualization}">Visualisation</a>
+    <!-- Partie gauche - Formulaire -->
+    <div class="divLeft">
 
-        <!-- Pour un gestion -->
-        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+        <div class="whitePanel formPanel">
+            <h1>Ajouter un nouvel objet connecté</h1>
+            <form th:action="@{/gestion/connected-object/add}" method="POST" th:object="${connectedObject}">
+                <!-- Input cachée pour stockée l'ID -->
+                <input type="hidden" th:field="*{id}">
 
-        <!-- Pour un utilisateur sans droits d'accès gestion -->
-        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Gestion
-        </a>
+                <label for="name">Nom de l'objet :</label>
+                <input type="text" id="name" th:field="*{name}" required>
 
-        <!-- Pour un admin -->
-        <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+                <label for="type">Type de l'objet :</label>
+                <select id="type" name="objectType" onchange="loadAttributes(this.value)" required>
+                    <option value="" selected disabled>-- Choisir un type --</option>
+                    <option th:each="objectType : ${objectTypes}" th:value="${objectType.id}" th:text="${objectType.name}"></option>
+                </select>
 
-        <!-- Pour un utilisateur sans droits d'accès admin -->
-        <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Administration
-        </a>
+                <label for="room">Pièce :</label>
+                <select id="room" name="room" required>
+                    <option value="" selected disabled>-- Choisir une pièce --</option>
+                    <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}"></option>
+                </select>
 
-        <a class="link" th:href="@{/profile}">Profil</a>
-        <div class="link">
-            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
-          car une requête GET (lien clickable) ne transmet pas de token CSRF
-          donc Spring Security la bloquerait pour un logout
-          (potentiellement dangereux sans protection CSRF) -->
-            <form th:action="@{/logout}" method="post">
-                <button class="button" type="submit">Déconnexion</button>
+                <label for="brand">Marque :</label>
+                <input type="text" id="brand" th:field="*{brand}" required>
+
+                <label for="mode">Mode :</label>
+                <select th:field="*{mode}" id="mode">
+                    <option th:each="mode : ${T(com.example.cydomotix.Model.Objects.Mode).values()}" th:value="${mode}" th:text="${mode.displayName}"></option>
+                </select>
+
+                <label for="connectivity">Connectivité :</label>
+                <select th:field="*{connectivity}" id="connectivity">
+                    <option th:each="connectvitiy : ${T(com.example.cydomotix.Model.Objects.Connectivity).values()}" th:value="${connectvitiy}" th:text="${connectvitiy.displayName}"></option>
+                </select>
+
+                <label for="batteryStatus">État de batterie :</label>
+                <input type="number" min="0" max="100" id="batteryStatus" th:field="*{batteryStatus}" required><span> %</span>
+
+                <label for="power">Puissance :</label>
+                <input type="number" id="power" min="0" step="0.1" th:field="*{power}" required><span> W</span>
+
+                <label for="lastInteraction">Dernière interaction :</label>
+                <input type="datetime-local" id="lastInteraction" th:field="*{lastInteraction}" required>
+
+                <h3>Champs :</h3>
+
+                <table id="attributesTable" class="dataTable">
+                    <thead>
+                    <tr>
+                        <th>Attribut</th>
+                        <th>Valeur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Attributs spécifiques au type selectionné -->
+                    </tbody>
+                </table>
+
+                <button type="submit">Enregistrer</button>
+
+                <!-- Affichage des messages -->
+                <div th:if="${#fields.hasErrors('name')}" class="error-message">
+                    <p th:errors="*{name}"></p>
+                </div>
+
+                <div th:if="${successMessage}" class="success-message">
+                    <p th:text="${successMessage}"></p>
+                </div>
             </form>
         </div>
     </div>
-    <!------------------------------FIN BARRE CENTRALE ------------------------------>
 
-
-
-<table id="connected-obj-table">
-    <thead>
-    <tr>
-        <th>Nom</th>
-        <th>Type</th>
-        <th>Pièce</th>
-        <th>Champs de base</th>
-        <th>Champs spécifiques au type</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Affichage de chaque ligne. 1 ligne = 1 object connecté -->
-    <tr th:each="connectedObject : ${connectedObjects}">
-        <td th:text="${connectedObject.name}"></td> <!-- Nom de l'objet -->
-        <td th:text="${connectedObject.objectType.name}"></td> <!-- Type de l'objet -->
-        <td th:text="${connectedObject.room.name}"></td> <!-- Pièce où se situe l'objet -->
-        <!-- Champs de base de l'objet -->
-        <td>
-            <table>
+    <!-- Partie droite - Liste des objets existants -->
+    <div class="divRight">
+        <div class="whitePanel tablePanel">
+            <table id="connected-obj-table" class="dataTable">
+                <thead>
                 <tr>
-                    <!-- Noms des champs -->
+                    <th>Nom</th>
+                    <th>Type</th>
+                    <th>Pièce</th>
+                    <th>Champs de base</th>
+                    <th>Champs spécifiques au type</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Affichage de chaque ligne. 1 ligne = 1 object connecté -->
+                <tr th:each="connectedObject : ${connectedObjects}">
+                    <td th:text="${connectedObject.name}"></td>
+                    <td th:text="${connectedObject.objectType.name}"></td>
+                    <td th:text="${connectedObject.room.name}"></td>
+                    <!-- Champs de base de l'objet -->
                     <td>
-                        <p>Marque :</p>
-                        <p>Mode :</p>
-                        <p>Connectivité :</p>
-                        <p>État de batterie :</p>
-                        <p>Dernière interaction :</p>
-                        <p>Status :</p>
-                        <p>Puissance :</p>
+                        <table>
+                            <tr>
+                                <!-- Noms des champs -->
+                                <td>
+                                    <p>Marque :</p>
+                                    <p>Mode :</p>
+                                    <p>Connectivité :</p>
+                                    <p>État de batterie :</p>
+                                    <p>Dernière interaction :</p>
+                                    <p>Status :</p>
+                                    <p>Puissance :</p>
+                                </td>
+                                <!-- Valeurs des champs -->
+                                <td>
+                                    <p th:text="${connectedObject.brand}"></p>
+                                    <p th:text="${connectedObject.mode.displayName}"></p>
+                                    <p th:text="${connectedObject.connectivity.displayName}"></p>
+                                    <p th:text="|${connectedObject.batteryStatus}%|"></p>
+                                    <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
+                                    <p th:if="${connectedObject.isActive == true}">Activé</p>
+                                    <p th:unless="${connectedObject.isActive}">Désactivé</p>
+                                    <p th:text="|${connectedObject.power} W|">
+                                </td>
+                            </tr>
+                        </table>
                     </td>
-                    <!-- Valeurs des champs -->
+                    <!-- Champs spécifiques au type de l'objet -->
                     <td>
-                        <p th:text="${connectedObject.brand}"></p>
-                        <p th:text="${connectedObject.mode.displayName}"></p>
-                        <p th:text="${connectedObject.connectivity.displayName}"></p>
-                        <p th:text="|${connectedObject.batteryStatus}%|"></p>
-                        <p th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></p>
-                        <p th:if="${connectedObject.isActive == true}">Activé</p>
-                        <p th:unless="${connectedObject.isActive}">Désactivé</p>
-                        <p th:text="|${connectedObject.power} W|">
-
+                        <!-- Affichage de sa liste d'attributs et leur valeur -->
+                        <table>
+                            <tr th:each="attribute, iterStat : ${connectedObject.objectType.attributes}">
+                                <td>
+                                    <p th:text="|${attribute.name} :|"></p>
+                                </td>
+                                <td>
+                                    <!-- Affichage conditionnels selon le type de valeur -->
+                                    <p th:if="${attribute.valueType.name() == 'STRING'}" th:text="${connectedObject.attributeValueList[iterStat.index].string_value}"></p>
+                                    <p th:if="${attribute.valueType.name() == 'INTEGER'}" th:text="${connectedObject.attributeValueList[iterStat.index].int_value}"></p>
+                                    <p th:if="${attribute.valueType.name() == 'DOUBLE'}" th:text="${connectedObject.attributeValueList[iterStat.index].double_value}"></p>
+                                    <p th:if="${attribute.valueType.name() == 'TEMPERATURE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}&deg;C|"></p>
+                                    <p th:if="${attribute.valueType.name() == 'HOURS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}h|"></p>
+                                    <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
+                                    <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
+                                    <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <a class="delete-btn action-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('ADMIN')">
+                            <button>Supprimer</button>
+                        </a>
+                        <a class="request-delete-btn action-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
+                            <button>Demander suppression</button>
+                        </a>
+                        <a class="power-btn action-btn" href="#" th:data-id="${connectedObject.id}">
+                            <button>Activer/Désactiver</button>
+                        </a>
                     </td>
                 </tr>
+                </tbody>
             </table>
-        </td>
-        <!-- Champs spécifiques au type de l'objet -->
-        <td>
-            <!-- Affichage de sa liste d'attributs et leur valeur -->
-            <table>
-                <tr th:each="attribute, iterStat : ${connectedObject.objectType.attributes}">
-                    <td>
-                        <p th:text="|${attribute.name} :|"></p>
-                    </td>
-                    <td>
-                        <!-- Affichage conditionnels selon le type de valeur -->
-                        <p th:if="${attribute.valueType.name() == 'STRING'}" th:text="${connectedObject.attributeValueList[iterStat.index].string_value}"></p>
-                        <p th:if="${attribute.valueType.name() == 'INTEGER'}" th:text="${connectedObject.attributeValueList[iterStat.index].int_value}"></p>
-                        <p th:if="${attribute.valueType.name() == 'DOUBLE'}" th:text="${connectedObject.attributeValueList[iterStat.index].double_value}"></p>
-                        <p th:if="${attribute.valueType.name() == 'TEMPERATURE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}&deg;C|"></p>
-                        <p th:if="${attribute.valueType.name() == 'HOURS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}h|"></p>
-                        <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
-                        <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
-                        <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
-                    </td>
-                </tr>
-            </table>
-        </td>
-        <td>
-            <a class="delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('ADMIN')">
-                <button>Supprimer</button>
-            </a><br>
-            <a class="request-delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
-                <button>Demander suppression</button>
-            </a>
-            <br>
-            <a class="power-btn" href="#" th:data-id="${connectedObject.id}">
-                <button>Activer/Désactiver</button>
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<br/><br/>
-
-<h1>Ajouter un nouvel object connecté</h1>
-
-<form th:action="@{/gestion/connected-object/add}" method="POST" th:object="${connectedObject}">
-    <!-- Input cachée pour stockée l'ID -->
-    <input type="hidden" th:field="*{id}">
-
-    <label for="name">Nom de l'objet :</label>
-    <input type="text" id="name" th:field="*{name}" required>
-    <br>
-
-    <label for="type">Type de l'objet :</label>
-    <select id="type" name="objectType" onchange="loadAttributes(this.value)" required>
-        <option value="" selected disabled>-- Choisir un type --</option>
-
-        <!-- Boucle sur les types disponibles pour peupler dyanmiquement le menu -->
-        <option th:each="objectType : ${objectTypes}" th:value="${objectType.id}" th:text="${objectType.name}"></option>
-    </select>
-    <br>
-
-    <label for="room">Pièce :</label>
-    <select id="room" name="room" required>
-        <option value="" selected disabled>-- Choisir une pièce --</option>
-
-        <!-- Boucle sur les pièces disponibles pour peupler dyanmiquement le menu -->
-        <option th:each="room : ${rooms}" th:value="${room.id}" th:text="${room.name}"></option>
-    </select>
-    <br>
-
-    <label for="brand">Marque :</label>
-    <input type="text" id="brand" th:field="*{brand}" required>
-    <br>
-
-    <label for="mode">Mode :</label>
-    <select th:field="*{mode}" id="mode">
-        <option th:each="mode : ${T(com.example.cydomotix.Model.Objects.Mode).values()}" th:value="${mode}" th:text="${mode.displayName}"></option>
-    </select>
-
-    <br>
-    <label for="connectivity">Connectivité :</label>
-    <select th:field="*{connectivity}" id="connectivity">
-        <option th:each="connectvitiy : ${T(com.example.cydomotix.Model.Objects.Connectivity).values()}" th:value="${connectvitiy}" th:text="${connectvitiy.displayName}"></option>
-    </select>
-    <br>
-
-    <label for="batteryStatus">État de batterie :</label>
-    <input type="number" min="0" max="100" id="batteryStatus" th:field="*{batteryStatus}" required><span> %</span>
-    <br>
-
-    <label for="power">Puissance :</label>
-    <input type="number" id="power" min="0" step="0.1" th:field="*{power}" required><span> W</span>
-    <br>
-
-    <label for="lastInteraction">Dernière interaction :</label>
-    <input type="datetime-local" id="lastInteraction" th:field="*{lastInteraction}" required>
-
-    <h3>Champs :</h3>
-
-    <table id="attributesTable">
-        <thead>
-        <tr>
-            <th>Attribut</th>
-            <th>Valeur</th>
-        </tr>
-        </thead>
-        <tbody>
-
-        <!-- Attributs spécifiques au type selectionné -->
-        </tbody>
-    </table>
-
-    <button type="submit">Enregistrer</button>
-    <br>
-
-
-    <!-- Affichage de l'erreur -->
-    <div th:if="${#fields.hasErrors('name')}">
-        <p style="color: red;" th:errors="*{name}"></p>
+        </div>
     </div>
-
-    <!-- Affichage du message de succès -->
-    <div th:if="${successMessage}" style="color: green; font-weight: bold;">
-        <p th:text="${successMessage}"></p>
-    </div>
-
-</form>
-
+</div>
 </body>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="_csrf" th:content="${_csrf.token}" />
-    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    <title>Création Object Connecté</title>
-    <script src="/js/connectedObjCreation.js" defer></script>
-</head>
 </html>
