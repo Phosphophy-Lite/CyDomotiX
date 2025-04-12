@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="03a1309f-25e4-49a0-b332-52b9efd12594" name="Changes" comment="home, error">
+      <change afterPath="$PROJECT_DIR$/cydomotix/src/main/resources/static/img/placeholder/image_entrée_v1.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cydomotix/src/main/resources/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/cydomotix/src/main/resources/templates/home.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cydomotix/src/main/resources/static/css/home.css" beforeDir="false" afterPath="$PROJECT_DIR$/cydomotix/src/main/resources/static/css/home.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cydomotix/src/main/resources/static/js/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/cydomotix/src/main/resources/static/js/home.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +55,7 @@
       <recent name="C:\Users\Administrateur\IdeaProjects\CyDomotiX\cydomotix\src\main\resources\static\img\profilePictures" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrateur\IdeaProjects\CyDomotiX\cydomotix\src\main\resources\static\img\placeholder" />
       <recent name="C:\Users\Administrateur\IdeaProjects\CyDomotiX\cydomotix\src\main\resources\static\img\background" />
     </key>
   </component>
@@ -113,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744140652205</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="home, error">
+      <option name="closed" value="true" />
+      <created>1744141915067</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1744141915067</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
