@@ -41,7 +41,7 @@ cd nom-du-dossier-cloné/cydomotix
 
 2. Une fois à l'intérieur de ce dossier, vous pouvez lancer la commande : <br/>
 ```
-mvn clean install
+mvn clean install -DskipTests
 mvn spring-boot:run
 ```
 
