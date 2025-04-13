@@ -1,8 +1,114 @@
+/* Styles pour les pages d'historique */
 body {
     margin: 0;
+}
+
+/* Container principal pour le contenu d'historique */
+.history-container {
+    width: 80%;
+    max-width: 1000px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border-radius: 1.5em;
+    padding: 2em;
+    margin: 2em auto;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Titre de la page d'historique */
+.history-title {
+    text-align: center;
+    margin: 1.5em 0;
+    font-size: 1.8rem;
+    color: #333;
+    border-bottom: 2px solid rgba(66, 144, 253, 0.5);
+    padding-bottom: 0.8em;
+}
+
+/* Zone défilante pour les entrées d'historique */
+.scrollable-content {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 1em;
+}
+
+/* Barre de défilement personnalisée */
+.scrollable-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: #e30af3;
+}
+
+/* Bouton de statistiques */
+.stats-button {
+    display: block;
+    text-align: left; /* Changé de 'right' à 'left' */
+    text-decoration: none;
+    margin-bottom: 1em;
+
 
 }
 
+.stats-button button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: arial;
+    font-size: 0.9em;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.stats-button button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+/* Sélecteurs pour la page d'historique de consommation */
+.filters-container {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1.5em;
+    flex-wrap: wrap; /* Change le comportement de flex pour passer a la ligne */
+}
+
+.filters-container select {
+    padding: 0.6em 1em;
+    border-radius: 2em;
+    border: 1px solid #4290fd;
+    background-color: white;
+    flex-grow: 1;
+    min-width: 200px;
+    font-family: arial;
+    transition: all 0.3s ease;
+}
+
+.filters-container select:focus {
+    border-color: #e30af3;
+    outline: none;
+    box-shadow: 0 0 5px rgba(227, 10, 243, 0.3);
+}
+
+/* Liste des entrées de consommation */
 #consumpt-list {
     margin-top: 2%;
     display: flex;
@@ -15,7 +121,7 @@ body {
     align-items: center;
     padding: 1rem;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     justify-content: space-between;
     transition: all 0.3s ease;
 }
@@ -63,4 +169,78 @@ body {
     border: 1px dashed #ccc;
     border-radius: 10px;
     margin-top: 1rem;
+}
+
+/* Style pour les boutons */
+button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: arial;
+    width: fit-content;
+    font-size: 0.9em;
+    margin: 1em auto;
+    display: block;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+/* Style pour les actions d'historique */
+.action-entry {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-left: 4px solid #4290fd;
+    transition: all 0.3s ease;
+}
+
+.action-entry:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.action-category {
+    font-weight: bold;
+    color: #4290fd;
+    margin-bottom: 0.5em;
+}
+
+.action-description {
+    margin-bottom: 0.5em;
+    font-size: 1rem;
+}
+
+.action-timestamp {
+    font-size: 0.85rem;
+    color: #777;
+    font-style: italic;
+    text-align: right;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .history-container {
+        width: 95%;
+        padding: 1.5em;
+    }
+
+    .filters-container {
+        flex-direction: column;
+    }
+
+    .filters-container select {
+        width: 100%;
+    }
+
+    .stats-button {
+        text-align: center;
+    }
 }

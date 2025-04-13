@@ -9,83 +9,81 @@
     <link rel="stylesheet" type="text/css" href="/css/consumptionHistory.css" th:href="@{/css/consumptionHistory.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="/js/dynamicStars.js" defer></script>
-
 </head>
 
 <body>
+<!------------------------------BARRE CENTRALE ------------------------------>
+<div id="upRod">
+    <a class="link" th:href="@{/dashboard}">Accueil</a>
+    <a class="link" th:href="@{/visualization}">Visualisation</a>
 
+    <!-- Pour un gestion -->
+    <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
 
-    <!------------------------------BARRE CENTRALE ------------------------------>
+    <!-- Pour un utilisateur sans droits d'accès gestion -->
+    <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Gestion
+    </a>
 
-    <div id="upRod">
+    <!-- Pour un admin -->
+    <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
 
-        <a class="link" th:href="@{/dashboard}">Accueil</a>
-        <a class="link" th:href="@{/visualization}">Visualisation</a>
+    <!-- Pour un utilisateur sans droits d'accès admin -->
+    <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Administration
+    </a>
 
-        <!-- Pour un gestion -->
-        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+    <a class="link" th:href="@{/profile}">Profil</a>
+    <div class="link">
+        <form th:action="@{/logout}" method="post">
+            <button class="button" type="submit">Déconnexion</button>
+        </form>
+    </div>
+</div>
+<!------------------------------FIN BARRE CENTRALE ------------------------------>
 
-        <!-- Pour un utilisateur sans droits d'accès gestion -->
-        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Gestion
+<!-- Container principal pour la page d'historique -->
+<div class="history-container">
+    <!-- Bouton vers statistiques -->
+    <div class="stats-button">
+        <a th:href="@{/gestion/stats}">
+            <button>Statistiques</button>
         </a>
+    </div>
 
-        <!-- Pour un admin -->
-        <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+    <h1 class="history-title">Historique de consommation énergétique</h1>
 
-        <!-- Pour un utilisateur sans droits d'accès admin -->
-        <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Administration
-        </a>
+    <!-- Filtres pour la consommation -->
+    <div class="filters-container">
+        <select id="objectSelect" onchange="handleSelectChange()">
+            <option value="" selected disabled>-- Choisir un objet --</option>
+            <option th:each="obj : ${connectedObjects}"
+                    th:value="${obj.id}"
+                    th:text="${obj.name}">
+            </option>
+        </select>
 
-        <a class="link" th:href="@{/profile}">Profil</a>
-        <div class="link">
-            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
-          car une requête GET (lien clickable) ne transmet pas de token CSRF
-          donc Spring Security la bloquerait pour un logout
-          (potentiellement dangereux sans protection CSRF) -->
-            <form th:action="@{/logout}" method="post">
-                <button class="button" type="submit">Déconnexion</button>
-            </form>
+        <select id="period" onchange="handleSelectChange()">
+            <option value="all" selected>Tout</option>
+            <option value="today">Aujourd'hui</option>
+            <option value="week">7 derniers jours</option>
+            <option value="month">Ce mois-ci</option>
+        </select>
+    </div>
+
+    <!-- Contenu défilant -->
+    <div class="scrollable-content">
+        <div id="consumpt-list">
+            <!-- Le contenu sera rempli dynamiquement par JavaScript -->
         </div>
     </div>
-
-    <!------------------------------FIN BARRE CENTRALE ------------------------------>
-
-
-
-
-    <!-- onglets -->
-    <a th:href="@{/gestion/stats}">Statistiques</a>
-    <a>Historique</a>
-
-    <h1>Historique de consommation énergétique</h1>
-
-    <select id="objectSelect" onchange="handleSelectChange()">
-        <option value="" selected disabled>-- Choisir un objet --</option>
-        <option th:each="obj : ${connectedObjects}"
-                th:value="${obj.id}"
-                th:text="${obj.name}">
-        </option>
-    </select>
-
-    <select id="period" onchange="handleSelectChange()">
-        <option value="all" selected>Tout</option>
-        <option value="today">Aujourd'hui</option>
-        <option value="week">7 derniers jours</option>
-        <option value="month">Ce mois-ci</option>
-    </select>
-
-
-    <div id="consumpt-list">
-
-    </div>
+</div>
 
 </body>
 </html>
