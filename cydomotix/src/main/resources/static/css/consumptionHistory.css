@@ -1,8 +1,112 @@
+/* Styles pour les pages d'historique */
 body {
     margin: 0;
-
 }
 
+/* Container principal pour le contenu d'historique */
+.history-container {
+    width: 80%;
+    max-width: 1000px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border-radius: 1.5em;
+    padding: 2em;
+    margin: 2em auto;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Titre de la page d'historique */
+.history-title {
+    text-align: center;
+    margin: 1.5em 0;
+    font-size: 1.8rem;
+    color: #333;
+    border-bottom: 2px solid rgba(66, 144, 253, 0.5);
+    padding-bottom: 0.8em;
+}
+
+/* Zone défilante pour les entrées d'historique */
+.scrollable-content {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 1em;
+}
+
+/* Barre de défilement personnalisée */
+.scrollable-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border-radius: 10px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: #e30af3;
+}
+
+/* Bouton de statistiques */
+.stats-button {
+    display: block;
+    text-align: left; /* Changé de 'right' à 'left' */
+    text-decoration: none;
+    margin-bottom: 1em;
+}
+
+.stats-button button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: arial;
+    font-size: 0.9em;
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.stats-button button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+/* Sélecteurs pour la page d'historique de consommation */
+.filters-container {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1.5em;
+    flex-wrap: wrap;
+}
+
+.filters-container select {
+    padding: 0.6em 1em;
+    border-radius: 2em;
+    border: 1px solid #4290fd;
+    background-color: white;
+    flex-grow: 1;
+    min-width: 200px;
+    font-family: arial;
+    transition: all 0.3s ease;
+}
+
+.filters-container select:focus {
+    border-color: #e30af3;
+    outline: none;
+    box-shadow: 0 0 5px rgba(227, 10, 243, 0.3);
+}
+
+/* Liste des entrées de consommation */
 #consumpt-list {
     margin-top: 2%;
     display: flex;
