@@ -8,7 +8,13 @@ public enum ValueType {
     HOURS("Heures (h)"),
     MINUTES("Minutes (min)"),
     SECONDS("Secondes (s)"),
-    PERCENTAGE("Pourcentage (%)");
+    PERCENTAGE("Pourcentage (%)"),
+    BOOLEAN("Booléen (Oui/Non)"), // Pour présence, détection, activé/désactivé
+    SPEED("Vitesse (m/s)"),
+    PRESSURE("Pression (hPa)"),
+    VOLUME("Volume (L)"),
+    DISTANCE("Distance (m)"),
+    SURFACE("Surface (m²)");
 
     private final String displayName;
 

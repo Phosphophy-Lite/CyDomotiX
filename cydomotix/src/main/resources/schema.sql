@@ -41,7 +41,22 @@ CREATE TABLE ObjectType (
 CREATE TABLE ObjectAttribute (
                                  id_object_attribute INT AUTO_INCREMENT PRIMARY KEY,
                                  name VARCHAR(255) NOT NULL, -- Ex: "Température", "Mode"
-                                 value_type ENUM('STRING', 'INTEGER', 'DOUBLE', 'TEMPERATURE', 'HOURS', 'MINUTES', 'SECONDS', 'PERCENTAGE'),
+                                 value_type ENUM(
+                                     'STRING',
+                                     'INTEGER',
+                                     'DOUBLE',
+                                     'TEMPERATURE',
+                                     'HOURS',
+                                     'MINUTES',
+                                     'SECONDS',
+                                     'PERCENTAGE',
+                                     'BOOLEAN',
+                                     'SPEED',
+                                     'PRESSURE',
+                                     'VOLUME',
+                                     'DISTANCE',
+                                     'SURFACE'
+                                 ),
                                  object_type_id INT NOT NULL, -- Relie l'attribut à un type spécifique d'objet connecté
                                  FOREIGN KEY (object_type_id) REFERENCES ObjectType(id_object_type) ON DELETE CASCADE,
                                  CONSTRAINT unique_attribute_per_type UNIQUE (name, object_type_id) -- On peut avoir un champ avec le même nom pour deux types différents mais pas deux fois le même champs pour 1 seul type

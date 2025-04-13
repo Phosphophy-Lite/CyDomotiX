@@ -196,7 +196,7 @@
                                             <p th:text="|${attribute.name} :|"></p>
                                         </td>
                                         <td>
-                                            <!-- Affichage conditionnels selon le type de valeur -->
+                                            <!-- Affichage conditionnel selon le type de valeur -->
                                             <p th:if="${attribute.valueType.name() == 'STRING'}" th:text="${connectedObject.attributeValueList[iterStat.index].string_value}"></p>
                                             <p th:if="${attribute.valueType.name() == 'INTEGER'}" th:text="${connectedObject.attributeValueList[iterStat.index].int_value}"></p>
                                             <p th:if="${attribute.valueType.name() == 'DOUBLE'}" th:text="${connectedObject.attributeValueList[iterStat.index].double_value}"></p>
@@ -205,6 +205,18 @@
                                             <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
                                             <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
                                             <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'BOOLEAN'}"
+                                               th:text="${connectedObject.attributeValueList[iterStat.index].int_value == 1 ? 'Oui' : 'Non'}"></p>
+                                            <p th:if="${attribute.valueType.name() == 'SPEED'}"
+                                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} m/s|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'PRESSURE'}"
+                                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} hPa|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'VOLUME'}"
+                                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} L|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'DISTANCE'}"
+                                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} m|"></p>
+                                            <p th:if="${attribute.valueType.name() == 'SURFACE'}"
+                                               th:text="${connectedObject.attributeValueList[iterStat.index].double_value + ' m²'}"></p>
                                         </td>
                                     </tr>
                                 </table>

@@ -69,6 +69,28 @@ function ConditionalInputField(valueType, index) {
         case "PERCENTAGE":
             inputField = `<input type="number" min="0" max="100" name="attributeValueList[${index}].int_value" required><span> %</span>`;
             break;
+        case "BOOLEAN":
+            inputField = `
+            <select name="attributeValueList[${index}].int_value" required>
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+            </select>`;
+            break;
+        case "SPEED":
+            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> m/s</span>`;
+            break;
+        case "PRESSURE":
+            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> hPa</span>`;
+            break;
+        case "VOLUME":
+            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> L</span>`;
+            break;
+        case "DISTANCE":
+            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> m</span>`;
+            break;
+        case "SURFACE":
+            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> m²</span>`;
+            break;
     }
 
     return inputField;

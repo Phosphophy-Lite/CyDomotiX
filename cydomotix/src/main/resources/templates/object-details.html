@@ -104,6 +104,18 @@
                             <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
                             <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
                             <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
+                            <p th:if="${attribute.valueType.name() == 'BOOLEAN'}"
+                               th:text="${connectedObject.attributeValueList[iterStat.index].int_value == 1 ? 'Oui' : 'Non'}"></p>
+                            <p th:if="${attribute.valueType.name() == 'SPEED'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} m/s|"></p>
+                            <p th:if="${attribute.valueType.name() == 'PRESSURE'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} hPa|"></p>
+                            <p th:if="${attribute.valueType.name() == 'VOLUME'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} L|"></p>
+                            <p th:if="${attribute.valueType.name() == 'DISTANCE'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} m|"></p>
+                            <p th:if="${attribute.valueType.name() == 'SURFACE'}"
+                               th:text="${connectedObject.attributeValueList[iterStat.index].double_value + ' m²'}"></p>
                         </td>
                     </tr>
                     <tr>
@@ -181,6 +193,18 @@
                             <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
                             <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
                             <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
+                            <p th:if="${attribute.valueType.name() == 'BOOLEAN'}"
+                               th:text="${connectedObject.attributeValueList[iterStat.index].int_value == 1 ? 'Oui' : 'Non'}"></p>
+                            <p th:if="${attribute.valueType.name() == 'SPEED'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} m/s|"></p>
+                            <p th:if="${attribute.valueType.name() == 'PRESSURE'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} hPa|"></p>
+                            <p th:if="${attribute.valueType.name() == 'VOLUME'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} L|"></p>
+                            <p th:if="${attribute.valueType.name() == 'DISTANCE'}"
+                               th:text="|${connectedObject.attributeValueList[iterStat.index].double_value} m|"></p>
+                            <p th:if="${attribute.valueType.name() == 'SURFACE'}"
+                               th:text="${connectedObject.attributeValueList[iterStat.index].double_value + ' m²'}"></p>
                         </td>
                     </tr>
                     <tr>
@@ -300,12 +324,35 @@
                                     <input th:if="${attributeValue.objectAttribute.valueType.name() == 'DOUBLE'}"
                                            type="number" step="0.01" th:field="*{attributeValueList[__${index.index}__].double_value}">
 
+                                    <select th:if="${attributeValue.objectAttribute.valueType.name() == 'BOOLEAN'}"
+                                            th:field="*{attributeValueList[__${index.index}__].int_value}">
+                                        <option th:value="1" th:text="'Oui'"
+                                                th:selected="*{attributeValueList[__${index.index}__].int_value == 1}"></option>
+                                        <option th:value="0" th:text="'Non'"
+                                                th:selected="*{attributeValueList[__${index.index}__].int_value == 0}"></option>
+                                    </select>
+
+                                    <input th:if="${attributeValue.objectAttribute.valueType.name() == 'SPEED' ||
+                                                      attributeValue.objectAttribute.valueType.name() == 'PRESSURE' ||
+                                                      attributeValue.objectAttribute.valueType.name() == 'VOLUME' ||
+                                                      attributeValue.objectAttribute.valueType.name() == 'DISTANCE' ||
+                                                      attributeValue.objectAttribute.valueType.name() == 'SURFACE'}"
+                                           type="number" step="0.01" min="0"
+                                           th:field="*{attributeValueList[__${index.index}__].double_value}"/>
+
+
                                     <!-- Dimension conditionnelle -->
                                     <span th:if="${attributeValue.objectAttribute.valueType.name() == 'PERCENTAGE'}"> %</span>
                                     <span th:if="${attributeValue.objectAttribute.valueType.name() == 'TEMPERATURE'}"> °C</span>
                                     <span th:if="${attributeValue.objectAttribute.valueType.name() == 'HOURS'}"> h</span>
                                     <span th:if="${attributeValue.objectAttribute.valueType.name() == 'MINUTES'}"> min</span>
                                     <span th:if="${attributeValue.objectAttribute.valueType.name() == 'SECONDS'}"> s</span>
+                                    <span th:if="${attributeValue.objectAttribute.valueType.name() == 'SPEED'}"> m/s</span>
+                                    <span th:if="${attributeValue.objectAttribute.valueType.name() == 'PRESSURE'}"> hPa</span>
+                                    <span th:if="${attributeValue.objectAttribute.valueType.name() == 'VOLUME'}"> L</span>
+                                    <span th:if="${attributeValue.objectAttribute.valueType.name() == 'DISTANCE'}"> m</span>
+                                    <span th:if="${attributeValue.objectAttribute.valueType.name() == 'SURFACE'}"> m²</span>
+
                                 </div>
                             </td>
                         </tr>
