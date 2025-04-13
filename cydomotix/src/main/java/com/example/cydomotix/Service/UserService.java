@@ -97,11 +97,23 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    private boolean emailVerificationEnabled() {
+        return emailService.isEnabled(); // tu exposes cette méthode dans EmailService
+    }
+
     /**
      * Envoyer un lien de vérification du compte par mail à l'utilisateur s'inscrivant sur la plateforme
      * @param user
      */
     public void sendVerificationToken(User user){
+
+        // Pas de vérification par email activée
+        if (!emailVerificationEnabled()) {
+            user.setEnabled(true); // Activer son compte
+            userRepository.save(user); // Enregistrer cette activation dans la BDD
+            return;
+        }
+
         // Création du token de vérification
         String token = UUID.randomUUID().toString();
         VerificationToken verificationToken = new VerificationToken();
