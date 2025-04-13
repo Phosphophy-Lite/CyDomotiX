@@ -61,9 +61,84 @@
 
     <div class="main-container">
 
+        <!-- POUR UN UTILISATEUR NORMAL QUI N'A AUCUN DROIT D'EDITION : afficher les informations de l'objet au milieu -->
+        <div class="center-column" sec:authorize="hasRole('USER') && !hasRole('GESTION') && !hasRole('ADMIN')">
+            <div class="object-details-section">
+                <table>
+                    <tr>
+                        <th colspan="2" th:text="${connectedObject.name}"></th>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center" th:text="${connectedObject.objectType.name}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center" th:text="${connectedObject.room.name}"></td>
+                    </tr>
+                    <tr>
+                        <td>Marque :</td>
+                        <td th:text="${connectedObject.brand}"></td>
+                    </tr>
+                    <tr>
+                        <td>Mode :</td>
+                        <td th:text="${connectedObject.mode.displayName}"></td>
+                    </tr>
+                    <tr>
+                        <td>Connectivité :</td>
+                        <td th:text="${connectedObject.connectivity.displayName}"></td>
+                    </tr>
+                    <tr>
+                        <td>État de batterie :</td>
+                        <td th:text="|${connectedObject.batteryStatus}%|"></td>
+                    </tr>
+                    <tr th:each="attribute, iterStat : ${connectedObject.objectType.attributes}">
+                        <td>
+                            <p th:text="|${attribute.name} :|"></p>
+                        </td>
+                        <td>
+                            <!-- Affichage conditionnels selon le type de valeur -->
+                            <p th:if="${attribute.valueType.name() == 'STRING'}" th:text="${connectedObject.attributeValueList[iterStat.index].string_value}"></p>
+                            <p th:if="${attribute.valueType.name() == 'INTEGER'}" th:text="${connectedObject.attributeValueList[iterStat.index].int_value}"></p>
+                            <p th:if="${attribute.valueType.name() == 'DOUBLE'}" th:text="${connectedObject.attributeValueList[iterStat.index].double_value}"></p>
+                            <p th:if="${attribute.valueType.name() == 'TEMPERATURE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}&deg;C|"></p>
+                            <p th:if="${attribute.valueType.name() == 'HOURS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}h|"></p>
+                            <p th:if="${attribute.valueType.name() == 'MINUTES'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}min|"></p>
+                            <p th:if="${attribute.valueType.name() == 'SECONDS'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}s|"></p>
+                            <p th:if="${attribute.valueType.name() == 'PERCENTAGE'}" th:text="|${connectedObject.attributeValueList[iterStat.index].int_value}%|"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Dernière interaction :</td>
+                        <td th:text="${#temporals.format(connectedObject.lastInteraction, 'dd/MM/yyyy HH:mm')}"></td>
+
+                    </tr>
+                    <tr>
+                        <td>Status :</td>
+                        <td>
+                            <p th:text="${connectedObject.isActive} ? 'Activé' : 'Désactivé'"></p>
+                            <a class="power-btn" th:href="@{/object/{id}/status(id=${connectedObject.id})}" sec:authorize="hasRole('GESTION')">
+                                <button th:text="${connectedObject.isActive} ? 'Désactiver' : 'Activer'"></button>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Puissance :</td>
+                        <td th:text="|${connectedObject.power} W|"></td>
+                    </tr>
+                    <tr sec:authorize="hasRole('ADMIN')">
+                        <td colspan="2" style="text-align: center">
+                            <a class="delete-btn" href="#" th:data-id="${connectedObject.id}">
+                                <button>Supprimer</button>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- POUR UN UTILISATEUR GESTION : afficher des sections -->
 
         <!-- Colonne gauche fixe avec les détails de l'objet -->
-        <div class="left-column">
+        <div class="left-column" sec:authorize="hasRole('GESTION')">
             <!-- Section 1: Détails de l'objet  -->
             <div class="object-details-section">
                 <table>
@@ -144,14 +219,13 @@
         <!-- Colonne du milieu pour la modification GESTION -->
 
 
-
         <!-- Edit Form: Only Visible to GESTION -->
 
         <!-- Section 2: Modification GESTION -->
 
-        <div class="center-column">
+        <div class="center-column" sec:authorize="hasRole('GESTION')">
 
-            <div sec:authorize="hasRole('GESTION')" class="admin-edit-section">
+            <div class="admin-edit-section">
                 <form th:action="@{/object/{id}/update(id=${connectedObject.id})}" method="POST" th:object="${connectedObject}">
                     <!-- Champs invisible mais nécessaire pour que le formulaire envoyé à la requête associe correctement ces champs à l'objet récupéré -->
                     <input type="hidden" th:field="*{id}">
@@ -277,8 +351,6 @@
             </div>
         </div>
         <br><br>
-
-
 
     </div>
 </body>

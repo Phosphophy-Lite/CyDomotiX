@@ -79,9 +79,9 @@ button {
     padding: 0.5em 1em;
     border-radius: 50px;
     border: none;
-    font-family: amongus, sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-weight: bold;
 }
 
 button.approve {

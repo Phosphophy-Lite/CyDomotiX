@@ -22,12 +22,12 @@ function loadAttributes(objectTypeId) {
 
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Sélectionner tous les boutons "Supprimer"
     const deleteButtons = document.querySelectorAll('.delete-btn');
 
     deleteButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
+        button.addEventListener('click', function (event) {
             event.preventDefault(); // Empêche le comportement par défaut (le lien qui se déclenche)
 
             const connectedObjId = this.getAttribute('data-id'); // Récupère l'ID de l'objet connecté
@@ -42,9 +42,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-function ConditionalInputField(valueType, index){
+function ConditionalInputField(valueType, index) {
     let inputField = "";
-    switch(valueType){
+    switch (valueType) {
         case "STRING":
             inputField = `<input type="text" name="attributeValueList[${index}].string_value" required>`;
             break;
@@ -74,12 +74,12 @@ function ConditionalInputField(valueType, index){
     return inputField;
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // Sélectionner tous les boutons "Activer/Désactiver"
     const powerBtn = document.querySelectorAll('.power-btn');
 
     powerBtn.forEach(button => {
-        button.addEventListener('click', function(event) {
+        button.addEventListener('click', function (event) {
             event.preventDefault(); // Empêche le comportement par défaut (le lien qui se déclenche)
 
             const connectedObjId = this.getAttribute('data-id'); // Récupère l'ID de l'objet connecté
@@ -133,3 +133,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.clickable-row').forEach(row => {
+        row.addEventListener('click', (event) => {
+            // Si l'élément cliqué ou un de ses parents a la classe "no-click", on ne fait rien
+            if (event.target.closest('.no-click')) return;
+
+            // Sinon on redirige
+            const id = row.dataset.id;
+            window.location.href = '/object/' + id;
+        });
+    });
+});

@@ -56,6 +56,7 @@
 .object-details-section table {
     width: 100%;
     border-collapse: collapse;
+    margin-bottom: 2em;
 }
 
 .object-details-section th {
@@ -143,7 +144,6 @@
     border-radius: 2em;
     border: 1px solid #4290fd;
     outline: none;
-    font-family: 'amongus';
 }
 
 #deleteDemand button {
@@ -154,7 +154,7 @@
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'amongus';
+    font-weight: bold;
 }
 
 #deleteDemand button:hover {

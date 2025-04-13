@@ -62,26 +62,28 @@ function showRetrievedData(data){
     }
 
     const consumptContainer =  document.createElement("div");
-    const consumptSpan = document.createElement("span");
+    const consumptValue = document.createElement("div");
+    consumptValue.setAttribute("class", "stat-value");
 
     const loginRateContainer =  document.createElement("div");
-    const loginRateSpan = document.createElement("span");
+    const loginRateValue = document.createElement("div");
+    loginRateValue.setAttribute("class", "stat-value");
 
     const consumption = data["totalHouseConsumption"];
-    loginRateSpan.textContent = data["loginRate"] + "%";
+    loginRateValue.textContent = data["loginRate"] + "%";
 
     if (consumption >= 1000) { // Formatter en kWh
         const kWh = (consumption / 1000).toFixed(2);
-        consumptSpan.textContent = `${kWh} kWh`;
+        consumptValue.textContent = `${kWh} kWh`;
     } else { // Afficher en Wh
-        consumptSpan.textContent = `${consumption.toFixed(2)} Wh`;
+        consumptValue.textContent = `${consumption.toFixed(2)} Wh`;
     }
 
     consumptContainer.textContent = "Consommation totale de la maison : ";
     loginRateContainer.textContent = "Taux de connexion des utilisateurs : ";
 
-    consumptContainer.appendChild(consumptSpan);
-    loginRateContainer.appendChild(loginRateSpan);
+    consumptContainer.appendChild(consumptValue);
+    loginRateContainer.appendChild(loginRateValue);
 
     statsList.appendChild(consumptContainer);
     statsList.appendChild(loginRateContainer);

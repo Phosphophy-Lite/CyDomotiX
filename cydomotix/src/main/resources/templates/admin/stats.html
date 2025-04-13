@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Statistiques globales</title>
@@ -54,6 +54,9 @@
     <div class="admin-layout">
         <!-- Sidebar pour les contrôles -->
         <div class="admin-sidebar">
+            <a th:href="@{/admin/history}" class="history-link">
+                Historique des actions
+            </a>
             <select id="period">
                 <option value="all" selected>Tout le temps</option>
                 <option value="today">Aujourd'hui</option>
@@ -68,10 +71,6 @@
             <div id="stats-list">
                 <!-- Les statistiques seront injectées ici via JavaScript -->
             </div>
-
-            <a th:href="@{/admin/history}" class="history-link">
-                Historique des actions
-            </a>
         </div>
 
         <!-- Section principale avec le graphique -->

@@ -13,15 +13,17 @@
     height: 100%;
     text-align: center;
     padding: 1em;
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
 }
 
 /************************** Div droite **************************/
 .divRight {
     display: inline-block;
     width: 70%;
-    height: 100%;
+    height: 600px;
     text-align: center;
-    padding: 1em;
+    padding: 0.5em;
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
 }
 
 /* Panneau blanc - style commun */
@@ -38,19 +40,19 @@
 .formPanel {
     height: auto;
     min-height: 25em;
-    width: 90%;
     margin: 1em auto;
+}
+
+.formPanel table {
+    margin-bottom: 1.5em;
 }
 
 /* Panneau tableau */
 .tablePanel {
-    height: auto;
-    min-height: 25em;
-    max-height: 80vh;
+    height: 100%;
     width: 90%;
     margin: 1em auto;
     overflow-y: auto;
-
     /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: #888 #f1f1f1;
@@ -76,6 +78,10 @@
 /* Optionnel : au survol */
 .tablePanel::-webkit-scrollbar-thumb:hover {
     background-color: #555;
+}
+
+h1 {
+    font-family: 'amongus';
 }
 
 /* Style pour les tableaux */
@@ -124,7 +130,11 @@
     background-color: #e9e9e9; /* Gris clair */
 }
 
-
+/* Style au survol */
+.dataTable tbody tr:hover {
+    background-color: rgb(221, 221, 221);
+    transition: background-color 0.2s ease;
+}
 
 /* Assurer que TOUS les éléments internes héritent du fond */
 .dataTable tbody tr td,
@@ -137,8 +147,8 @@
 
 /* Style pour les formulaires */
 form {
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
     width: 100%;
-    text-align: left;
     padding: 1em;
 }
 
@@ -158,42 +168,69 @@ form select {
     margin-bottom: 1em;
     border-radius: 0.5em;
     border: 1px solid #ccc;
+    box-sizing: border-box; /* Inclure padding et border dans la largeur */
 }
 
-form button {
+.saveBtn {
+    padding: 0.6em 1.8em;
     background: linear-gradient(0.25turn, #4290fd, #e30af3);
-    color: white;
-    padding: 0.5em 1em;
     border: none;
-    border-radius: 0.5em;
-    cursor: pointer;
-    font-family: arial;
-}
-
-form button:hover {
-    transform: scale(1.05);
-    transition: all 0.3s ease;
-}
-
-/* Actions buttons */
-.action-btn {
-    display: inline-block;
-    margin: 0.2em;
-}
-
-button {
-    background: linear-gradient(0.25turn, #4290fd, #e30af3);
+    border-radius: 2em;
     color: white;
-    padding: 0.5em 1em;
-    border: none;
-    border-radius: 0.5em;
     cursor: pointer;
-    font-family: arial;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 0.9em;
 }
 
-button:hover {
+.saveBtn:hover {
     transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+/* Boutons de l'objet */
+.power-btn button,
+.delete-btn button {
+    padding: 0.4em 1.2em;
+    border-radius: 2em;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 0.9em;
+    margin: 0.3em 0 0.3em 0;
+}
+
+.power-btn button {
+    background: linear-gradient(0.25turn, #4290fd, #9b4dff);
+    color: white;
+}
+
+.delete-btn button {
+    background: linear-gradient(0.25turn, #ff4d4d, #e30af3);
+    color: white;
+}
+
+.power-btn button:hover,
+.delete-btn button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.request-delete-btn button {
+    padding: 0.6em 1.8em;
+    background: linear-gradient(0.25turn, #ff4d4d, #e30af3);
+    border: none;
+    border-radius: 2em;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.request-delete-btn button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
 }
 
 /* Messages */
@@ -208,6 +245,10 @@ button:hover {
     margin: 1em 0;
 }
 
+.clickable-row {
+    cursor: pointer;
+}
+
 /* Responsive design */
 @media (max-width: 1200px) {
     .mainContainer {
@@ -216,5 +257,13 @@ button:hover {
 
     .divLeft, .divRight {
         width: 100%;
+    }
+
+    .divRight{
+        height: 90%;
+    }
+
+    form {
+        text-align: center;
     }
 }

@@ -86,7 +86,7 @@
     border-radius: 3em;
     height: 25em;
     width: 80%;
-    margin: 3em;
+    margin: 3em 0 3em 0;
 
 }
 
@@ -231,6 +231,7 @@
     background-color: rgb(161, 161, 161);
     color: white;
     transition: background-color 0.2s ease;
+    cursor: pointer;
 }
 
 /* Assurer que TOUS les éléments internes héritent du fond (pour un fond uni dans tout le tableau)*/

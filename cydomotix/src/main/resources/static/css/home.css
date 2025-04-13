@@ -4,11 +4,15 @@
 }
 
 body {
-    font-family: amongus;
     margin: 0;
     padding: 0;
     background-image: url('/img/background/espace.jpg');
     color: white;
+    font-family: arial;
+}
+
+h1{
+    font-family: amongus;
 }
 
 .overlay {
@@ -25,22 +29,21 @@ header {
     position: relative;
     z-index: 2;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-left: 250px;
+    justify-content: flex-end; /* 👈 Aligne le contenu à droite */
     padding: 20px 50px;
-        }
+    width: 100%;
+    box-sizing: border-box;
+}
 
-
-
-.auth-buttons{
-    background: linear-gradient(to right, #4facfe, #8e44ad); /* bleu -> rose/violet */
-    color: white;
+.auth-buttons {
     display: flex;
-    gap: 50px; /* espace entre les boutons */
-    justify-content: center; /* centrer horizontalement */
+    flex-wrap: wrap; /* 👈 Permet aux boutons de passer à la ligne si trop étroit */
+    gap: 20px;
+    justify-content: flex-end;
     align-items: center;
-    margin-top: 20px;
+
+    background: linear-gradient(to right, #4facfe, #8e44ad);
+    color: white;
     border: 2px solid black;
     padding: 10px 30px;
     border-radius: 50px;
@@ -49,7 +52,10 @@ header {
     text-transform: uppercase;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 100%;
+    overflow-wrap: break-word;
 }
+
 
 
 /* Style de base pour les liens */
@@ -58,7 +64,6 @@ header {
     text-decoration: none; /* Pas de soulignement */
     font-weight: 600; /* Légèrement plus gras pour le lien */
     font-size: 1.5rem; /* Taille de police augmentée */
-
 }
 
 
@@ -147,6 +152,13 @@ header {
 
 }
 
+.sidebar-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0;
+    align-items: center;
+}
 
 .sidebar.show {
     transform: translateX(0);
@@ -182,7 +194,50 @@ header {
 }
 
 img{
-  width: 300px;
-  height: 200px;
+    width: 300px;
+    height: 200px;
+    margin: 0;
 }
 
+
+.info-button {
+    position: relative;
+    z-index: 15; /* Au-dessus du cadenas */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    padding: 10px 25px;
+    border-radius: 15px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    transition: all 0.3s ease;
+
+    /* Styles de texte pour qu'il ressemble à un h1 */
+    font-size: 2em;
+    font-weight: bold;
+    font-family: amongus; /* Utilisation de la même police */
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+.info-button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 600px) {
+    .auth-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px;
+        border-radius: 20px;
+    }
+
+    .auth-buttons a {
+        width: 100%;
+        text-align: center;
+    }
+}

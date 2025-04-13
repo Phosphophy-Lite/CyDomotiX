@@ -15,6 +15,7 @@ h2 {
     font-size: 2.5em;
     margin-bottom: 1em;
     text-shadow: 0px 0px 10px rgba(227, 10, 243, 0.5);
+    font-family: 'amongus';
 }
 
 /* Section profil - style similaire à object-details-section */
@@ -116,7 +117,6 @@ h2 {
     padding: 0.5em 0.8em;
     border-radius: 2em;
     border: 1px solid #4290fd;
-    font-family: 'amongus';
     box-sizing: border-box;
     font-size: 0.9em;
     transition: all 0.3s ease;
@@ -138,10 +138,9 @@ h2 {
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'amongus';
-    width: fit-content;
+    font-weight: bold;
     font-size: 0.9em;
-    margin: 1em auto;
+    margin: auto;
     display: block;
 }
 
@@ -149,9 +148,6 @@ h2 {
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
 }
-
-
-
 
 /* Messages d'erreur et de succès */
 .error-message {

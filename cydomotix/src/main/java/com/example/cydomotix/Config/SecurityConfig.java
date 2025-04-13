@@ -73,7 +73,7 @@ public class SecurityConfig {
                         auth.requestMatchers("/h2-console/**", "/h2-console").hasRole("DEV");
                     }
 
-                    auth.requestMatchers("/", "/login", "/register", "/verify", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
+                    auth.requestMatchers("/", "/login", "/register", "/verify", "/visualization", "/visualization/**", "/css/**", "/js/**", "/img/**", "/error").permitAll(); // Pages publiques (pas besoin d'authentification)
                     auth.requestMatchers("/gestion/**").hasRole("GESTION"); // Pages dans /gestion/ sont restreintes aux rôles GESTION et supérieurs
                     auth.requestMatchers("/admin/**").hasRole("ADMIN"); // Pages dans /admin/ sont restreintes aux rôles ADMIN et supérieurs
                     auth.requestMatchers("/dev/**").hasRole("DEV"); // Pages dans /dev/ sont restreintes aux rôles DEV et supérieurs

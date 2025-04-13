@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Statistiques</title>
@@ -54,16 +54,15 @@
     <div class="admin-layout">
         <!-- Sidebar pour les contrôles -->
         <div class="admin-sidebar">
+            <a th:href="@{/gestion/history}" class="history-link">
+                Historique
+            </a>
             <select id="period">
                 <option value="all" selected>Tout le temps</option>
                 <option value="today">Aujourd'hui</option>
                 <option value="week">7 derniers jours</option>
                 <option value="month">Ce mois-ci</option>
             </select>
-
-            <a th:href="@{/gestion/history}" class="history-link">
-                Historique
-            </a>
         </div>
 
         <!-- Section principale avec le graphique -->

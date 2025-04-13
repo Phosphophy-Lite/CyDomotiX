@@ -63,26 +63,28 @@
 
                 <h3>Attributs du type d'objet:</h3>
 
-                <table id="attributesTable" class="dataTable">
-                    <thead>
-                    <tr>
-                        <th>Nom de l'attribut</th>
-                        <th>Type de la valeur</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="attribute, iterStat : *{attributes}">
-                        <td><!--<input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required>--></td>
-                        <td>
-                        </td>
-                        <td><button type="button" onclick="removeRow(this)">Supprimer</button></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div style="overflow: auto; max-height: 250px; margin-bottom: 1em">
+                    <table id="attributesTable" class="dataTable">
+                        <thead>
+                        <tr>
+                            <th>Nom de l'attribut</th>
+                            <th>Type de la valeur</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="attribute, iterStat : *{attributes}">
+                            <td><!--<input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required>--></td>
+                            <td>
+                            </td>
+                            <td><button type="button" onclick="removeRow(this)">Supprimer</button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                <button type="button" onclick="addRow()">Ajouter un attribut</button>
-                <button type="submit">Enregistrer</button>
+                <button type="button" class="saveBtn" onclick="addRow()">Ajouter un attribut</button>
+                <button type="submit" class="saveBtn">Enregistrer</button>
 
                 <!-- Affichage des messages -->
                 <div th:if="${#fields.hasErrors('name')}" class="error-message">
@@ -118,10 +120,10 @@
                         </ul>
                     </td>
                     <td>
-                        <a class="delete-btn action-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('ADMIN')">
+                        <a class="delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('ADMIN')">
                             <button>Supprimer</button>
                         </a>
-                        <a class="request-delete-btn action-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
+                        <a class="request-delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
                             <button>Demander suppression</button>
                         </a>
                     </td>

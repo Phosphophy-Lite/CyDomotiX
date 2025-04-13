@@ -48,23 +48,19 @@
 <div class="overlay"></div>
 
 <header>
-    <a href="/home.html" class="logo">
-        <span class="logo-icon"></span>
-        <span></span>
-    </a>
-
     <div class="auth-buttons">
         <a href="/login?show=login" class="link">Se connecter</a>
         <a href="/login?show=register" class="link">S'inscrire</a>
     </div>
-
-
 </header>
 
 <main>
     <section class="hero">
-        <h1>Votre maison. Plus intelligente.Plus simple. Plus sûre.</h1>
+        <h1>Votre maison. Plus intelligente. Plus simple. Plus sûre.</h1>
         <p>Contrôlez, surveillez et automatisez votre maison depuis n'importe où.</p>
+        <a th:href="@{/visualization}">
+            <button class="info-button">Informations</button>
+        </a>
     </section>
 </main>
 
@@ -74,8 +70,6 @@
         sidebar.classList.toggle("show");
     }
 </script>
-
-
 
 </body>
 </html>

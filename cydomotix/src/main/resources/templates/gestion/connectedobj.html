@@ -115,7 +115,7 @@
                     </tbody>
                 </table>
 
-                <button type="submit">Enregistrer</button>
+                <button type="submit" class="saveBtn">Enregistrer</button>
 
                 <!-- Affichage des messages -->
                 <div th:if="${#fields.hasErrors('name')}" class="error-message">
@@ -145,7 +145,7 @@
                 </thead>
                 <tbody>
                 <!-- Affichage de chaque ligne. 1 ligne = 1 object connecté -->
-                <tr th:each="connectedObject : ${connectedObjects}">
+                <tr th:each="connectedObject : ${connectedObjects}" class="clickable-row" th:data-id="${connectedObject.id}">
                     <td th:text="${connectedObject.name}"></td>
                     <td th:text="${connectedObject.objectType.name}"></td>
                     <td th:text="${connectedObject.room.name}"></td>
@@ -199,15 +199,15 @@
                             </tr>
                         </table>
                     </td>
-                    <td>
-                        <a class="delete-btn action-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('ADMIN')">
+                    <td class="no-click">
+                        <a class="delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('ADMIN')">
                             <button>Supprimer</button>
                         </a>
-                        <a class="request-delete-btn action-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
+                        <a class="request-delete-btn" href="#" th:data-id="${connectedObject.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
                             <button>Demander suppression</button>
                         </a>
-                        <a class="power-btn action-btn" href="#" th:data-id="${connectedObject.id}">
-                            <button>Activer/Désactiver</button>
+                        <a class="power-btn" href="#" th:data-id="${connectedObject.id}">
+                            <button th:text="${connectedObject.isActive} ? 'Désactiver' : 'Activer'"></button>
                         </a>
                     </td>
                 </tr>
