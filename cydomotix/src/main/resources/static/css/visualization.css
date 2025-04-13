@@ -241,3 +241,110 @@
 #connected-obj-table tbody tr td p {
     background-color: transparent !important;
 }
+/* Responsive pour mobile */
+@media screen and (max-width: 768px) {
+    /* Structure principale */
+    #mainContainer {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Conserver la barre de navigation horizontale */
+    #upRod {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        height: auto;
+        padding: 0.5em 0;
+    }
+
+    #upRod .link, #upRod .lockedLink {
+        margin: 0.3em 0.5em;
+        font-size: 0.9em;
+    }
+
+    /* Côté gauche - filtres */
+    #divLeft {
+        width: 90%;
+        height: auto;
+        margin: 1em auto;
+    }
+
+    /* Barre de recherche */
+    #containerRecherche {
+        width: 90%;
+        margin: 1em auto;
+    }
+
+    /* Section des filtres */
+    #filter {
+        width: 90%;
+        height: auto;
+        margin: 1em auto;
+        padding: 1em 0 2em 0;
+    }
+
+    /* Côté droit - tableau */
+    #divRight {
+        width: 90%;
+        height: auto;
+    }
+
+    #divTable {
+        width: 95%;
+        height: 50vh;
+        margin: 1em auto;
+        padding: 1em;
+        overflow-x: auto; /* Pour permettre le défilement horizontal du tableau */
+    }
+
+    /* Ajustements du tableau */
+    #connected-obj-table {
+        font-size: 0.9em;
+    }
+
+    .col-small, .col-large {
+        width: auto; /* Laisser le tableau s'adapter naturellement */
+    }
+
+    /* Gestion des cellules du tableau pour le responsive */
+    #connected-obj-table thead th {
+        white-space: nowrap;
+        padding: 0.3em;
+    }
+
+    /* Alternative: mode liste pour très petits écrans */
+    @media screen and (max-width: 480px) {
+        #connected-obj-table thead {
+            display: none;
+        }
+
+        #connected-obj-table tbody tr {
+            display: block;
+            margin-bottom: 1.5em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 0.5em;
+        }
+
+        #connected-obj-table tbody td {
+            display: block;
+            text-align: left;
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 8px;
+        }
+
+        #connected-obj-table tbody td:last-child {
+            border-bottom: none;
+        }
+
+        /* Ajouter des en-têtes via pseudo-éléments pour chaque cellule */
+        #connected-obj-table tbody td:nth-of-type(1):before { content: "Nom: "; font-weight: bold; }
+        #connected-obj-table tbody td:nth-of-type(2):before { content: "Type: "; font-weight: bold; }
+        #connected-obj-table tbody td:nth-of-type(3):before { content: "Pièce: "; font-weight: bold; }
+        #connected-obj-table tbody td:nth-of-type(4):before { content: "Champs de base:"; font-weight: bold; display: block; margin-bottom: 0.5em; }
+        #connected-obj-table tbody td:nth-of-type(5):before { content: "Champs spécifiques:"; font-weight: bold; display: block; margin-bottom: 0.5em; }
+    }
+}
