@@ -11,9 +11,7 @@
 .left-column {
     position: fixed;
     width: 28%;
-    max-width: 400px;
     padding: 1em;
-    height: calc(100vh - 9em); /* Hauteur moins la barre de navigation et les marges */
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -51,9 +49,8 @@
     background-color: rgba(255, 255, 255, 0.9);
     color: black;
     border-radius: 3em;
-    padding: 2em;
     margin: 2em;
-    box-shadow: 0px 5px 20px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 5px 20px rgba(255, 255, 255, 0.5);
 }
 
 .object-details-section table {
@@ -66,7 +63,7 @@
     color: white;
     font-size: 1.6em;
     padding: 0.3em;
-    border-radius: 1em 1em 0 0;
+    border-radius: 3em 3em 0 0;
     line-height: 1.2;
 }
 
@@ -91,7 +88,7 @@
 .delete-btn button {
     padding: 0.4em 1.2em;
     border-radius: 2em;
-    font-family: amongus;
+    font-weight: bold;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -196,11 +193,16 @@
     padding: 0.5em 0.8em;
     border-radius: 2em;
     border: 1px solid #4290fd;
-    font-family: 'amongus';
-    width: 100%;
-    max-width: 400px;
+    min-width: 0;
     box-sizing: border-box; /* Inclure padding et border dans la largeur */
     font-size: 0.9em;
+    margin-bottom: 0.5em;
+}
+
+.admin-edit-section input[readonly]{
+    background: rgba(227, 10, 243, 0.05);
+    border: none;
+    color: black;
 }
 
 .admin-edit-section h3 {
@@ -219,12 +221,19 @@
 }
 
 .admin-edit-section #attributesTable th {
-    background: linear-gradient(0.25turn, #4290fd, #e30af3);
     color: white;
     padding: 0.5em 0.8em;
     text-align: left;
     font-size: 1em;
     line-height: 1.2;
+}
+
+.admin-edit-section #attributesTable th:nth-child(2n) {
+    background: linear-gradient(to left, #4290fd, #e30af3);
+}
+
+.admin-edit-section #attributesTable th:nth-child(2n+1) {
+    background: linear-gradient(to right, #4290fd, #e30af3);
 }
 
 .admin-edit-section #attributesTable td {
@@ -243,14 +252,24 @@
     color: white;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-family: 'amongus';
-    width: fit-content;
+    margin: auto;
+    font-weight: bold;
     font-size: 0.9em;
 }
 
 .admin-edit-section button:hover {
     transform: scale(1.05);
     box-shadow: 0 0 10px rgba(227, 10, 243, 0.5);
+}
+
+.inputWithUnit {
+    display:flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.inputWithUnit > input {
+    flex:1
 }
 
 /* Messages de succès et d'erreur */
