@@ -11,80 +11,78 @@
     <script src="/js/dynamicStars.js" defer></script>
 </head>
 <body>
+<!------------------------------BARRE CENTRALE ------------------------------>
+<div id="upRod">
+    <a class="link" th:href="@{/dashboard}">Accueil</a>
+    <a class="link" th:href="@{/visualization}">Visualisation</a>
 
+    <!-- Pour un gestion -->
+    <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
 
-    <!------------------------------BARRE CENTRALE ------------------------------>
-
-    <div id="upRod">
-
-        <a class="link" th:href="@{/dashboard}">Accueil</a>
-        <a class="link" th:href="@{/visualization}">Visualisation</a>
-
-        <!-- Pour un gestion -->
-        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
-
-        <!-- Pour un utilisateur sans droits d'accès gestion -->
-        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Gestion
-        </a>
-
-        <!-- Pour un admin -->
-        <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
-
-        <!-- Pour un utilisateur sans droits d'accès admin -->
-        <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Administration
-        </a>
-
-        <a class="link" th:href="@{/profile}">Profil</a>
-        <div class="link">
-            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
-          car une requête GET (lien clickable) ne transmet pas de token CSRF
-          donc Spring Security la bloquerait pour un logout
-          (potentiellement dangereux sans protection CSRF) -->
-            <form th:action="@{/logout}" method="post">
-                <button class="button" type="submit">Déconnexion</button>
-            </form>
-        </div>
-    </div>
-
-    <!------------------------------FIN BARRE CENTRALE ------------------------------>
-
-
-
-    <!-- onglets -->
-    <a>Statistiques</a>
-    <a th:href="@{/admin/history}">Historique des actions</a>
-
-    <h1>Statistiques globales</h1>
-
-    <select id="period">
-        <option value="all" selected>Tout le temps</option>
-        <option value="today">Aujourd'hui</option>
-        <option value="week">7 derniers jours</option>
-        <option value="month">Ce mois-ci</option>
-    </select>
-
-    <a th:href="@{/admin/export/csv}" class="export-btn">
-        Exporter en CSV
+    <!-- Pour un utilisateur sans droits d'accès gestion -->
+    <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Gestion
     </a>
 
+    <!-- Pour un admin -->
+    <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
 
-    <div id="stats-list">
+    <!-- Pour un utilisateur sans droits d'accès admin -->
+    <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Administration
+    </a>
+
+    <a class="link" th:href="@{/profile}">Profil</a>
+    <div class="link">
+        <form th:action="@{/logout}" method="post">
+            <button class="button" type="submit">Déconnexion</button>
+        </form>
     </div>
+</div>
+<!------------------------------FIN BARRE CENTRALE ------------------------------>
 
-    <div id="duration-stat">
-        <div class="chart-container">
-            <canvas id="durationChart"></canvas>
+<!-- Contenu principal dans une div blanche centrée -->
+<div class="main-container">
+    <h1>Statistiques globales</h1>
+
+    <div class="admin-layout">
+        <!-- Sidebar pour les contrôles -->
+        <div class="admin-sidebar">
+            <select id="period">
+                <option value="all" selected>Tout le temps</option>
+                <option value="today">Aujourd'hui</option>
+                <option value="week">7 derniers jours</option>
+                <option value="month">Ce mois-ci</option>
+            </select>
+
+            <a th:href="@{/admin/export/csv}" class="export-btn">
+                Exporter en CSV
+            </a>
+
+            <div id="stats-list">
+                <!-- Les statistiques seront injectées ici via JavaScript -->
+            </div>
+
+            <a th:href="@{/admin/history}" class="history-link">
+                Historique des actions
+            </a>
+        </div>
+
+        <!-- Section principale avec le graphique -->
+        <div class="admin-main">
+            <div id="duration-stat">
+                <div class="chart-container">
+                    <canvas id="durationChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
-
-
+</div>
 </body>
 </html>
