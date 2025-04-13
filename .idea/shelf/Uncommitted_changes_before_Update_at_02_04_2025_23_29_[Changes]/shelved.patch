@@ -1,0 +1,86 @@
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"MavenProjectsManager\">\r\n    <option name=\"originalFiles\">\r\n      <list>\r\n        <option value=\"$PROJECT_DIR$/cydomotix/pom.xml\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_X\" default=\"true\" project-jdk-name=\"openjdk-23\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/out\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	
++++ b/.idea/misc.xml	
+@@ -8,7 +8,7 @@
+       </list>
+     </option>
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_22" project-jdk-name="23" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: cydomotix/src/main/resources/templates/page2.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>Title</title>\r\n\r\n<!--    <link rel=\"stylesheet\" th:href=\"@{/css/home.css}\" />-->\r\n<!--    <script src=\"/js/app.js\" defer></script>-->\r\n\r\n</head>\r\n<body>\r\n\r\n<h2>Coucou de la page 2</h2>\r\n</body>\r\n</html>
+===================================================================
+diff --git a/cydomotix/src/main/resources/templates/page2.html b/cydomotix/src/main/resources/templates/page2.html
+--- a/cydomotix/src/main/resources/templates/page2.html	
++++ b/cydomotix/src/main/resources/templates/page2.html	
+@@ -2,14 +2,53 @@
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+-    <title>Title</title>
+ 
+ <!--    <link rel="stylesheet" th:href="@{/css/home.css}" />-->
+ <!--    <script src="/js/app.js" defer></script>-->
++    <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    <title>Maison Connectée</title>
++    <link rel="stylesheet" href="styles.css">
++    <style>
++        .taskbar {
++            position: fixed;
++            top: 0;
++            left: 0;
++            width: 100%;
++            background: #FFFFFF;
++            display: flex;
++            justify-content: space-around;
++            align-items: center;
++            padding: 10px 0;
++            color: black;
++            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
++            flex-wrap: wrap;
++        }
++        .task-item {
++            cursor: pointer;
++            padding: 10px 20px;
++            transition: background 0.3s;
+ 
++        }
++        .task-item:hover {
++            background: #FFFFFF;
++            border-radius: 5px;
++        }
++        body {
++            padding-top: 50px;
++        }
++    </style>
+ </head>
+ <body>
+ 
+-<h2>Coucou de la page 2</h2>
++<header>
++    <div style="text-align: center;"><h1>Bienvenue dans votre Maison Connectée!</h1></div>
++</header>
++    <nav class="taskbar">
++        <nav class="task-item"> Accueil</nav>
++        <nav class="task-item"> Rechercher</nav>
++        <nav class="task-item"> Decouvrir</nav>
++        <nav class="task-item">⚙️</nav>
++    </nav>
++
+ </body>
+-</html>
+\ No newline at end of file
++</html>

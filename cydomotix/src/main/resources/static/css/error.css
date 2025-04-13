@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'amongus';
+    src: url('../img/font/AmaticBold.ttf');
+}
+
+body {
+    font-family: 'amongus', sans-serif; /* Ajout d'un fallback pour la police */
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/background/espace.jpg');
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h1 {
+    font-size: 110px;
+    animation: float 1s ease-in-out infinite;
+    margin: 0; /* Supprime les marges par défaut */
+}
+
+#img2 {
+    width: 300px;
+    height: auto;
+    animation: float 1s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+p {
+    font-size: 4vw;
+    margin: 20px 0; /* Ajoute un peu d'espace autour du texte */
+}
+
+nav {
+    display: flex;
+    justify-content: center; /* Centre le contenu du menu de navigation */
+    padding: 10px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+    transition: color 0.3s ease;
+    padding: 10px 20px; /* Ajoute un peu de padding autour du lien */
+}
+
+nav a:hover {
+    color: #ffcc00;
+}
+
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+

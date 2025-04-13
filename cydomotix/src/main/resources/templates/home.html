@@ -1,18 +1,81 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maison connectée</title>
+    <link rel="stylesheet" type="text/css" href="/css/home.css" th:href="@{/css/home.css}">
 
-    <link rel="stylesheet" type="text/css" href="/css/login.css" th:href="@{/css/home.css}" />
 </head>
+
 <body>
+<button class="open-sidebar-btn" onclick="toggleSidebar()">☰</button>
 
-<p>Page d'accueil</p>
+<!-- Sidebar masquée par défaut -->
+<div id="sidebar" class="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">✖</button>
 
-<a th:href="@{/login?show=register}">S'inscrire</a>
-<a th:href="@{/login?show=login}">Se connecter</a>
+    <h2>Bienvenue !</h2>
+
+    <div class="sidebar-section">
+        <p>Contrôle à distance.<br>Gardez le contrôle de votre maison, même en déplacement, grâce à un accès à distance simple et sécurisé.</p>
+        <img src="/img/icon/controle.png" alt="Contrôle" class="sidebar-icon">
+    </div>
+
+    <div class="sidebar-section">
+        <p>Sécurité intelligente.<br> Protégez votre foyer avec une sécurité intelligente qui détecte, alerte et réagit automatiquement en cas de danger.</p>
+        <img src="/img/icon/securite.png" alt="Sécurité" class="sidebar-icon">
+    </div>
+
+    <div class="sidebar-section">
+        <p>Température réglable.<br> Réglez la température idéale pièce par pièce et profitez d’un confort thermique personnalisé à tout moment.</p>
+        <img src="/img/icon/temperature.png" alt="Température" class="sidebar-icon">
+    </div>
+
+    <div class="sidebar-section">
+        <p>Suivi énergétique. <br>Analysez votre consommation en temps réel et optimisez vos dépenses grâce à un suivi énergétique précis et intuitif.</p>
+        <img src="/img/icon/energie.png" alt="Énergie" class="sidebar-icon">
+    </div>
+
+    <p><strong>Gérez votre maison depuis n'importe où.</strong></p>
+
+    <div style="margin-top: 30px;">
+        <a href="/login?show=register" class="sidebar-btn">Créer un compte</a>
+    </div>
+</div>
+
+
+<div class="overlay"></div>
+
+<header>
+    <a href="/home.html" class="logo">
+        <span class="logo-icon"></span>
+        <span></span>
+    </a>
+
+    <div class="auth-buttons">
+        <a href="/login?show=login" class="link">Se connecter</a>
+        <a href="/login?show=register" class="link">S'inscrire</a>
+    </div>
+
+
+</header>
+
+<main>
+    <section class="hero">
+        <h1>Votre maison. Plus intelligente.Plus simple. Plus sûre.</h1>
+        <p>Contrôlez, surveillez et automatisez votre maison depuis n'importe où.</p>
+    </section>
+</main>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("show");
+    }
+</script>
+
+
 
 </body>
-
 </html>
