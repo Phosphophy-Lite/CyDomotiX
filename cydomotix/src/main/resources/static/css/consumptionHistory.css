@@ -59,8 +59,6 @@ body {
     text-align: left; /* Changé de 'right' à 'left' */
     text-decoration: none;
     margin-bottom: 1em;
-
-
 }
 
 .stats-button button {
@@ -74,7 +72,7 @@ body {
     font-family: arial;
     font-size: 0.9em;
     display: inline-block;
-    font-weight: 600;
+    font-weight: bold;
     font-size: 1em;
 }
 
@@ -88,7 +86,7 @@ body {
     display: flex;
     gap: 1em;
     margin-bottom: 1.5em;
-    flex-wrap: wrap; /* Change le comportement de flex pour passer a la ligne */
+    flex-wrap: wrap;
 }
 
 .filters-container select {

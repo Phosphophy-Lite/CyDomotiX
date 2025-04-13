@@ -1,3 +1,52 @@
+/* FOND ESPACE DYNAMIQUE */
+/* Ajout d'étoiles filantes occasionnelles */
+@keyframes shootingStar {
+    0% {
+        transform: translateX(0) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100vw) translateY(100vh);
+        opacity: 0;
+    }
+}
+
+.shooting-star {
+    position: fixed;
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    animation: shootingStar 3s linear forwards;
+    z-index: -1;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 1px white;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Étoiles scintillantes */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.twinkle-star {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background-color: white;
+    border-radius: 50%;
+    z-index: -1;
+    animation: twinkle 5s infinite;
+    pointer-events: none;
+}
+
+/*FIN FIN ESPACE DYNAMIQUE */
+
+
 @font-face {
     font-family: amongus;
     src: url('../img/font/AmaticBold.ttf');
@@ -64,6 +113,7 @@ header {
     text-decoration: none; /* Pas de soulignement */
     font-weight: 600; /* Légèrement plus gras pour le lien */
     font-size: 1.5rem; /* Taille de police augmentée */
+
 }
 
 
@@ -228,7 +278,7 @@ img{
     box-shadow: 0 6px 15px rgba(255, 255, 255, 0.4);
 }
 
-@media (max-width: 600px) {
+@media screen and (max-width: 768px) {
     .auth-buttons {
         flex-direction: column;
         align-items: stretch;
@@ -239,5 +289,80 @@ img{
     .auth-buttons a {
         width: 100%;
         text-align: center;
+    }
+
+
+    /* Section Hero */
+    .hero {
+        height: 60vh;
+        padding: 0 15px;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 85%;
+        padding: 60px 15px 15px 15px;
+    }
+
+    .sidebar-section {
+        margin-bottom: 20px;
+    }
+
+    .sidebar p {
+        font-size: 0.9rem;
+    }
+
+    img {
+        width: 100%;
+        max-width: 250px;
+        height: auto;
+    }
+
+    /* Bouton d'ouverture du sidebar */
+    .open-sidebar-btn {
+        top: 10px;
+        left: 10px;
+        padding: 8px 12px;
+    }
+
+    /* Étoiles et animations */
+    .shooting-star {
+        height: 25px;
+    }
+
+    /* Ajustements généraux */
+    body {
+        font-size: 0.9rem;
+    }
+}
+
+/* Pour les très petits écrans */
+@media screen and (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .auth-buttons {
+        padding: 6px 15px;
+        gap: 15px;
+    }
+
+    .auth-buttons a {
+        font-size: 1rem;
+    }
+
+    .sidebar-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
     }
 }

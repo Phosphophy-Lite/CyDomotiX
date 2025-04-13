@@ -166,20 +166,69 @@ p {
 
 
 
-/* Version mobile */
-@media (max-width: 600px) {
-    #mainContainer {
-        flex-direction: column;
-        align-items: center;
+/* Version mobile - correction des superpositions */
+@media (max-width: 768px) {
+    /* Corrections générales */
+    #main.inscription-mode {
+        height: auto;
+        min-height: 55em; /* Hauteur minimum plus grande */
+        padding-bottom: 15%; /* Plus d'espace en bas */
     }
 
-    #main {
-        width: 95%; /* Prend presque toute la largeur */
-        height: auto; /* Ajuste la hauteur selon le contenu */
-        min-height: 50em; /* S'assure qu'elle soit plus grande */
+    .signUpPartLine {
+        height: auto; /* Hauteur automatique au lieu de fixe */
+        padding-bottom: 2em; /* Padding en bas de chaque champ */
+        margin-bottom: 2.5em; /* Marge en bas de chaque ligne */
+        position: relative; /* Positionnement relatif */
     }
 
-    #BarrePseudonyme {
-        width: 100%;
+    /* S'assurer que les labels sont bien positionnés */
+    label {
+        display: block;
+        margin-top: 2em; /* Plus d'espace avant chaque label */
+        margin-bottom: 1em; /* Plus d'espace après chaque label */
+        clear: both; /* Évite les flottements */
     }
-}
+
+    /* Ajuster l'espacement pour les champs de sélection */
+    select, input[type="date"], input[type="file"] {
+        margin-top: 1em;
+        margin-bottom: 3em; /* Beaucoup plus d'espace après ces éléments */
+    }
+
+    /* Assurer que les champs d'input sont correctement positionnés */
+    .SignUpInput {
+        display: block;
+        margin-bottom: 1.5em; /* Plus d'espace sous les inputs */
+        padding: 0.5em 0; /* Padding vertical dans les inputs */
+    }
+
+    /* Ajuster l'espacement des conteneurs de sections */
+    .signUpPart {
+        margin-bottom: 3em; /* Plus d'espace entre les deux colonnes devenues verticales */
+        padding-bottom: 1em; /* Padding en bas de chaque partie */
+    }
+
+    /* Correction spécifique pour les input après les labels */
+    label + input, label + select {
+        margin-top: 0.5em; /* Légère marge après un label */
+    }
+
+    /* Pour s'assurer que chaque section est bien séparée de la suivante */
+    #signupForm br {
+        display: block;
+        height: 1.5em; /* Hauteur fixe pour les br */
+        content: " "; /* Nécessaire pour que la hauteur soit prise en compte */
+        clear: both; /* Évite les flottements */
+    }
+
+    /* Si vous avez besoin d'autres ajustements pour des éléments spécifiques */
+    #username, #email, #lastName, #firstName, #password {
+        margin-bottom: 2.5em; /* Plus d'espace pour ces champs spécifiques */
+    }
+
+    /* Assurer que tout élément dans le formulaire a assez d'espace */
+    #signupForm * {
+        box-sizing: border-box;
+    }
+}}

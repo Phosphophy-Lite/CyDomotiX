@@ -139,6 +139,7 @@ body {
 }
 
 .export-btn:active {
+    background-color: #004080;
     transform: scale(0.98);
 }
 

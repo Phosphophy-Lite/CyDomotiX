@@ -474,10 +474,107 @@ ul li {
 */
 
 
+/* Responsive pour mobile */
+@media screen and (max-width: 768px) {
+    /* Structure principale */
+    #containerPage {
+        flex-direction: column;
+        align-items: center;
+    }
 
+    /* Conserver la barre de navigation horizontale */
+    #upRod {
+        /* Garder en horizontal */
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        height: auto;
+        padding: 0.5em 0;
+    }
 
+    #upRod .link, #upRod .lockedLink {
+        margin: 0.3em 0.5em;
+        font-size: 0.9em;
+    }
 
+    /* Redimensionnement des sections principales */
+    #leftSide, #rightSide {
+        width: 90%;
+        height: auto;
+        margin: 1em auto;
+    }
 
+    /* Réajustement de visualisation avec hauteur augmentée */
+    #visualisation {
+        width: 90%;
+        height: 40vh; /* Hauteur augmentée en fonction de la hauteur de la fenêtre */
+        margin-bottom: 2em;
+    }
 
+    /* Gestion et Administration */
+    #containerGestAdmin {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+    }
 
+    #gestion, #administration {
+        width: 90%;
+        height: 20vh;
+        margin: 1em auto;
+    }
+
+    /* User et score */
+    #user {
+        width: 90%;
+        height: 40vh;
+        margin: 1em auto;
+    }
+
+    #ptsScore {
+        width: 90%;
+        margin: 1em auto;
+    }
+
+    /* Images et textes responsifs */
+    #imageAmongUs {
+        width: 100%;
+        border-radius: 3em 3em 0 0;
+        height: 50%;
+    }
+
+    #visualisation::after {
+        width: 100%;
+        border-radius: 0 0 3em 3em;
+        top: 50%;
+        right: 0;
+        height: 50%;
+    }
+
+    /* Ajuster la position du titre dans visualisation */
+    .title-link {
+        top: 50%;
+    }
+
+    /* Ajuster la taille des textes pour mobile */
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .title-link, .admin-button, .gestion-button {
+        font-size: 1.5em;
+        padding: 8px 15px;
+    }
+
+    /* Popup responsif */
+    .popup-content {
+        width: 85%;
+        padding: 20px;
+    }
+
+    .popup-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
 

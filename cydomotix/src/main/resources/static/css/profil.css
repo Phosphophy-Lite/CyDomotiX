@@ -180,17 +180,52 @@ input[type="file"] {
     background-color: rgba(255, 255, 255, 0.7);
 }
 
+
 /* Responsive design pour les écrans plus petits */
 @media (max-width: 768px) {
+    /* Styles pour la barre de navigation sur mobile */
+    #upRod {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 8px 5px;
+        gap: 8px;
+    }
+
+    /* Style pour tous les liens sauf le dernier (déconnexion) */
+    #upRod .link:not(:last-child), #upRod .lockedLink {
+        margin: 3px 8px;
+        font-size: 0.9em;
+    }
+
+    /* Style pour le bouton de déconnexion */
+    #upRod .link:last-child {
+        flex-basis: 100%;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #upRod .link:last-child form {
+        display: flex;
+        justify-content: center;
+    }
+
+    #upRod .link:last-child button {
+        width: 150px;
+        margin: 0 auto;
+    }
+
+    /* Reste des styles responsives */
     .profile-content {
         width: 90%;
         padding: 1.5em;
         border-radius: 2em;
+        margin: 0 auto;
     }
 
-    .profile-form table, 
-    .profile-form tbody, 
-    .profile-form tr, 
+    .profile-form table,
+    .profile-form tbody,
+    .profile-form tr,
     .profile-form td {
         display: block;
         width: 100%;
@@ -198,9 +233,5 @@ input[type="file"] {
 
     .profile-form td {
         padding: 0.5em 0;
-    }
-
-    .profile-form table tr:nth-child(odd) {
-        background-color: transparent;
     }
 }

@@ -91,3 +91,43 @@
     background: rgba(255, 255, 255, 0.25);
     box-shadow: 0 6px 15px rgba(255, 255, 255, 0.4);
 }
+
+@media screen and (max-width: 768px) {
+    #upRod {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        height: auto;
+        padding: 0.8em 0;
+    }
+
+    #upRod .link, #upRod .lockedLink {
+        margin: 0.5em 0.8em;  /* Plus d'espace entre les éléments */
+        font-size: 0.9em;
+    }
+
+    /* Structure principale en colonne unique */
+    .containerPage {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 3%;
+        width: 100%;
+    }
+
+    /* Cartes en colonne unique prenant toute la largeur disponible */
+    #page1, #page2, #page3 {
+        width: 85%;
+        height: 8em;
+        margin: 1em auto;
+        border-radius: 2em;
+    }
+
+    .title-link {
+        font-size: 1.4em;
+        padding: 8px 15px;
+        width: 80%;
+    }
+}
+
+
