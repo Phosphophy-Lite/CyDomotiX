@@ -5,88 +5,131 @@
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <title>Création Type d'Objet</title>
+    <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/gestion-create.css" th:href="@{/css/gestion-create.css}" />
     <script src="/js/objTypeCreation.js" defer></script>
+    <script src="/js/dynamicStars.js" defer></script>
 </head>
 
 <body>
-    <table id="obj-types-table">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Champs</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        <!-- Affichage de chaque ligne d'un type d'objet -->
-            <tr th:each="objectType : ${objectTypes}">
-                <td th:text="${objectType.name}"></td>
-                <td>
-                    <!-- Affichage de sa liste d'attributs et leur type -->
-                    <ul>
-                        <li th:each="attribute : ${objectType.attributes}">
-                            <!-- th:text="|...|" : concaténation de chaînes formattées -->
-                            <p th:text="|${attribute.name} : ${attribute.valueType.displayName}|"></p>
-                        </li>
-                    </ul>
-                </td>
-                <td>
-                    <a class="delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('ADMIN')">
-                        <button>Supprimer</button>
-                    </a><br>
-                    <a class="request-delete-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
-                        <button>Demander suppression</button>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<!------------------------------BARRE CENTRALE ------------------------------>
+<div id="upRod">
+    <a class="link" th:href="@{/dashboard}">Accueil</a>
+    <a class="link" th:href="@{/visualization}">Visualisation</a>
 
-    <br/><br/>
+    <!-- Pour un gestion -->
+    <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
 
-    <h1>Créer un nouveau Type d'Objet</h1>
+    <!-- Pour un utilisateur sans droits d'accès gestion -->
+    <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Gestion
+    </a>
 
-    <form th:action="@{/gestion/object-type/create}" method="POST" th:object="${objectType}">
-        <label for="name">Nom du type d'objet:</label>
-        <input type="text" id="name" th:field="*{name}" required>
-        <br>
+    <!-- Pour un admin -->
+    <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
 
-        <h3>Attributs du type d'objet:</h3>
+    <!-- Pour un utilisateur sans droits d'accès admin -->
+    <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Administration
+    </a>
 
-        <table id="attributesTable">
-            <thead>
+    <a class="link" th:href="@{/profile}">Profil</a>
+    <div class="link">
+        <form th:action="@{/logout}" method="post">
+            <button class="button" type="submit">Déconnexion</button>
+        </form>
+    </div>
+</div>
+<!------------------------------FIN BARRE CENTRALE ------------------------------>
+
+
+
+<div class="mainContainer">
+    <!-- Partie gauche - Formulaire -->
+    <div class="divLeft">
+
+        <div class="whitePanel formPanel">
+            <h1>Créer un nouveau Type d'Objet</h1>
+            <form th:action="@{/gestion/object-type/create}" method="POST" th:object="${objectType}">
+                <label for="name">Nom du type d'objet:</label>
+                <input type="text" id="name" th:field="*{name}" required>
+
+                <h3>Attributs du type d'objet:</h3>
+
+                <table id="attributesTable" class="dataTable">
+                    <thead>
+                    <tr>
+                        <th>Nom de l'attribut</th>
+                        <th>Type de la valeur</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="attribute, iterStat : *{attributes}">
+                        <td><!--<input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required>--></td>
+                        <td>
+                        </td>
+                        <td><button type="button" onclick="removeRow(this)">Supprimer</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" onclick="addRow()">Ajouter un attribut</button>
+                <button type="submit">Enregistrer</button>
+
+                <!-- Affichage des messages -->
+                <div th:if="${#fields.hasErrors('name')}" class="error-message">
+                    <p th:errors="*{name}"></p>
+                </div>
+
+                <div th:if="${successMessage}" class="success-message">
+                    <p th:text="${successMessage}"></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Partie droite - Liste des types -->
+    <div class="divRight">
+        <div class="whitePanel tablePanel">
+            <table id="obj-types-table" class="dataTable">
+                <thead>
                 <tr>
-                    <th>Nom de l'attribut</th>
-                    <th>Type de la valeur</th>
+                    <th>Nom</th>
+                    <th>Champs</th>
                     <th>Action</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr th:each="attribute, iterStat : *{attributes}">
-                    <td><!--<input type="text" th:field="*{attributes[__${iterStat.index}__].name}" required>--></td>
+                </thead>
+                <tbody>
+                <tr th:each="objectType : ${objectTypes}">
+                    <td th:text="${objectType.name}"></td>
                     <td>
-
+                        <ul>
+                            <li th:each="attribute : ${objectType.attributes}">
+                                <p th:text="|${attribute.name} : ${attribute.valueType.displayName}|"></p>
+                            </li>
+                        </ul>
                     </td>
-                    <td><button type="button" onclick="removeRow(this)">Supprimer</button></td>
+                    <td>
+                        <a class="delete-btn action-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('ADMIN')">
+                            <button>Supprimer</button>
+                        </a>
+                        <a class="request-delete-btn action-btn" href="#" th:data-id="${objectType.id}" sec:authorize="hasRole('GESTION') && !hasRole('ADMIN')">
+                            <button>Demander suppression</button>
+                        </a>
+                    </td>
                 </tr>
-            </tbody>
-        </table>
-
-        <button type="button" onclick="addRow()">Ajouter un attribut</button><br>
-        <button type="submit">Enregistrer</button><br>
-
-
-        <!-- Affichage de l'erreur -->
-        <div th:if="${#fields.hasErrors('name')}">
-            <p style="color: red;" th:errors="*{name}"></p>
+                </tbody>
+            </table>
         </div>
-
-        <!-- Affichage du message de succès -->
-        <div th:if="${successMessage}" style="color: green; font-weight: bold;">
-            <p th:text="${successMessage}"></p>
-        </div>
-
-    </form>
-
+    </div>
+</div>
 </body>
 </html>

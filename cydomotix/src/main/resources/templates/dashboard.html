@@ -132,12 +132,14 @@
             </div>
 
             <div id="ptsScore">
-                <div id="containerDifferentPts">
-                    <div id="coPts"><h5>Connexion</h5><p>XXX pts</p></div>
-                    <div id="searchPts"><h5>Recherche</h5><p>XXX pts</p></div>
+                <div id="roleScoreContainer">
+                    <h3>Rôle</h3>
+                    <h2 th:text="${user.accessType.displayName}"></h2>
                 </div>
-                <h2>TOTAL</h2>
-                <p>XXX pts</p>
+                <div id="pointsScoreContainer">
+                    <h3>Vos points</h3>
+                    <h2 th:text="|${user.points} pts|"></h2>
+                </div>
             </div>
 
         </div>

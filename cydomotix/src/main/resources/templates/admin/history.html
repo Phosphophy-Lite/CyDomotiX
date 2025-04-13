@@ -3,8 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Historique</title>
+    <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
+    <script src="/js/dynamicStars.js" defer></script>
 </head>
 <body>
+
+    <!------------------------------BARRE CENTRALE ------------------------------>
+
+    <div id="upRod">
+
+        <a class="link" th:href="@{/dashboard}">Accueil</a>
+        <a class="link" th:href="@{/visualization}">Visualisation</a>
+
+        <!-- Pour un gestion -->
+        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+
+        <!-- Pour un utilisateur sans droits d'accès gestion -->
+        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+            </svg>
+            Gestion
+        </a>
+
+        <!-- Pour un admin -->
+        <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+
+        <!-- Pour un utilisateur sans droits d'accès admin -->
+        <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+            </svg>
+            Administration
+        </a>
+
+        <a class="link" th:href="@{/profile}">Profil</a>
+        <div class="link">
+            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
+          car une requête GET (lien clickable) ne transmet pas de token CSRF
+          donc Spring Security la bloquerait pour un logout
+          (potentiellement dangereux sans protection CSRF) -->
+            <form th:action="@{/logout}" method="post">
+                <button class="button" type="submit">Déconnexion</button>
+            </form>
+        </div>
+    </div>
+
+    <!------------------------------FIN BARRE CENTRALE ------------------------------>
+
+
+
     <!-- onglets -->
     <a th:href="@{/admin/stats}">Statistiques</a>
     <a>Historique des actions</a>

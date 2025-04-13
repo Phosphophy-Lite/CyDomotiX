@@ -1,0 +1,149 @@
+/* admin-requests.css - Style pour les pages deletion-requests.html et registration-requests.html */
+
+/* Style général du conteneur principal */
+.requests-container {
+    display: flex;
+    justify-content: center;
+    padding: 2em;
+}
+
+/* Style de la div principale contenant les demandes */
+.requests-box {
+    display: inline-block;
+    box-shadow: 0px 0px 30px rgba(255, 255, 255, 0.4);
+    width: 80%;
+    max-height: 75vh;
+    background-color: white;
+    color: black;
+    overflow-y: auto;
+    border-radius: 3em;
+    padding: 2em;
+    transition: all 0.3s ease-in-out;
+}
+
+.requests-box:hover {
+    box-shadow: 0px 0px 35px rgba(255, 255, 255, 0.6);
+}
+
+/* Style du titre */
+.requests-box h2 {
+    text-align: center;
+    margin-bottom: 1.5em;
+    font-family: amongus, sans-serif;
+    font-size: 2em;
+    position: sticky;
+    top: 0;
+    background: white;
+    padding: 0.5em 0;
+    z-index: 10;
+    border-bottom: 2px solid #333;
+}
+
+/* Style du tableau */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2em;
+}
+
+table th {
+    background-color: #1e1e2f;
+    color: white;
+    padding: 1em;
+    text-align: left;
+    position: sticky;
+    top: 4em;
+    z-index: 5;
+}
+
+table tr {
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s ease;
+}
+
+table tr:hover {
+    background-color: #f5f5f5;
+}
+
+table td {
+    padding: 1em;
+}
+
+/* Style des boutons d'action */
+.action-buttons {
+    display: flex;
+    gap: 0.5em;
+}
+
+button {
+    padding: 0.5em 1em;
+    border-radius: 50px;
+    border: none;
+    font-family: amongus, sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button.approve {
+    background: linear-gradient(to right, #4290fd, #4290fd9b);
+    color: white;
+}
+
+button.reject {
+    background: linear-gradient(to right, #e30af3, #e30af39f);
+    color: white;
+}
+
+button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Style du message de succès */
+.success-message {
+    color: #4caf50;
+    font-weight: bold;
+    text-align: center;
+    background-color: rgba(76, 175, 80, 0.1);
+    padding: 1em;
+    border-radius: 1em;
+    margin: 1em 0;
+    border: 1px solid #4caf50;
+}
+
+/* Personnalisation de la barre de défilement */
+.requests-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.requests-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.requests-box::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #4290fd, #e30af3);
+    border-radius: 10px;
+}
+
+.requests-box::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #2470d8, #c707cd);
+}
+
+/* Style responsive */
+@media screen and (max-width: 768px) {
+    .requests-box {
+        width: 95%;
+        border-radius: 2em;
+        padding: 1em;
+    }
+
+    table {
+        font-size: 0.9em;
+    }
+
+    button {
+        padding: 0.4em 0.8em;
+        font-size: 0.9em;
+    }
+}
