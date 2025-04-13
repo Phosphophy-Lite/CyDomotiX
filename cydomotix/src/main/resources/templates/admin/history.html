@@ -5,84 +5,91 @@
     <title>Historique</title>
     <link rel="stylesheet" type="text/css" href="/css/body.css" th:href="@{/css/body.css}" />
     <link rel="stylesheet" type="text/css" href="/css/upRod.css" th:href="@{/css/upRod.css}" />
+    <link rel="stylesheet" type="text/css" href="/css/consumptionHistory.css" th:href="@{/css/consumptionHistory.css}" />
     <script src="/js/dynamicStars.js" defer></script>
 </head>
 <body>
 
-    <!------------------------------BARRE CENTRALE ------------------------------>
+<!------------------------------BARRE CENTRALE ------------------------------>
+<div id="upRod">
+    <a class="link" th:href="@{/dashboard}">Accueil</a>
+    <a class="link" th:href="@{/visualization}">Visualisation</a>
 
-    <div id="upRod">
+    <!-- Pour un gestion -->
+    <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
 
-        <a class="link" th:href="@{/dashboard}">Accueil</a>
-        <a class="link" th:href="@{/visualization}">Visualisation</a>
+    <!-- Pour un utilisateur sans droits d'accès gestion -->
+    <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Gestion
+    </a>
 
-        <!-- Pour un gestion -->
-        <a class="link" th:href="@{/gestion}" sec:authorize="hasRole('GESTION')">Gestion</a>
+    <!-- Pour un admin -->
+    <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
 
-        <!-- Pour un utilisateur sans droits d'accès gestion -->
-        <a class="lockedLink" sec:authorize="!hasRole('GESTION')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Gestion
+    <!-- Pour un utilisateur sans droits d'accès admin -->
+    <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
+            <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
+        </svg>
+        Administration
+    </a>
+
+    <a class="link" th:href="@{/profile}">Profil</a>
+    <div class="link">
+        <form th:action="@{/logout}" method="post">
+            <button class="button" type="submit">Déconnexion</button>
+        </form>
+    </div>
+</div>
+<!------------------------------FIN BARRE CENTRALE ------------------------------>
+
+<!-- Container principal pour la page d'historique -->
+<div class="history-container">
+    <!-- Bouton vers statistiques -->
+    <div class="stats-button">
+        <a th:href="@{/admin/stats}">
+            <button>Statistiques</button>
         </a>
+    </div>
 
-        <!-- Pour un admin -->
-        <a class="link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Administration</a>
+    <h1 class="history-title">Historique d'action sur la plateforme</h1>
 
-        <!-- Pour un utilisateur sans droits d'accès admin -->
-        <a class="lockedLink" sec:authorize="!hasRole('ADMIN')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#777" viewBox="0 0 16 16" style="margin-right: 4px;">
-                <path d="M8 1a3 3 0 0 0-3 3v3H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1h-1V4a3 3 0 0 0-3-3zm-2 6V4a2 2 0 0 1 4 0v3H6z"/>
-            </svg>
-            Administration
-        </a>
+    <!-- Contenu défilant -->
+    <div class="scrollable-content">
+        <div th:each="userAction : ${userActions}" class="action-entry">
+            <div class="action-category">
+                <span th:text="${userAction.actionType.displayName}"></span>
+            </div>
 
-        <a class="link" th:href="@{/profile}">Profil</a>
-        <div class="link">
-            <!-- Spring Security a besoin d'envoyer une requête POST pour le logout
-          car une requête GET (lien clickable) ne transmet pas de token CSRF
-          donc Spring Security la bloquerait pour un logout
-          (potentiellement dangereux sans protection CSRF) -->
-            <form th:action="@{/logout}" method="post">
-                <button class="button" type="submit">Déconnexion</button>
-            </form>
+            <div class="action-description">
+                <p th:if="${userAction.actionType.name() == 'LOGIN'}" th:text="${userAction.author} + ' s\'est connecté.'"></p>
+
+                <p th:if="${userAction.actionType.name() == 'UPDATE_OBJECT'
+                                or (userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity != null)}"
+                   th:text="${userAction.author} + ' a modifié ' + ${userAction.relatedEntity}"></p>
+
+                <p th:if="${userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity == null}" th:text="${userAction.author} + ' a modifié son profil.'"></p>
+
+                <p th:if="${userAction.actionType.name() == 'DELETE_OBJECT'
+                                or userAction.actionType.name() == 'DELETE_TYPE'
+                                or userAction.actionType.name() == 'DELETE_USER'}" th:text="${userAction.author} + ' a supprimé ' + ${userAction.relatedEntity}"></p>
+
+                <p th:if="${userAction.actionType.name() == 'ADD_OBJECT'
+                                or userAction.actionType.name() == 'ADD_TYPE'}" th:text="${userAction.author} + ' a ajouté ' + ${userAction.relatedEntity}"></p>
+
+                <p th:if="${userAction.actionType.name() == 'ON_OBJECT'}" th:text="${userAction.author} + ' a allumé l\'objet ' + ${userAction.relatedEntity}"></p>
+                <p th:if="${userAction.actionType.name() == 'OFF_OBJECT'}" th:text="${userAction.author} + ' a éteint l\'objet ' + ${userAction.relatedEntity}"></p>
+            </div>
+
+            <div class="action-timestamp">
+                <span th:text="${#temporals.format(userAction.timestamp, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
         </div>
     </div>
-
-    <!------------------------------FIN BARRE CENTRALE ------------------------------>
-
-
-
-    <!-- onglets -->
-    <a th:href="@{/admin/stats}">Statistiques</a>
-    <a>Historique des actions</a>
-
-    <h1>Historique d'action sur la plateforme</h1>
-
-    <div th:each="userAction : ${userActions}">
-        <p>Catégorie : <span th:text="${userAction.actionType.displayName}"></span></p>
-        <p th:if="${userAction.actionType.name() == 'LOGIN'}" th:text="${userAction.author} + ' s\'est connecté.'"></p>
-
-        <p th:if="${userAction.actionType.name() == 'UPDATE_OBJECT'
-                    or (userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity != null)}"
-           th:text="${userAction.author} + ' a modifié ' + ${userAction.relatedEntity}"></p>
-
-        <p th:if="${userAction.actionType.name() == 'UPDATE_USER' and userAction.relatedEntity == null}" th:text="${userAction.author} + ' a modifié son profil.'"></p>
-
-        <p th:if="${userAction.actionType.name() == 'DELETE_OBJECT'
-                    or userAction.actionType.name() == 'DELETE_TYPE'
-                    or userAction.actionType.name() == 'DELETE_USER'}" th:text="${userAction.author} + ' a supprimé ' + ${userAction.relatedEntity}"></p>
-
-        <p th:if="${userAction.actionType.name() == 'ADD_OBJECT'
-                    or userAction.actionType.name() == 'ADD_TYPE'}" th:text="${userAction.author} + ' a ajouté ' + ${userAction.relatedEntity}"></p>
-
-        <p th:if="${userAction.actionType.name() == 'ON_OBJECT'}" th:text="${userAction.author} + ' a allumé l\'objet ' + ${userAction.relatedEntity}"></p>
-        <p th:if="${userAction.actionType.name() == 'OFF_OBJECT'}" th:text="${userAction.author} + ' a éteint l\'objet ' + ${userAction.relatedEntity}"></p>
-
-        <p th:text="${#temporals.format(userAction.timestamp, 'dd/MM/yyyy HH:mm')}"></p>
-        <br>
-    </div>
+</div>
 
 </body>
 </html>
