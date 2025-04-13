@@ -132,18 +132,96 @@ button:hover {
 
 /* Style responsive */
 @media screen and (max-width: 768px) {
-    .requests-box {
-        width: 95%;
-        border-radius: 2em;
-        padding: 1em;
+    /* Styles pour upRod en mobile */
+    #upRod {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 5px;
     }
 
-    table {
+    /* Style pour tous les liens sauf le dernier (déconnexion) */
+    #upRod .link:not(:last-child), #upRod .lockedLink {
+        margin: 0 6px;
         font-size: 0.9em;
+        white-space: nowrap;
+    }
+
+    /* Style pour le bouton de déconnexion */
+    #upRod .link:last-child {
+        flex-basis: 100%;
+        text-align: center;
+        margin-top: 8px;
+    }
+
+    #upRod .link:last-child form {
+        display: flex;
+        justify-content: center;
+    }
+
+    #upRod .link:last-child button {
+        width: 150px;
+        margin: 0 auto;
+    }
+
+    /* Amélioration du conteneur de requêtes */
+    .requests-container {
+        padding: 1em 0.5em;
+    }
+
+    .requests-box {
+        width: 95%;
+        max-width: 100%;
+        border-radius: 1.5em;
+        padding: 1em;
+        max-height: none; /* Supprime la hauteur max pour mobile */
+    }
+
+    /* Ajustement du titre */
+    .requests-box h2 {
+        font-size: 1.5em;
+        padding: 0.3em 0;
+        margin-bottom: 1em;
+    }
+
+    /* Responsive pour le tableau */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        font-size: 0.85em;
+    }
+
+    table th, table td {
+        padding: 0.7em 0.5em;
+    }
+
+    table th {
+        top: 3em; /* Ajuster la position sticky */
+    }
+
+    /* Style pour les boutons d'action sur mobile */
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3em;
     }
 
     button {
-        padding: 0.4em 0.8em;
-        font-size: 0.9em;
+        padding: 0.4em 0.6em;
+        font-size: 0.85em;
+    }
+
+    /* Pour les très petits écrans */
+    @media screen and (max-width: 480px) {
+        table th, table td {
+            padding: 0.5em 0.3em;
+            font-size: 0.9em;
+        }
+
+        .requests-box {
+            padding: 0.8em;
+        }
     }
 }
