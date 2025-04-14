@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -126,6 +127,8 @@ public class ConnectedObjectController {
             // Liste des pièces
             model.addAttribute("rooms", roomService.getAllRooms());
 
+            bindingResult.getAllErrors().forEach(System.out::println);
+
             return "gestion/connectedobj";  // Retourne à la page du formulaire avec les erreurs
         }
 
@@ -137,6 +140,8 @@ public class ConnectedObjectController {
             ObjectAttribute existingAttribute = objectAttributeService.getObjectAttributeById(attributeValue.getObjectAttribute().getId());
             attributeValue.setObjectAttribute(existingAttribute); // On remplace l'instance transiente par une instance persistante
         }
+
+        connectedObject.setLastInteraction(ZonedDateTime.now());
 
         connectedObjectService.save(connectedObject, principal.getName());  // Sauvegarder ConnectedObject et ses attributs en BDD et logger l'action utilisateur
         redirectAttributes.addFlashAttribute("successMessage", "Objet connecté ajouté avec succès !");

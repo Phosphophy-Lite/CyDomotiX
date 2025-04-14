@@ -83,7 +83,7 @@ function ConditionalInputField(valueType, index) {
             inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> hPa</span>`;
             break;
         case "VOLUME":
-            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> L</span>`;
+            inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].int_value" required><span> L</span>`;
             break;
         case "DISTANCE":
             inputField = `<input type="number" step="0.01" min="0" name="attributeValueList[${index}].double_value" required><span> m</span>`;
